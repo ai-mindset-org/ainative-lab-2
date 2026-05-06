@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ain ws01 · context playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #000; }
+  body {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.5;
+    text-transform: lowercase;
+    padding: 16px;
+  }
+  h1, h2, h3, h4, p, ul, ol, li, label, span, div, button, textarea, input { font-family: inherit; }
+  h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.02em; }
+  h2 { font-size: 13px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: 0.04em; }
+  h3 { font-size: 12px; font-weight: 700; margin: 0 0 6px 0; }
+  p  { margin: 0; }
+  a  { color: #000; text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { background: #000; color: #fff; text-decoration: none; }
+
+  .frame { border: 1px solid #000; padding: 12px; }
+  .stack > * + * { margin-top: 16px; }
+
+  /* HEADER */
+  .header { display: flex; flex-direction: column; gap: 4px; }
+  .header .sub { font-size: 11px; color: #000; }
+
+  /* SECTION TITLE */
+  .fig {
+    display: flex; align-items: baseline; gap: 8px;
+    border-bottom: 1px solid #000; padding-bottom: 4px; margin-bottom: 10px;
+    font-weight: 700; font-size: 13px;
+  }
+  .fig .lbl { font-size: 10px; letter-spacing: 0.08em; }
+
+  /* GRID — 1 col mobile, 2 col desktop */
+  .grid2 { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 800px) {
+    .grid2 { grid-template-columns: 1fr 1fr; }
+    .grid2.full { grid-template-columns: 1fr; }
+  }
+
+  /* FIELDS */
+  .field { border: 1px solid #000; padding: 8px; display: flex; flex-direction: column; gap: 6px; background: #fff; }
+  .field label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; }
+  .field .hint { font-size: 10px; color: #bdbdbd; }
+  textarea {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    padding: 6px;
+    font: inherit;
+    text-transform: lowercase;
+    resize: vertical;
+  }
+  textarea:focus { outline: 2px solid #000; outline-offset: -2px; }
+  textarea::placeholder { color: #bdbdbd; }
+
+  /* ARTIFACT CARDS */
+  .card { border: 1px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .card .head { display: flex; align-items: baseline; gap: 6px; }
+  .card .num { font-size: 16px; font-weight: 700; }
+  .card .ttl { font-size: 12px; font-weight: 700; }
+  .card .sub { font-size: 10px; color: #000; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 0; }
+
+  /* CHECKLIST */
+  .checklist { display: grid; grid-template-columns: 1fr; gap: 4px; }
+  @media (min-width: 800px) { .checklist { grid-template-columns: 1fr 1fr; } }
+  .check {
+    display: flex; align-items: flex-start; gap: 8px;
+    border: 1px solid #000; padding: 6px 8px;
+    cursor: pointer;
+  }
+  .check input[type="checkbox"] {
+    appearance: none; -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border: 1px solid #000; background: #fff;
+    margin: 2px 0 0 0; flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+  }
+  .check input[type="checkbox"]:checked { background: #000; }
+  .check input[type="checkbox"]:checked::after {
+    content: "x";
+    position: absolute; inset: 0;
+    color: #fff; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+  .check .txt { font-size: 11px; }
+  .check .idx { font-size: 10px; font-weight: 700; min-width: 18px; }
+
+  /* SCORE */
+  .score-row {
+    display: flex; align-items: stretch; gap: 0;
+    border: 1px solid #000; margin-top: 10px;
+  }
+  .score-cell {
+    flex: 1; padding: 8px 10px; border-right: 1px solid #000;
+    font-size: 11px;
+  }
+  .score-cell:last-child { border-right: 0; }
+  .score-cell.value { font-weight: 700; flex: 0 0 auto; min-width: 100px; }
+  .bands { display: flex; flex-direction: column; gap: 0; border: 1px solid #000; border-top: 0; }
+  .band {
+    padding: 6px 10px; font-size: 11px; border-bottom: 1px solid #000;
+    display: flex; gap: 8px;
+  }
+  .band:last-child { border-bottom: 0; }
+  .band .range { font-weight: 700; min-width: 72px; }
+  .band.active { background: #000; color: #fff; }
+  .band.active a { color: #fff; }
+
+  /* OUTBOUND */
+  .out-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  @media (min-width: 800px) { .out-grid { grid-template-columns: 1fr 1fr; } }
+  .out-card { border: 1px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .out-card .arrow { font-weight: 700; font-size: 12px; }
+  .out-card .url { font-size: 10px; color: #000; word-break: break-all; }
+
+  /* FOOTER */
+  .footer { display: flex; flex-direction: column; gap: 8px; }
+  .footer .meta { font-size: 11px; }
+  .footer .actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  button.btn {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    padding: 6px 10px;
+    font: inherit;
+    text-transform: lowercase;
+    cursor: pointer;
+  }
+  button.btn:hover { background: #000; color: #fff; }
+  .saved { font-size: 10px; color: #bdbdbd; margin-left: 4px; }
+
+  /* PRINT */
+  @media print {
+    @page { size: A4 portrait; margin: 14mm; }
+    body { padding: 0; font-size: 11pt; }
+    .grid2 { grid-template-columns: 1fr !important; }
+    .checklist { grid-template-columns: 1fr !important; }
+    .out-grid { grid-template-columns: 1fr !important; }
+    button.btn, .saved, .footer .actions { display: none !important; }
+    textarea { border: 1px solid #000; min-height: 40pt; }
+    .frame, .field, .card, .check, .out-card, .band, .score-row, .bands { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<main class="stack">
+
+  <!-- HEADER -->
+  <section class="frame header">
+    <h1>ain ws01 · context playground</h1>
+    <p class="sub">harness / personal os · 2026-05-06 · povaliaev · ai-native sprint vol2</p>
+  </section>
+
+  <!-- FIG.1 LAYER BUILDER -->
+  <section>
+    <div class="fig"><span class="lbl">fig.1</span> layer builder</div>
+    <div class="grid2">
+      <div class="field">
+        <label>① source</label>
+        <textarea id="layer-source" placeholder="воркшопы, звонки, intro, market, pos, research"></textarea>
+      </div>
+      <div class="field">
+        <label>② signal</label>
+        <textarea id="layer-signal" placeholder="что изменилось, где болит, какая сила входит"></textarea>
+      </div>
+      <div class="field">
+        <label>③ ask</label>
+        <textarea id="layer-ask" placeholder="что deck/агент должен сделать дальше"></textarea>
+      </div>
+      <div class="field">
+        <label>④ output</label>
+        <textarea id="layer-output" placeholder="какой artifact возвращает агент"></textarea>
+      </div>
+      <div class="field">
+        <label>⑤ evidence</label>
+        <textarea id="layer-evidence" placeholder="какой след доказывает действие"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIG.2 ARTIFACT CHAIN -->
+  <section>
+    <div class="fig"><span class="lbl">fig.2</span> artifact chain</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="head"><span class="num">①</span><span class="ttl">workcase canvas</span></div>
+        <div class="sub">trigger · input · action · review · output · metric</div>
+        <textarea id="art-1" placeholder="свободные заметки..."></textarea>
+      </div>
+      <div class="card">
+        <div class="head"><span class="num">②</span><span class="ttl">context seed</span></div>
+        <div class="sub">source · signal · ask · output · evidence</div>
+        <textarea id="art-2" placeholder="свободные заметки..."></textarea>
+      </div>
+      <div class="card">
+        <div class="head"><span class="num">③</span><span class="ttl">agent passport</span></div>
+        <div class="sub">owner · scope · tools · expiry</div>
+        <textarea id="art-3" placeholder="свободные заметки..."></textarea>
+      </div>
+      <div class="card">
+        <div class="head"><span class="num">④</span><span class="ttl">guardrail checklist</span></div>
+        <div class="sub">blast radius · rollback · approval gate · audit trail</div>
+        <textarea id="art-4" placeholder="свободные заметки..."></textarea>
+      </div>
+      <div class="card">
+        <div class="head"><span class="num">⑤</span><span class="ttl">evidence note</span></div>
+        <div class="sub">decision · rationale · replay · review-date</div>
+        <textarea id="art-5" placeholder="свободные заметки..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIG.3 READINESS CHECK -->
+  <section>
+    <div class="fig"><span class="lbl">fig.3</span> readiness check (12 пунктов · 0–12 score)</div>
+    <div class="checklist" id="checklist"></div>
+
+    <div class="score-row">
+      <div class="score-cell value">score: <span id="score">0</span>/12</div>
+      <div class="score-cell" id="score-readout">raw context — начни с одного source audit</div>
+    </div>
+
+    <div class="bands" id="bands">
+      <div class="band" data-min="0" data-max="3"><span class="range">0–3</span><span>raw context — начни с одного source audit</span></div>
+      <div class="band" data-min="4" data-max="7"><span class="range">4–7</span><span>harness forming — выбери workflow и seed</span></div>
+      <div class="band" data-min="8" data-max="10"><span class="range">8–10</span><span>closed loop — добавь evidence + review cadence</span></div>
+      <div class="band" data-min="11" data-max="12"><span class="range">11–12</span><span>mature — масштабируй на следующий workflow</span></div>
+    </div>
+  </section>
+
+  <!-- FIG.4 OUTBOUND -->
+  <section>
+    <div class="fig"><span class="lbl">fig.4</span> outbound</div>
+    <div class="out-grid">
+      <a class="out-card" href="https://learn.aimindset.org/s3" target="_blank" rel="noopener">
+        <span class="arrow">→ lms s3</span>
+        <span class="url">learn.aimindset.org/s3</span>
+      </a>
+      <a class="out-card" href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">
+        <span class="arrow">→ dragon deck</span>
+        <span class="url">ainative-lab-deck.netlify.app</span>
+      </a>
+      <a class="out-card" href="https://ai-mindset-org.github.io/ainative-lab/" target="_blank" rel="noopener">
+        <span class="arrow">→ ainative-lab s2 hub</span>
+        <span class="url">ai-mindset-org.github.io/ainative-lab</span>
+      </a>
+      <a class="out-card" href="obsidian://open?vault=notes&file=AI%20mindset%20%7Bshared%7D%2Fai-mindset-2026%2Finbox%2F%7BAIM%7D%20%7Bresearch%7D%20Context%20Engineering%20Dragon%20Redesign%20%E2%80%93%202026-05-06.md">
+        <span class="arrow">→ research note (vault)</span>
+        <span class="url">obsidian://notes / context engineering dragon redesign – 2026-05-06</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <section class="frame footer">
+    <div class="meta">ain ws01 · context playground · v1 · 2026-05-06 · shaper style · b&amp;w · jetbrains mono</div>
+    <div class="actions">
+      <button class="btn" id="btn-save">[ save ]</button>
+      <button class="btn" id="btn-export">[ export .md ]</button>
+      <button class="btn" id="btn-print">[ print ]</button>
+      <button class="btn" id="btn-reset">[ reset ]</button>
+      <span class="saved" id="saved-indicator"></span>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  'use strict';
+
+  var STORE_KEY = 'ain-ws01-playground-v1';
+
+  var LAYER_IDS = ['layer-source','layer-signal','layer-ask','layer-output','layer-evidence'];
+  var ART_IDS   = ['art-1','art-2','art-3','art-4','art-5'];
+  var ART_TITLES = [
+    'workcase canvas',
+    'context seed',
+    'agent passport',
+    'guardrail checklist',
+    'evidence note'
+  ];
+  var LAYER_LABELS = ['source','signal','ask','output','evidence'];
+
+  var CHECK_ITEMS = [
+    'могу назвать один workflow, который болит',
+    'могу написать его trigger',
+    'могу описать форму input',
+    'знаю точку human review',
+    'знаю output artifact',
+    'есть baseline metric',
+    'могу написать context seed',
+    'знаю какой evidence собираю',
+    'знаю как отозвать scope агента',
+    'есть один rollback-шаг',
+    'поставлен review-date',
+    'знаю что не автоматизирую'
+  ];
+
+  // build checklist
+  var checklistEl = document.getElementById('checklist');
+  CHECK_ITEMS.forEach(function(text, i){
+    var n = i + 1;
+    var label = document.createElement('label');
+    label.className = 'check';
+    label.innerHTML =
+      '<input type="checkbox" id="chk-' + n + '" data-idx="' + n + '">' +
+      '<span class="idx">' + (n < 10 ? '0' + n : n) + '</span>' +
+      '<span class="txt">' + text + '</span>';
+    checklistEl.appendChild(label);
+  });
+
+  // load state
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      var s = JSON.parse(raw);
+      if (s.layers) LAYER_IDS.forEach(function(id, i){
+        var el = document.getElementById(id);
+        if (el && typeof s.layers[i] === 'string') el.value = s.layers[i];
+      });
+      if (s.artifacts) ART_IDS.forEach(function(id, i){
+        var el = document.getElementById(id);
+        if (el && typeof s.artifacts[i] === 'string') el.value = s.artifacts[i];
+      });
+      if (s.checks) {
+        for (var i = 0; i < 12; i++) {
+          var c = document.getElementById('chk-' + (i+1));
+          if (c) c.checked = !!s.checks[i];
+        }
+      }
+    } catch(e) { /* ignore */ }
+  }
+
+  function getState() {
+    var layers = LAYER_IDS.map(function(id){
+      var el = document.getElementById(id); return el ? el.value : '';
+    });
+    var artifacts = ART_IDS.map(function(id){
+      var el = document.getElementById(id); return el ? el.value : '';
+    });
+    var checks = [];
+    for (var i = 0; i < 12; i++) {
+      var c = document.getElementById('chk-' + (i+1));
+      checks.push(c ? !!c.checked : false);
+    }
+    return { layers: layers, artifacts: artifacts, checks: checks };
+  }
+
+  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function showSaved() {
+    var d = new Date();
+    var ind = document.getElementById('saved-indicator');
+    if (ind) ind.textContent = 'saved at ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(getState()));
+      showSaved();
+    } catch(e) { /* ignore quota */ }
+  }
+
+  function recomputeScore() {
+    var s = getState();
+    var score = s.checks.filter(function(x){ return x; }).length;
+    var scoreEl = document.getElementById('score');
+    if (scoreEl) scoreEl.textContent = score;
+
+    var bands = document.querySelectorAll('#bands .band');
+    var activeText = '';
+    bands.forEach(function(b){
+      var min = parseInt(b.getAttribute('data-min'), 10);
+      var max = parseInt(b.getAttribute('data-max'), 10);
+      if (score >= min && score <= max) {
+        b.classList.add('active');
+        activeText = b.textContent.trim();
+      } else {
+        b.classList.remove('active');
+      }
+    });
+    var ro = document.getElementById('score-readout');
+    if (ro && activeText) {
+      // strip leading range like "0–3"
+      ro.textContent = activeText.replace(/^\S+\s+/, '');
+    }
+  }
+
+  function todayStamp() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+  }
+
+  function buildMarkdown() {
+    var s = getState();
+    var score = s.checks.filter(function(x){ return x; }).length;
+    var lines = [];
+    lines.push('---');
+    lines.push('name: ain-ws01-context-playground');
+    lines.push('date: 2026-05-06');
+    lines.push('score: ' + score + '/12');
+    lines.push('---');
+    lines.push('');
+    lines.push('## layers');
+    LAYER_LABELS.forEach(function(lbl, i){
+      lines.push('');
+      lines.push('### ' + lbl);
+      lines.push('');
+      lines.push((s.layers[i] || '').trim() || '_пусто_');
+    });
+    lines.push('');
+    lines.push('## artifact chain');
+    ART_TITLES.forEach(function(ttl, i){
+      lines.push('');
+      lines.push('### ' + (i+1) + '. ' + ttl);
+      lines.push('');
+      lines.push((s.artifacts[i] || '').trim() || '_пусто_');
+    });
+    lines.push('');
+    lines.push('## readiness');
+    lines.push('');
+    CHECK_ITEMS.forEach(function(text, i){
+      var mark = s.checks[i] ? '[x]' : '[ ]';
+      lines.push('- ' + mark + ' ' + text);
+    });
+    lines.push('');
+    lines.push('score: ' + score + '/12');
+    lines.push('');
+    return lines.join('\n');
+  }
+
+  function downloadMd() {
+    var md = buildMarkdown();
+    var blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    var url  = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'ain-ws01-context-playground-' + todayStamp() + '.md';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  }
+
+  function bind() {
+    // textareas: blur autosave
+    LAYER_IDS.concat(ART_IDS).forEach(function(id){
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', saveState);
+    });
+    // checkboxes: change autosave + score
+    for (var i = 0; i < 12; i++) {
+      var c = document.getElementById('chk-' + (i+1));
+      if (!c) continue;
+      c.addEventListener('change', function(){
+        recomputeScore();
+        saveState();
+      });
+    }
+    // buttons
+    var bSave = document.getElementById('btn-save');
+    if (bSave) bSave.addEventListener('click', function(){ saveState(); });
+
+    var bExp = document.getElementById('btn-export');
+    if (bExp) bExp.addEventListener('click', function(){ saveState(); downloadMd(); });
+
+    var bPr = document.getElementById('btn-print');
+    if (bPr) bPr.addEventListener('click', function(){ window.print(); });
+
+    var bRs = document.getElementById('btn-reset');
+    if (bRs) bRs.addEventListener('click', function(){
+      if (window.confirm('очистить всё?')) {
+        try { localStorage.removeItem(STORE_KEY); } catch(e) {}
+        window.location.reload();
+      }
+    });
+  }
+
+  // init
+  loadState();
+  bind();
+  recomputeScore();
+})();
+</script>
+
+</body>
+</html>

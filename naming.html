@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ainative-lab-2 · naming convention</title>
+<style>
+:root{--bg:#ffffff;--ink:#000000;--soft:#d9d9d9;--hair:#ececec;--muted:#8a8a8a;--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--frame:1px;--gutter:22px}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{font-size:14px}body{background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.55;letter-spacing:0.04em;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;text-transform:lowercase;padding:0}a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink)}a:hover{background:var(--ink);color:var(--bg);border-bottom-color:var(--ink)}::selection{background:var(--ink);color:var(--bg)}.wrapper{max-width:980px;margin:0 auto;padding:32px 40px 80px}header.top{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:baseline;border-bottom:var(--frame) solid var(--ink);padding-bottom:14px;margin-bottom:28px}header.top .brand{font-weight:600;letter-spacing:0.18em;font-size:14px}header.top .crumb{color:var(--muted);font-size:11px;letter-spacing:0.10em}header.top .meta{color:var(--muted);font-size:11px;letter-spacing:0.10em;justify-self:end}header.top .meta b{color:var(--ink);font-weight:500;letter-spacing:0.08em}.title-block{border:var(--frame) solid var(--ink);padding:28px 24px 24px;margin-bottom:36px;position:relative}.title-block .h1{font-size:28px;font-weight:500;letter-spacing:0.02em;line-height:1.15;margin-bottom:14px}.title-block .formula{display:inline-block;border:var(--frame) solid var(--ink);padding:8px 14px;font-size:13px;letter-spacing:0.06em;background:var(--ink);color:var(--bg);margin-bottom:14px}.title-block .lede{color:var(--muted);font-size:12px;letter-spacing:0.06em;max-width:640px}.title-block .back{position:absolute;top:14px;right:16px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--soft)}.title-block .back:hover{color:var(--bg);background:var(--ink);border-bottom-color:var(--ink)}section.fig{margin-bottom:40px}section.fig>.label{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:baseline;border-bottom:var(--frame) solid var(--ink);padding-bottom:6px;margin-bottom:18px}section.fig>.label .num{font-weight:600;letter-spacing:0.18em;font-size:11px;text-transform:uppercase}section.fig>.label .name{color:var(--muted);font-size:11px;letter-spacing:0.16em;text-transform:uppercase}section.fig>.label .tag{color:var(--muted);font-size:10px;letter-spacing:0.14em;text-transform:uppercase}.builder{border:var(--frame) solid var(--ink);padding:22px}.builder-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}.builder-row.full{grid-template-columns:1fr}@media (max-width:640px){.builder-row{grid-template-columns:1fr}}.field label{display:block;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.field select,.field input{width:100%;padding:9px 12px;background:var(--bg);border:var(--frame) solid var(--ink);color:var(--ink);font-family:var(--mono);font-size:13px;letter-spacing:0.04em;text-transform:lowercase;outline:none;border-radius:0;-webkit-appearance:none;appearance:none}.field select{background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) center,calc(100% - 12px) center;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:32px}.field select:focus,.field input:focus{background-color:var(--hair)}.field input::placeholder{color:var(--muted);letter-spacing:0.04em}.preview{border:var(--frame) solid var(--ink);padding:18px 18px 14px;margin-top:18px;background:var(--hair)}.preview .plabel{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}.preview .pfile{font-size:15px;letter-spacing:0.02em;word-break:break-all;line-height:1.45;color:var(--ink)}.preview .pfile .dim{color:var(--muted)}.actions{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}.btn{background:var(--bg);border:var(--frame) solid var(--ink);padding:8px 16px;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);cursor:pointer;border-radius:0}.btn:hover{background:var(--ink);color:var(--bg)}.btn.copied{background:var(--ink);color:var(--bg)}.charcount{margin-left:auto;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}.charcount.over{color:var(--ink);font-weight:600}.checks{margin-top:16px;display:grid;gap:6px}.checks .ck{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:baseline;font-size:11px;letter-spacing:0.04em;color:var(--muted);border-top:1px dashed var(--soft);padding-top:6px}.checks .ck .mark{width:16px;height:16px;display:inline-grid;place-items:center;border:var(--frame) solid var(--soft);font-size:10px;color:var(--muted)}.checks .ck.pass .mark{background:var(--ink);color:var(--bg);border-color:var(--ink)}.checks .ck.pass{color:var(--ink)}.checks .ck.fail .mark{background:var(--bg);color:var(--ink);border-color:var(--ink)}.checks .ck.fail{color:var(--ink)}.examples{border:var(--frame) solid var(--ink)}.ex-row{display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:baseline;padding:12px 16px;border-bottom:var(--frame) solid var(--soft);cursor:pointer;transition:background 0.08s ease}.ex-row:last-child{border-bottom:none}.ex-row:hover{background:var(--hair)}.ex-row .ix{font-size:10px;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase}.ex-row .name{font-size:12px;letter-spacing:0.02em;word-break:break-all}.ex-row .name .dim{color:var(--muted)}.ex-row .hint{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}.ex-row:hover .hint{color:var(--ink)}.table{border:var(--frame) solid var(--ink)}.table .row{display:grid;grid-template-columns:160px 1fr;border-bottom:var(--frame) solid var(--soft)}.table .row:last-child{border-bottom:none}.table .row .k{padding:10px 14px;border-right:var(--frame) solid var(--soft);font-size:12px;letter-spacing:0.04em}.table .row .v{padding:10px 14px;font-size:11px;color:var(--muted);letter-spacing:0.04em}.table .group{background:var(--ink);color:var(--bg);padding:6px 14px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase}.prose{border:var(--frame) solid var(--ink);padding:22px;display:grid;gap:14px}.prose p{font-size:12px;letter-spacing:0.04em;color:var(--ink);max-width:75ch}.prose p .k{font-weight:600;letter-spacing:0.10em;text-transform:uppercase;font-size:10px;color:var(--muted);display:block;margin-bottom:4px}footer.bottom{border-top:var(--frame) solid var(--ink);margin-top:48px;padding-top:14px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:baseline;color:var(--muted);font-size:10px;letter-spacing:0.14em;text-transform:uppercase}@media print{body{font-size:11px}.wrapper{max-width:none;padding:16px 20px}.btn,.actions{display:none}section.fig{break-inside:avoid}.builder,.examples,.table,.prose{break-inside:avoid}a{border-bottom:none}.preview{background:var(--bg)}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<!-- ──────────────────────── HEADER ──────────────────────── -->
+<header class="top">
+<div class="brand">ainative-lab-2</div>
+<div class="crumb">naming convention · interactive builder</div>
+<div class="meta"><b>v1</b> · 2026-05-06 · s3</div>
+</header>
+<!-- ──────────────────────── TITLE ──────────────────────── -->
+<section class="title-block">
+<a href="./index.html" class="back">← back to hub</a>
+<div class="h1">naming convention</div>
+<div class="formula">{project} {type} description &ndash; yyyy-mm-dd.md</div>
+<div class="lede">a contract between you, your team, and your agents. without naming, the agent is blind. this builder helps you name files for the obsidian vault that drives ai-native sprint vol2 (s3).</div>
+</section>
+<!-- ──────────────────────── FIG.1 BUILDER ────────────────── -->
+<section class="fig" id="fig1">
+<div class="label">
+<span class="num">fig.1</span>
+<span class="name">interactive builder</span>
+<span class="tag">live preview</span>
+</div>
+<div class="builder">
+<div class="builder-row">
+<div class="field">
+<label>project code</label>
+<select id="projectSelect">
+<option value="">— select project —</option>
+<option value="{AIM}">{AIM} — ai mindset (team rituals, ops)</option>
+<option value="{space}">{space} — ai mindset space community</option>
+<option value="{f25}">{f25} — lab fall 2025</option>
+<option value="{x26}">{x26} — spring lab x26</option>
+<option value="{s3}">{s3} — ai-native sprint vol2 (current)</option>
+<option value="{ai-native}">{ai-native} — ai-native organizations program</option>
+<option value="{pos}">{pos} — personal operating system</option>
+<option value="{circle}">{circle} — circle product</option>
+<option value="{core}">{core} — core strategic chat / decisions</option>
+<option value="{self}">{self} — personal / self research</option>
+<option value="{consulting}">{consulting} — consulting projects</option>
+<option value="{channel}">{channel} — content channel, blog</option>
+<option value="other">other (type custom code)…</option>
+</select>
+</div>
+<div class="field">
+<label>content type</label>
+<select id="typeSelect">
+<option value="">— select type —</option>
+<optgroup label="core / personal">
+<option value="{rule}">{rule} — rule, standard</option>
+<option value="{prd}">{prd} — product requirements</option>
+<option value="{skill}">{skill} — claude skill</option>
+<option value="{prompt}">{prompt} — ai prompt</option>
+<option value="{tool}">{tool} — tool, instrument</option>
+<option value="{template}">{template} — reusable template</option>
+<option value="{context}">{context} — context document</option>
+</optgroup>
+<optgroup label="meetings">
+<option value="{meeting}">{meeting} — meeting notes</option>
+<option value="{transcript}">{transcript} — call transcript</option>
+</optgroup>
+<optgroup label="research">
+<option value="{research}">{research} — research</option>
+<option value="{analysis}">{analysis} — deep analysis</option>
+<option value="{overview}">{overview} — overview, survey</option>
+</optgroup>
+<optgroup label="business">
+<option value="{program}">{program} — program / curriculum</option>
+<option value="{crm}">{crm} — partner / candidate card</option>
+<option value="{brief}">{brief} — creative / project brief</option>
+<option value="{material}">{material} — workshop material</option>
+</optgroup>
+<optgroup label="rituals / workshop">
+<option value="{announce}">{announce} — channel / chat announce</option>
+<option value="{promo}">{promo} — promo content</option>
+<option value="{plan}">{plan} — plan, roadmap</option>
+<option value="{flow-map}">{flow-map} — flow / process map</option>
+<option value="{playbook}">{playbook} — playbook, runbook</option>
+</optgroup>
+<option value="other">other (type custom type)…</option>
+</select>
+</div>
+</div>
+<div class="builder-row">
+<div class="field" id="projectCustomWrap" style="display:none">
+<label>custom project code</label>
+<input type="text" id="projectCustom" placeholder="{my-code}" autocomplete="off">
+</div>
+<div class="field" id="typeCustomWrap" style="display:none">
+<label>custom type</label>
+<input type="text" id="typeCustom" placeholder="{my-type}" autocomplete="off">
+</div>
+</div>
+<div class="builder-row full">
+<div class="field">
+<label>description</label>
+<input type="text" id="descInput" placeholder="короткое описание задачи" autocomplete="off">
+</div>
+</div>
+<div class="builder-row">
+<div class="field">
+<label>date (yyyy-mm-dd)</label>
+<input type="text" id="dateInput" value="2026-05-06" autocomplete="off">
+</div>
+<div class="field" style="align-self:end">
+<label style="visibility:hidden">_</label>
+<div class="charcount" id="charCount" style="margin-left:0;padding:9px 0">— / 80</div>
+</div>
+</div>
+<div class="preview">
+<div class="plabel">generated filename</div>
+<div class="pfile" id="previewFile"><span class="dim">select project + type to begin…</span></div>
+<div class="actions">
+<button class="btn" id="copyBtn" type="button">[ copy ]</button>
+<button class="btn" id="resetBtn" type="button">[ reset ]</button>
+<span class="charcount" id="charMirror"></span>
+</div>
+</div>
+<div class="checks" id="checks">
+<div class="ck" data-key="len"><span class="mark">·</span><span>under 80 characters</span></div>
+<div class="ck" data-key="endash"><span class="mark">·</span><span>en dash &ndash; (not em dash &mdash;, not hyphen -)</span></div>
+<div class="ck" data-key="lower"><span class="mark">·</span><span>lowercase description (proper nouns ok)</span></div>
+<div class="ck" data-key="suffix"><span class="mark">·</span><span>no interface suffix (&ndash; claude code, &ndash; cursor, &ndash; chatgpt are deprecated since 2026-02-20)</span></div>
+<div class="ck" data-key="datepos"><span class="mark">·</span><span>date at the end, never in the middle</span></div>
+</div>
+</div>
+</section>
+<!-- ──────────────────────── FIG.2 EXAMPLES ──────────────── -->
+<section class="fig" id="fig2">
+<div class="label">
+<span class="num">fig.2</span>
+<span class="name">examples</span>
+<span class="tag">click to load</span>
+</div>
+<div class="examples" id="examplesList"></div>
+</section>
+<!-- ──────────────────────── FIG.3 PROJECT CODES ─────────── -->
+<section class="fig" id="fig3">
+<div class="label">
+<span class="num">fig.3</span>
+<span class="name">project codes</span>
+<span class="tag">9 canonical + open</span>
+</div>
+<div class="table" id="projTable"></div>
+</section>
+<!-- ──────────────────────── FIG.4 CONTENT TYPES ─────────── -->
+<section class="fig" id="fig4">
+<div class="label">
+<span class="num">fig.4</span>
+<span class="name">content types</span>
+<span class="tag">grouped by use</span>
+</div>
+<div class="table" id="typeTable"></div>
+</section>
+<!-- ──────────────────────── FIG.5 WHY IT MATTERS ────────── -->
+<section class="fig" id="fig5">
+<div class="label">
+<span class="num">fig.5</span>
+<span class="name">why it matters</span>
+<span class="tag">three reasons</span>
+</div>
+<div class="prose">
+<p>
+<span class="k">vault as operating system</span>
+имя файла — это индекс. в ai-native vault имя несёт project, type, описание и дату в машинно-читаемой форме. агент видит структуру до того, как читает контент. это превращает obsidian из заметочника в data layer персональной ос.
+</p>
+<p>
+<span class="k">sortable timeline</span>
+дата всегда в конце через en dash. <code>ls -1 | sort</code> сразу даёт хронологический порядок. <code>glob('*{research}*2026-05*')</code> возвращает все ресёрчи мая. ничего не нужно открывать.
+</p>
+<p>
+<span class="k">agent-readable</span>
+<code>{project}</code> и <code>{type}</code> в фигурных скобках парсятся одной регуляркой. описание остаётся для человека: коротко, lowercase, без техжаргона. имя — это api между тобой и твоими агентами.
+</p>
+</div>
+</section>
+<!-- ──────────────────────── FOOTER ──────────────────────── -->
+<footer class="bottom">
+<div>ainative-lab-2 · s3</div>
+<div style="text-align:center;color:var(--muted)">fig. 1–5 · naming convention · 2026-05-06</div>
+<div><a href="./index.html">[ hub ]</a></div>
+</footer>
+</div>
+<script>
+const TODAY = '2026-05-06';
+const EXAMPLES = [
+{ project:'{AIM}',       type:'{research}', desc:'context engineering dragon redesign', date:'2026-05-06' },
+{ project:'{s3}',        type:'{template}', desc:'context seed',                        date:'2026-05-06' },
+{ project:'{AIM}',       type:'{announce}', desc:'s3 w1 workshop povaliaev',            date:'2026-05-06' },
+{ project:'{AIM}',       type:'{meeting}',  desc:'speaker sync buzko',                  date:'2026-05-04' },
+{ project:'{ai-native}', type:'{playbook}', desc:'personal os starter',                 date:'2026-05-06' },
+];
+const PROJECTS = [
+['{AIM}',       'ai mindset team rituals, ops, processes'],
+['{space}',     'ai mindset space community sessions'],
+['{f25}',       'lab fall 2025 cohort'],
+['{x26}',       'spring lab x26 cohort'],
+['{s3}',        'ai-native sprint vol2 (current cohort)'],
+['{ai-native}', 'ai-native organizations program-wide'],
+['{pos}',       'personal operating system content'],
+['{circle}',    'circle product'],
+['{core}',      'strategic chat / north-star decisions'],
+];
+const TYPE_GROUPS = [
+['core / personal', [
+['{rule}',     'rule, standard'],
+['{prd}',      'product requirements doc'],
+['{skill}',    'claude code skill definition'],
+['{prompt}',   'reusable ai prompt'],
+['{tool}',     'tool, instrument, dashboard'],
+['{template}', 'reusable template'],
+['{context}',  'context document for agents'],
+]],
+['meetings', [
+['{meeting}',    'meeting notes, agenda'],
+['{transcript}', 'call / workshop transcript'],
+]],
+['research', [
+['{research}', 'investigation, exploration'],
+['{analysis}', 'deep analytical document'],
+['{overview}', 'overview, survey, landscape'],
+]],
+['business', [
+['{program}',  'program / curriculum'],
+['{crm}',      'partner or candidate card'],
+['{brief}',    'creative / project brief'],
+['{material}', 'workshop material'],
+]],
+['rituals / workshop', [
+['{announce}', 'channel / chat announce'],
+['{promo}',    'promo content (email, ad)'],
+['{plan}',     'plan, roadmap, sprint'],
+['{flow-map}', 'flow or process map'],
+['{playbook}', 'playbook, runbook'],
+]],
+];
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function getProject() {
+const v = $('projectSelect').value;
+if (v === 'other') return $('projectCustom').value.trim();
+return v;
+}
+function getType() {
+const v = $('typeSelect').value;
+if (v === 'other') return $('typeCustom').value.trim();
+return v;
+}
+function buildFilename() {
+const project = getProject();
+const type    = getType();
+const desc    = $('descInput').value.trim();
+const date    = $('dateInput').value.trim() || TODAY;
+const parts = [];
+if (project) parts.push(project);
+if (type) parts.push(type);
+if (desc) parts.push(desc);
+let head = parts.join(' ');
+if (!head) return '';
+return `${head} – ${date}.md`;
+}
+function renderPreview() {
+const project = getProject();
+const type    = getType();
+const desc    = $('descInput').value.trim();
+const date    = $('dateInput').value.trim() || TODAY;
+const previewEl = $('previewFile');
+if (!project && !type && !desc) {
+previewEl.innerHTML = '<span class="dim">select project + type to begin…</span>';
+$('charCount').textContent = '— / 80';
+$('charCount').classList.remove('over');
+$('charMirror').textContent = '';
+runChecks('');
+return;
+}
+const html = [];
+if (project) html.push(esc(project));
+if (type)    html.push(esc(type));
+if (desc)    html.push(esc(desc));
+let head = html.join(' ');
+head += ` <span class="dim">–</span> ${esc(date)}<span class="dim">.md</span>`;
+previewEl.innerHTML = head;
+const flat = buildFilename();
+const len = flat.length;
+const cc = `${len} / 80`;
+$('charCount').textContent = cc;
+$('charMirror').textContent = cc;
+$('charCount').classList.toggle('over', len > 80);
+runChecks(flat);
+}
+function setCheck(key, pass) {
+const row = document.querySelector(`.ck[data-key="${key}"]`);
+if (!row) return;
+row.classList.remove('pass','fail');
+if (pass === true)  { row.classList.add('pass'); row.querySelector('.mark').textContent = '✓'; }
+else if (pass === false) { row.classList.add('fail'); row.querySelector('.mark').textContent = '✗'; }
+else { row.querySelector('.mark').textContent = '·'; }
+}
+function runChecks(flat) {
+if (!flat) {
+['len','endash','lower','suffix','datepos'].forEach(k => setCheck(k, null));
+return;
+}
+setCheck('len', flat.length <= 80);
+const hasEnDash = flat.includes('–');
+const hasEmDash = flat.includes('—');
+setCheck('endash', hasEnDash && !hasEmDash);
+const desc = $('descInput').value.trim();
+const stripped = desc.replace(/\{[^}]+\}/g,'').trim();
+const upperRatio = stripped ? (stripped.match(/[A-ZА-Я]/g) || []).length / stripped.length : 0;
+setCheck('lower', stripped === '' || upperRatio < 0.30);
+const bad = /–\s*(claude code|cursor|chatgpt|codex|windsurf)\b/i;
+setCheck('suffix', !bad.test(flat));
+const dateAtEnd = /–\s*\d{4}-\d{2}-\d{2}\.md$/.test(flat);
+setCheck('datepos', dateAtEnd);
+}
+function renderExamples() {
+const list = $('examplesList');
+list.innerHTML = EXAMPLES.map((ex, i) => {
+const flat = `${ex.project} ${ex.type} ${ex.desc} – ${ex.date}.md`;
+return `
+<div class="ex-row" data-i="${i}">
+<div class="ix">ex.${String(i+1).padStart(2,'0')}</div>
+<div class="name">${esc(ex.project)} ${esc(ex.type)} ${esc(ex.desc)} <span class="dim">–</span> ${esc(ex.date)}<span class="dim">.md</span></div>
+<div class="hint">[ load ]</div>
+</div>
+`;
+}).join('');
+list.querySelectorAll('.ex-row').forEach(row => {
+row.addEventListener('click', () => loadExample(parseInt(row.dataset.i, 10)));
+});
+}
+function loadExample(i) {
+const ex = EXAMPLES[i];
+if (!ex) return;
+const ps = $('projectSelect');
+const ts = $('typeSelect');
+let found = false;
+for (const o of ps.options) { if (o.value === ex.project) { ps.value = ex.project; found = true; break; } }
+if (!found) { ps.value = 'other'; $('projectCustomWrap').style.display = ''; $('projectCustom').value = ex.project; }
+else { $('projectCustomWrap').style.display = 'none'; $('projectCustom').value = ''; }
+found = false;
+for (const o of ts.options) { if (o.value === ex.type) { ts.value = ex.type; found = true; break; } }
+if (!found) { ts.value = 'other'; $('typeCustomWrap').style.display = ''; $('typeCustom').value = ex.type; }
+else { $('typeCustomWrap').style.display = 'none'; $('typeCustom').value = ''; }
+$('descInput').value = ex.desc;
+$('dateInput').value = ex.date;
+renderPreview();
+document.getElementById('fig1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function renderProjects() {
+$('projTable').innerHTML = PROJECTS.map(([k,v]) => `
+<div class="row"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>
+`).join('');
+}
+function renderTypes() {
+$('typeTable').innerHTML = TYPE_GROUPS.map(([group, rows]) => {
+return `<div class="group">${esc(group)}</div>` + rows.map(([k,v]) =>
+`<div class="row"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`
+).join('');
+}).join('');
+}
+function copyFilename() {
+const text = buildFilename();
+if (!text) return;
+const btn = $('copyBtn');
+const fallback = () => {
+const ta = document.createElement('textarea');
+ta.value = text; document.body.appendChild(ta); ta.select();
+try { document.execCommand('copy'); } catch (e) {}
+document.body.removeChild(ta);
+};
+const after = () => {
+btn.textContent = '[ copied ✓ ]';
+btn.classList.add('copied');
+setTimeout(() => { btn.textContent = '[ copy ]'; btn.classList.remove('copied'); }, 1500);
+};
+if (navigator.clipboard && window.isSecureContext) {
+navigator.clipboard.writeText(text).then(after, () => { fallback(); after(); });
+} else { fallback(); after(); }
+}
+function resetBuilder() {
+$('projectSelect').value = '';
+$('typeSelect').value = '';
+$('projectCustomWrap').style.display = 'none';
+$('typeCustomWrap').style.display = 'none';
+$('projectCustom').value = '';
+$('typeCustom').value = '';
+$('descInput').value = '';
+$('dateInput').value = TODAY;
+renderPreview();
+}
+function onSelectChange() {
+$('projectCustomWrap').style.display = $('projectSelect').value === 'other' ? '' : 'none';
+$('typeCustomWrap').style.display    = $('typeSelect').value    === 'other' ? '' : 'none';
+renderPreview();
+}
+['projectSelect','typeSelect'].forEach(id => $(id).addEventListener('change', onSelectChange));
+['descInput','dateInput','projectCustom','typeCustom'].forEach(id => {
+$(id).addEventListener('input', renderPreview);
+$(id).addEventListener('change', renderPreview);
+});
+$('copyBtn').addEventListener('click', copyFilename);
+$('resetBtn').addEventListener('click', resetBuilder);
+renderExamples();
+renderProjects();
+renderTypes();
+renderPreview();
+</script>
+</body>
+</html>

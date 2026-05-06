@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ainative-lab-2 · ai-native sprint vol2 · s3</title>
+<meta name="description" content="entry hub for ai-native sprint vol2 (s3). 4 may – 25 may 2026. ai mindset org.">
+<meta property="og:title" content="ainative-lab-2 · s3">
+<meta property="og:description" content="ai-native sprint vol2 · 4 may – 25 may 2026 · ai mindset org">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ainative-lab-2.netlify.app/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#000;
+    --paper:#fff;
+    --dim:#bdbdbd;
+    --line:1px solid #000;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight:400;
+    font-size:13px;
+    line-height:1.55;
+    text-transform:lowercase;
+    letter-spacing:.01em;
+    padding:18px;
+  }
+  a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink)}
+  a:hover{background:var(--ink); color:var(--paper)}
+  .wrap{max-width:1280px; margin:0 auto}
+  .frame{border:var(--line); padding:18px; margin-bottom:16px}
+  .row{display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start; justify-content:space-between}
+  .row-end{justify-content:flex-end}
+  .muted{color:var(--dim)}
+  .tiny{font-size:11px}
+  .num{font-feature-settings:"tnum" 1}
+
+  /* header */
+  header.frame h1{
+    font-size:34px;
+    font-weight:500;
+    margin:0 0 6px 0;
+    letter-spacing:.02em;
+  }
+  header .sub{font-size:13px}
+  header .right{font-size:11px; text-align:right}
+  @media (max-width:640px){
+    header .right{text-align:left; margin-top:8px}
+  }
+
+  /* fig label */
+  .fig{
+    display:inline-block;
+    border:var(--line);
+    padding:2px 8px;
+    font-size:11px;
+    font-weight:500;
+    margin-bottom:10px;
+  }
+  .fig.invert{background:var(--ink); color:var(--paper)}
+  .fig-title{
+    font-size:16px;
+    font-weight:500;
+    margin:0 0 12px 0;
+  }
+
+  /* fig.1 today */
+  .today{position:relative}
+  .today .band{
+    background:var(--ink);
+    color:var(--paper);
+    padding:10px 14px;
+    margin:-18px -18px 14px -18px;
+    border-bottom:var(--line);
+    display:flex; gap:12px; justify-content:space-between; flex-wrap:wrap;
+  }
+  .today .band .when{font-size:11px}
+  .today p{margin:0 0 16px 0; max-width:780px}
+  .cta{display:flex; gap:12px; flex-wrap:wrap}
+  .cta a{
+    display:inline-block;
+    border:var(--line);
+    padding:10px 14px;
+    font-weight:500;
+    font-size:13px;
+  }
+
+  /* grids */
+  .grid{display:grid; gap:12px}
+  .grid-5{grid-template-columns:repeat(5, 1fr)}
+  .grid-3{grid-template-columns:repeat(3, 1fr)}
+  @media (max-width:1000px){
+    .grid-5{grid-template-columns:repeat(2, 1fr)}
+    .grid-3{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .grid-5{grid-template-columns:1fr}
+  }
+  .card{
+    border:var(--line);
+    padding:12px;
+    display:flex; flex-direction:column; gap:8px;
+    min-height:90px;
+    background:var(--paper);
+  }
+  .card .n{font-size:18px; font-weight:500}
+  .card .t{font-weight:500}
+  .card .arrow{margin-top:auto; font-size:11px}
+  .card a{border-bottom:none}
+  .card:hover{background:var(--ink); color:var(--paper)}
+  .card:hover a{color:var(--paper)}
+
+  /* ported list */
+  .ported{display:flex; flex-direction:column; gap:0}
+  .ported .item{
+    display:grid;
+    grid-template-columns:1fr 2fr;
+    gap:14px;
+    padding:10px 0;
+    border-top:var(--line);
+  }
+  .ported .item:last-child{border-bottom:var(--line)}
+  .ported .item .desc{color:var(--ink)}
+  @media (max-width:640px){
+    .ported .item{grid-template-columns:1fr}
+  }
+  .stub{
+    display:inline-block;
+    border:var(--line);
+    padding:0 6px;
+    font-size:10px;
+    margin-left:6px;
+    vertical-align:middle;
+  }
+
+  /* context list */
+  .ctx{list-style:none; margin:0; padding:0}
+  .ctx li{
+    display:grid;
+    grid-template-columns:140px 1fr;
+    gap:14px;
+    padding:8px 0;
+    border-top:var(--line);
+  }
+  .ctx li:last-child{border-bottom:var(--line)}
+  .ctx li .k{font-weight:500}
+  @media (max-width:640px){
+    .ctx li{grid-template-columns:1fr}
+    .ctx li .k{color:var(--dim); font-size:11px}
+  }
+
+  /* roadmap */
+  .road{list-style:none; margin:0; padding:0}
+  .road li{
+    padding:6px 0;
+    border-top:var(--line);
+    display:flex; gap:10px; align-items:baseline;
+  }
+  .road li:last-child{border-bottom:var(--line)}
+  .road .box{
+    display:inline-block;
+    width:18px; height:18px;
+    border:var(--line);
+    text-align:center;
+    line-height:16px;
+    font-size:12px;
+    flex:0 0 18px;
+  }
+  .road .box.done{background:var(--ink); color:var(--paper)}
+  .road .done-text{text-decoration:line-through; color:var(--dim)}
+
+  /* footer */
+  footer{font-size:11px; color:var(--ink)}
+  footer .line{padding:2px 0}
+  footer a{font-size:11px}
+
+  /* note block */
+  .note{
+    margin-top:14px;
+    padding:10px 12px;
+    border:var(--line);
+    border-style:dashed;
+    font-size:12px;
+    color:var(--ink);
+    background:var(--paper);
+  }
+
+  @media print{
+    body{padding:0; font-size:11px}
+    a{color:var(--ink); border-bottom:none}
+    .frame{break-inside:avoid; page-break-inside:avoid}
+    .card:hover{background:var(--paper); color:var(--ink)}
+    .cta a{background:var(--paper); color:var(--ink)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="frame">
+    <div class="row">
+      <div>
+        <h1>ainative-lab-2</h1>
+        <div class="sub">ai-native sprint vol2 · s3 · 4 may – 25 may 2026 · ai mindset org</div>
+      </div>
+      <div class="right tiny muted">
+        successor to <a href="https://ai-mindset-org.github.io/ainative-lab/">ai-mindset-org/ainative-lab</a> (s2)
+      </div>
+    </div>
+  </header>
+
+  <!-- FIG.1 TODAY -->
+  <section id="fig-1-today" class="frame today">
+    <div class="band">
+      <span class="fig invert">fig.1 · today · active</span>
+      <span class="when num">2026-05-06 · 17:00 cet</span>
+    </div>
+    <h2 class="fig-title">w1 workshop · personal os / harness · povaliaev · 2026-05-06 17:00 cet</h2>
+    <p>контекст-инжиниринг как harness вокруг внешней силы. соберём первую версию personal os с context, шаблонами, инструментами и границами под одну задачу. поиск, не лекция.</p>
+    <div class="cta">
+      <a href="./playground.html">→ open playground</a>
+      <a href="https://ainative-lab-deck.netlify.app/">→ open deck</a>
+    </div>
+  </section>
+
+  <!-- FIG.2 ARTIFACT TOOLKIT -->
+  <section id="fig-2-toolkit" class="frame">
+    <span class="fig">fig.2 · artifact toolkit</span>
+    <h2 class="fig-title">artifact toolkit · 5 шаблонов под один workflow</h2>
+    <div class="grid grid-5">
+      <a class="card" href="./playground.html#fig-2-workcase">
+        <span class="n">①</span>
+        <span class="t">workcase canvas</span>
+        <span class="arrow">→ playground#fig-2-workcase</span>
+      </a>
+      <a class="card" href="./playground.html#fig-2-seed">
+        <span class="n">②</span>
+        <span class="t">context seed</span>
+        <span class="arrow">→ playground#fig-2-seed</span>
+      </a>
+      <a class="card" href="./playground.html#fig-2-passport">
+        <span class="n">③</span>
+        <span class="t">agent passport</span>
+        <span class="arrow">→ playground#fig-2-passport</span>
+      </a>
+      <a class="card" href="./playground.html#fig-2-guardrail">
+        <span class="n">④</span>
+        <span class="t">guardrail checklist</span>
+        <span class="arrow">→ playground#fig-2-guardrail</span>
+      </a>
+      <a class="card" href="./playground.html#fig-2-evidence">
+        <span class="n">⑤</span>
+        <span class="t">evidence note</span>
+        <span class="arrow">→ playground#fig-2-evidence</span>
+      </a>
+    </div>
+    <div class="note">
+      artifact chain — переносимые шаблоны для одного workflow. лежат в playground'е, копируются в твой vault через export .md
+    </div>
+  </section>
+
+  <!-- FIG.3 PORTED FROM S2 -->
+  <section id="fig-3-ported" class="frame">
+    <span class="fig">fig.3 · ported from s2</span>
+    <h2 class="fig-title">ported from s2 · cherry-picked, adapted to s3</h2>
+    <div class="ported">
+      <div class="item">
+        <div><a href="./naming.html">→ naming convention (s3)</a> <span class="stub">stub</span></div>
+        <div class="desc">короткая интерактивная форма для имени файла</div>
+      </div>
+      <div class="item">
+        <div><a href="./rules.html">→ rules &amp; skills explorer (s3)</a> <span class="stub">stub</span></div>
+        <div class="desc">правила и навыки команды и личной оси</div>
+      </div>
+      <div class="item">
+        <div><a href="https://ai-mindset-org.github.io/ainative-lab/">→ s2 archive (read-only reference)</a></div>
+        <div class="desc">прошлый sprint целиком</div>
+      </div>
+    </div>
+    <div class="note">
+      naming.html и rules.html — placeholders, заполняются параллельными агентами. могут рендериться пустыми на первой итерации.
+    </div>
+  </section>
+
+  <!-- FIG.4 LAB CONTEXT -->
+  <section id="fig-4-context" class="frame">
+    <span class="fig">fig.4 · lab context</span>
+    <h2 class="fig-title">lab context · числа и сигналы</h2>
+    <ul class="ctx">
+      <li><span class="k">dates</span><span>4 may – 25 may 2026 (demo day)</span></li>
+      <li><span class="k">scale</span><span>~160 participants · 141 profiles · co-curators povaliaev + gershuni</span></li>
+      <li><span class="k">cohorts compared</span><span>s2: 217 people, 16 demo projects (broader) · s3: smaller, deeper, ops/agents focus</span></li>
+      <li><span class="k">audience signals</span><span>69% agents · 65% team/company · 58% ops · 54% dev stack · 32% context layer</span></li>
+    </ul>
+  </section>
+
+  <!-- FIG.5 ROADMAP -->
+  <section id="fig-5-roadmap" class="frame">
+    <span class="fig">fig.5 · roadmap</span>
+    <h2 class="fig-title">roadmap · v0.1 → s3 demo day</h2>
+    <ul class="road">
+      <li><span class="box done">x</span><span class="done-text">playground v1 (today, 2026-05-06)</span></li>
+      <li><span class="box"></span><span>knowledge graph v2 (s3 nodes from vault)</span></li>
+      <li><span class="box"></span><span>speakers page (s3 co-curators + invited)</span></li>
+      <li><span class="box"></span><span>participants explorer (~160, no s2 data shown)</span></li>
+      <li><span class="box"></span><span>naming.html v2 (live tool, not docs)</span></li>
+      <li><span class="box"></span><span>rules.html v2 (live tool, not docs)</span></li>
+      <li><span class="box"></span><span>weeks (w1 done, w2–w4)</span></li>
+      <li><span class="box"></span><span>custom subdomain (s3.aimindset.org? harness.aimindset.org?)</span></li>
+    </ul>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="frame">
+    <div class="line">ainative-lab-2 · ai mindset org · v0.1 · 2026-05-06</div>
+    <div class="line muted">built on shaper-style aesthetic · jetbrains mono · single file</div>
+    <div class="line"><a href="https://github.com/ai-mindset-org/ainative-lab-2">https://github.com/ai-mindset-org/ainative-lab-2</a></div>
+  </footer>
+
+</div>
+</body>
+</html>
