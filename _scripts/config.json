@@ -1,0 +1,27 @@
+{
+  "lab": "s3",
+  "lab_full": "ai-native sprint vol2",
+  "dates": {
+    "start": "2026-05-04",
+    "end": "2026-05-25",
+    "intro": "2026-05-02",
+    "demo_day": "2026-05-25"
+  },
+  "vault": {
+    "root": "/Users/alex/Library/CloudStorage/Dropbox/notes/AI mindset {shared}/ai-mindset-2026",
+    "lab_dir": "Labs/s3 – ai-native vol2",
+    "context_dir": "Labs/s3 – ai-native vol2/context",
+    "speakers_dir": "Org/Partners",
+    "rules_dir": "aim-rules"
+  },
+  "site": {
+    "name": "ainative-lab-2",
+    "url_default": "https://ainative-lab-2.netlify.app",
+    "url_custom": null
+  },
+  "previous_lab": {
+    "lab": "s2",
+    "repo": "ai-mindset-org/ainative-lab",
+    "url": "https://ai-mindset-org.github.io/ainative-lab"
+  }
+}

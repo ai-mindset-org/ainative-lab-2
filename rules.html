@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ainative-lab-2 · rules &amp; skills</title>
+<meta name="description" content="минимальный набор переносимых правил для personal os — context engineering, agent guardrails, naming, memory, review">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #000; }
+  body {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.5;
+    text-transform: lowercase;
+    padding: 16px;
+  }
+  h1, h2, h3, h4, p, ul, ol, li, label, span, div, button { font-family: inherit; }
+  h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.02em; }
+  h2 { font-size: 13px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: 0.04em; }
+  h3 { font-size: 12px; font-weight: 700; margin: 0 0 6px 0; }
+  p  { margin: 0; }
+  a  { color: #000; text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { background: #000; color: #fff; text-decoration: none; }
+
+  .frame { border: 1px solid #000; padding: 12px; }
+  .stack > * + * { margin-top: 16px; }
+
+  /* HEADER */
+  .header { display: flex; flex-direction: column; gap: 6px; }
+  .header .row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .header .sub { font-size: 11px; color: #000; }
+  .header .back { font-size: 11px; }
+
+  /* SECTION TITLE */
+  .fig {
+    display: flex; align-items: baseline; gap: 8px;
+    border-bottom: 1px solid #000; padding-bottom: 4px; margin-bottom: 10px;
+    font-weight: 700; font-size: 13px;
+  }
+  .fig .lbl { font-size: 10px; letter-spacing: 0.08em; }
+
+  /* FILTER BAR */
+  .filterbar { display: flex; flex-wrap: wrap; gap: 4px; border: 1px solid #000; padding: 6px; }
+  .chip {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    padding: 4px 8px;
+    font: inherit;
+    font-size: 11px;
+    text-transform: lowercase;
+    cursor: pointer;
+  }
+  .chip:hover { background: #000; color: #fff; }
+  .chip.active { background: #000; color: #fff; }
+
+  /* CARD GRID */
+  .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1080px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+  .card {
+    border: 1px solid #000;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #fff;
+  }
+  .card.hidden { display: none; }
+  .card .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; }
+  .card .ttl-btn {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    text-align: left;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: lowercase;
+    cursor: pointer;
+    color: #000;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .card .ttl-btn:hover .ttl-txt { text-decoration: underline; }
+  .card .ttl-num { font-size: 11px; font-weight: 700; min-width: 18px; }
+  .card .ttl-txt { flex: 1; }
+  .card .caret { font-size: 11px; }
+  .card .one { font-size: 11px; color: #000; padding-left: 24px; }
+  .card .marker {
+    font-size: 10px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 4px 0;
+    margin-top: 2px;
+  }
+  .card .body {
+    display: none;
+    font-size: 11px;
+    line-height: 1.6;
+    border-top: 1px solid #000;
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+  .card.open .body { display: block; }
+  .card.open { background: #fafafa; }
+  .card .body p + p { margin-top: 6px; }
+  .card .body code { background: #000; color: #fff; padding: 0 4px; font-size: 10px; }
+
+  /* READING ORDER LIST */
+  .order { border: 1px solid #000; padding: 0; list-style: none; margin: 0; counter-reset: ord; }
+  .order li {
+    counter-increment: ord;
+    display: flex;
+    gap: 10px;
+    padding: 6px 10px;
+    border-bottom: 1px solid #000;
+    font-size: 11px;
+  }
+  .order li:last-child { border-bottom: 0; }
+  .order li::before {
+    content: counter(ord, decimal-leading-zero);
+    font-weight: 700;
+    min-width: 22px;
+  }
+  .order .note { font-size: 11px; padding: 6px 10px; border-top: 1px solid #000; background: #f4f4f4; }
+
+  /* SOURCE TABLE */
+  .src { border: 1px solid #000; }
+  .src .row {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    border-bottom: 1px solid #000;
+    font-size: 10px;
+  }
+  @media (min-width: 720px) {
+    .src .row { grid-template-columns: 32px 1.4fr 2fr; }
+  }
+  .src .row:last-child { border-bottom: 0; }
+  .src .cell { padding: 6px 8px; border-right: 1px solid #000; word-break: break-word; }
+  .src .cell:last-child { border-right: 0; }
+  .src .num { font-weight: 700; }
+  .src .ttl { font-weight: 700; }
+  .src .path { font-size: 10px; word-break: break-all; }
+  .src .path a { font-size: 10px; }
+
+  /* FOOTER */
+  .footer { display: flex; flex-direction: column; gap: 8px; }
+  .footer .meta { font-size: 11px; }
+  .footer .links { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; }
+
+  /* PRINT */
+  @media print {
+    @page { size: A4 portrait; margin: 14mm; }
+    body { padding: 0; font-size: 11pt; }
+    .grid { grid-template-columns: 1fr 1fr !important; }
+    .filterbar, .footer .links { display: none !important; }
+    .card { page-break-inside: avoid; }
+    .card .body { display: block !important; }
+    .card.hidden { display: flex !important; }
+    .src .row { grid-template-columns: 32px 1fr 1fr !important; }
+  }
+</style>
+</head>
+<body>
+
+<main class="stack">
+
+  <!-- HEADER -->
+  <section class="frame header">
+    <div class="row">
+      <h1>ainative-lab-2 · rules &amp; skills</h1>
+      <a class="back" href="index.html">← back to hub</a>
+    </div>
+    <p class="sub">минимальный набор переносимых правил для personal os · context · guardrail · naming · memory · review · communication</p>
+    <p class="sub">13 карточек · кликни заголовок чтобы развернуть · фильтр по тегу ниже · состояние сохраняется в localStorage</p>
+  </section>
+
+  <!-- FIG.1 CARDS -->
+  <section>
+    <div class="fig"><span class="lbl">fig.1</span> rules and skills · картотека</div>
+    <div class="filterbar" id="filterbar"></div>
+    <div class="grid" id="grid" style="margin-top:10px"></div>
+  </section>
+
+  <!-- FIG.2 READING ORDER -->
+  <section>
+    <div class="fig"><span class="lbl">fig.2</span> reading order</div>
+    <ol class="order">
+      <li><span>один workflow перед архитектурой — без этого остальное не приживётся</span></li>
+      <li><span>context seed — пять слоёв входа: source · signal · ask · output · evidence</span></li>
+      <li><span>agent passport — owner · scope · tools · expiry на каждого агента</span></li>
+      <li><span>guardrails и blast radius — что агент трогает, как откатить</span></li>
+      <li><span>human review как сигнал, не одобрение</span></li>
+      <li><span>evidence over logs — каждое решение со ссылкой на повтор</span></li>
+      <li><span>memory scopes — user · task · project · operational</span></li>
+      <li><span>replay-ability — каждое действие воспроизводимо третьим лицом</span></li>
+      <li><span>naming как операционная ось</span></li>
+      <li><span>template before dashboard — сначала форма, потом визуализация</span></li>
+      <li><span>communication: рамка проектная, без эмоджи, en dash</span></li>
+      <li><span>auto-eval (T/R/C) — каждый ответ проходит самопроверку</span></li>
+      <li><span>context window protocol — ◇ остаток токенов главнее процентов</span></li>
+      <p class="note">если зашёл за конкретным — фильтруй карточки выше по тегу. tag · context закроет 1–2–6, tag · guardrail закроет 3–4–8.</p>
+    </ol>
+  </section>
+
+  <!-- FIG.3 SOURCE MAP -->
+  <section>
+    <div class="fig"><span class="lbl">fig.3</span> source map</div>
+    <div class="src" id="srcmap"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <section class="frame footer">
+    <div class="meta">ainative-lab-2 · rules &amp; skills · v1 · 2026-05-06 · shaper style · b&amp;w · jetbrains mono</div>
+    <div class="links">
+      <a href="index.html">← hub</a>
+      <a href="playground.html">→ context playground</a>
+      <a href="https://learn.aimindset.org/s3" target="_blank" rel="noopener">→ lms s3</a>
+      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">→ dragon deck</a>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  'use strict';
+
+  // ─── DATA ────────────────────────────────────────
+  // 13 cards — synthesized for s3 (ai-native sprint vol2) audience.
+  // each: id, kind, title, one, addresses (tag), body, source.
+  // source path uses obsidian:// URI when in vault, or local doc reference.
+  // OBS: vault root for team = AI mindset {shared}/ai-mindset-2026/
+
+  var V = 'AI mindset {shared}/ai-mindset-2026/';
+
+  // helper: build obsidian URI safely
+  function obs(file){
+    var enc = encodeURIComponent(file);
+    return 'obsidian://open?vault=notes&file=' + enc;
+  }
+
+  var CARDS = [
+    {
+      id: 'one-workflow',
+      kind: 'pattern',
+      title: 'один workflow перед архитектурой',
+      one: 'не строй платформу — выбери первый процесс и закрой его до конца',
+      addresses: 'context',
+      body:
+        'самая частая ошибка ai-native команды — начинать с инфраструктуры (vector db, agent framework, pipelines) до того как описан хотя бы один реальный workflow. ' +
+        'возьми один регулярный процесс — sales follow-up, weekly review, ingest research — пройди его руками с одним llm и одной таблицей. ' +
+        'когда workflow воспроизводим у одного человека пять раз подряд, он становится кандидатом на агента. ' +
+        'до этого любая «архитектура» — преждевременная оптимизация. ' +
+        'правило симметричное: новые скиллы тоже сначала живут как одна команда + один файл, и только потом разрастаются в плагины и subagents.',
+      source: { label: V + 'aim-rules/{rule} {AIM} Alves Architecture – 2026-05-05.md', uri: obs(V + 'aim-rules/{rule} {AIM} Alves Architecture – 2026-05-05.md') }
+    },
+    {
+      id: 'context-seed',
+      kind: 'pattern',
+      title: 'context seed: source · signal · ask · output · evidence',
+      one: 'канонические пять слоёв входа для любого агента или промпта',
+      addresses: 'context',
+      body:
+        'каждый сильный prompt раскладывается на пять слоёв. ' +
+        'source — откуда сырьё (звонок, transcript, pull request, partner card). ' +
+        'signal — что изменилось или что болит, почему сейчас. ' +
+        'ask — конкретное действие, а не «помоги мне». ' +
+        'output — форма ответа (markdown, json, tg message, draft pr). ' +
+        'evidence — какой след подтверждает, что действие случилось (commit, file, message id). ' +
+        'если хотя бы один слой пуст — агент будет галлюцинировать. ' +
+        'эта же сетка лежит в основе context playground: дешёвый способ научить команду писать одинаковые промпты.',
+      source: { label: V + 'inbox/{AIM} {research} Context Engineering Dragon Redesign – 2026-05-06.md', uri: obs(V + 'inbox/{AIM} {research} Context Engineering Dragon Redesign – 2026-05-06.md') }
+    },
+    {
+      id: 'agent-passport',
+      kind: 'rule',
+      title: 'agent passport',
+      one: 'у каждого агента — owner · scope · tools · expiry',
+      addresses: 'guardrail',
+      body:
+        'один автономный скрипт без паспорта = «таинственный демон» через две недели. ' +
+        'owner — человек, который отвечает за поведение и за выкл. ' +
+        'scope — какие данные он трогает и какие нет (одна команда, одна inbox, один календарь). ' +
+        'tools — ровно те mcp/функции/доступы, которые нужны (least privilege). ' +
+        'expiry — дата ревизии: через сколько недель мы перепроверяем, нужен ли агент вообще. ' +
+        'паспорт хранится рядом с самим скиллом или в командном vault, не в чате. ' +
+        'без expiry зоопарк агентов растёт быстрее, чем команда успевает их понимать.',
+      source: { label: V + 'aim-rules/{rule} {AIM} Shared Skills Infrastructure – 2026-04-07.md', uri: obs(V + 'aim-rules/{rule} {AIM} Shared Skills Infrastructure – 2026-04-07.md') }
+    },
+    {
+      id: 'blast-radius',
+      kind: 'rule',
+      title: 'guardrails по blast radius',
+      one: 'агент имеет право на тот объём данных, который ты готов потерять',
+      addresses: 'guardrail',
+      body:
+        'для каждого автономного действия пиши явный blast radius: какие записи, файлы, чаты, аккаунты могут быть затронуты. ' +
+        'после этого закрепи три чек-пункта: rollback (как откатить), approval gate (когда нужен человек), audit trail (где лог). ' +
+        'три простые правила, которые работают: запрещённые каналы — hard blocklist в конфиге; deletes/overwrites — только через подтверждение; внешние сообщения — сначала draft в saved messages, потом отправка. ' +
+        'на старте можно жить без векторных баз, но без guardrails — не стоит ни одного автономного шага.',
+      source: { label: V + 'aim-rules/{rule} {AIM} Shared Skills Infrastructure – 2026-04-07.md', uri: obs(V + 'aim-rules/{rule} {AIM} Shared Skills Infrastructure – 2026-04-07.md') }
+    },
+    {
+      id: 'hitl-signal',
+      kind: 'pattern',
+      title: 'human review как сигнал, не одобрение',
+      one: 'человек в петле существует чтобы учить систему, а не чтобы подписывать каждый ход',
+      addresses: 'review',
+      body:
+        'когда human review воспринимается как «approve / reject» — он быстро превращается в бутылочное горлышко и в формальность. ' +
+        'правильная рамка: review генерирует сигнал, который попадает в evals и в правила. ' +
+        'каждое исправление = строка в feedback memory: что система сделала, что человек поправил, какой паттерн стоит за ошибкой. ' +
+        'через три-пять циклов часть правок уходит в системный prompt, часть — в guardrails, часть — в новый чек-лист. ' +
+        'review без записи — потерянная итерация.',
+      source: { label: 'rules/{rule} GEPA Self-Improving Skills Protocol – 2026-04-06.md', uri: obs('rules/{rule} GEPA Self-Improving Skills Protocol – 2026-04-06.md') }
+    },
+    {
+      id: 'evidence-logs',
+      kind: 'rule',
+      title: 'evidence > logs',
+      one: 'каждое решение хранится не в чате, а в файле с decision · rationale · replay · review-date',
+      addresses: 'memory',
+      body:
+        'логи показывают что произошло, evidence — почему и что с этим делать. ' +
+        'четыре поля минимум: decision (что решили), rationale (на чём основано), replay (как воспроизвести), review-date (когда пересмотрим). ' +
+        'кладём такие записи рядом с проектом или в /inbox/, не в чат и не в slack. ' +
+        'правило выживания на длинной дистанции: через полгода правда о том, почему мы выбрали именно этот стек, должна находиться поиском по vault, а не реконструкцией по переписке.',
+      source: { label: V + 'inbox/', uri: obs(V + 'inbox/') }
+    },
+    {
+      id: 'memory-scopes',
+      kind: 'rule',
+      title: 'memory scopes: user · task · project · operational',
+      one: 'четыре слоя памяти, каждый со своим сроком жизни и своим хозяином',
+      addresses: 'memory',
+      body:
+        'user memory — про человека: роль, предпочтения, контекст. живёт долго, обновляется редко. ' +
+        'task memory — про текущее действие: цели сессии, открытые вопросы. живёт минуты-часы. ' +
+        'project memory — про инициативу: ключевые решения, ссылки, дедлайны. живёт неделями, decay fast. ' +
+        'operational memory — про инфраструктуру: какие mcp подключены, какие hooks висят, что ломалось. живёт пока живёт стек. ' +
+        'не сохраняем то, что и так есть: код, git history, существующие правила. дублирование = деградация.',
+      source: { label: '~/.claude/projects/.../memory/', uri: 'file:///Users/alex/.claude/projects/' }
+    },
+    {
+      id: 'naming',
+      kind: 'rule',
+      title: 'naming как операционная ось',
+      one: 'vault на 11k+ файлов держится не папками, а форматом {project} {type} description – yyyy-mm-dd.md',
+      addresses: 'naming',
+      body:
+        'когда базе больше тысячи документов, файловая иерархия проигрывает поиску. ' +
+        'единый формат имени даёт три суперсилы сразу: фильтрация по типу ({rule}, {research}, {meeting}), сортировка по дате, мгновенный поиск без знания папок. ' +
+        'дата — всегда в конце через en dash. суффикс интерфейса (claude code, cursor) — deprecated. ' +
+        'каждый новый файл — frontmatter с тегами и ссылками. ' +
+        'правило обратной стороны: «no new folders» — группируем тегами и wiki-links, а не директориями. это масштабируется, иерархия — нет.',
+      source: { label: 'rules/{rule} file naming convention for Obsidian.md', uri: obs('rules/{rule} file naming convention for Obsidian.md') }
+    },
+    {
+      id: 'template-before-dashboard',
+      kind: 'pattern',
+      title: 'template before dashboard',
+      one: 'сначала форма артефакта (один .md или один .html), потом визуализация',
+      addresses: 'context',
+      body:
+        'команды любят начинать с дешбордов и графов, до того как стандартизирована единица данных. ' +
+        'результат — красивый интерфейс над несогласованным сырьём. ' +
+        'обратный порядок: template (workshop summary, partner card, weekly review, decision note) → 5–10 заполненных экземпляров руками → потом разговор про вид и автоматизацию. ' +
+        'это работает и для агентов: «сделай мне отчёт» становится возможным только когда на столе уже лежит ответ на вопрос «как выглядит правильный отчёт».',
+      source: { label: V + 'aim-rules/{AIM} {example} Workshop Summary – POS WS02 Reference – 2026-04-03.md', uri: obs(V + 'aim-rules/{AIM} {example} Workshop Summary – POS WS02 Reference – 2026-04-03.md') }
+    },
+    {
+      id: 'replay',
+      kind: 'rule',
+      title: 'replay-ability',
+      one: 'каждое действие должно быть воспроизводимо третьим лицом без тебя',
+      addresses: 'review',
+      body:
+        'если результат можно повторить только потому что он остался в твоей голове — это не workflow, а ритуал. ' +
+        'минимальный replay-pack: команда/скрипт, входной файл, ожидаемый выход, ссылка на образец. ' +
+        'без этого — onboarding нового человека или передача задачи агенту превращается в долгое «давай я расскажу как я это делаю». ' +
+        'тест простой: незнакомый человек открывает evidence note и за 15 минут получает тот же артефакт. если нет — прячь в backlog «разобрать процесс».',
+      source: { label: V + 'aim-rules/{rule} {AIM} Shared Skills Infrastructure – 2026-04-07.md', uri: obs(V + 'aim-rules/{rule} {AIM} Shared Skills Infrastructure – 2026-04-07.md') }
+    },
+    {
+      id: 'communication',
+      kind: 'rule',
+      title: 'communication: рамка проектная, без эмоджи, en dash',
+      one: 'единый стиль внешних и внутренних сообщений: lowercase, конкретно, без корпоративщины',
+      addresses: 'communication',
+      body:
+        'tone of voice — это рантайм бренд. на масштабе одного человека хватает интуиции, на команде нужен явный стандарт. ' +
+        'строчная буква в начале блоков, без эмоджи (исключение — если просит партнёр), en dash вместо тире и дефиса. ' +
+        'главная мысль — в первых 2–3 строках. абзацы по 2–4 строки, между ними пустая строка. ' +
+        'запрещены «в рамках», «хотелось бы», «извините за беспокойство», маркетинговый смолл-ток. ' +
+        'тот же стандарт применяется к промптам и evidence note — и письма команде, и инструкции агенту звучат одинаково узнаваемо.',
+      source: { label: V + 'aim-rules/rules_texts, announces/', uri: obs(V + 'aim-rules/rules_texts, announces/') }
+    },
+    {
+      id: 'auto-eval',
+      kind: 'rule',
+      title: 'auto-eval (t/r/c) каждый ответ',
+      one: 'binary pass/fail по трём осям: text · rules · code',
+      addresses: 'review',
+      body:
+        '«evals are the new prd» — hamel husain. вместо внешнего qa — самопроверка после каждого содержательного ответа. ' +
+        't (text) — структура, ясность, есть ли actionable. ' +
+        'r (rules) — naming, путь, форматирование, стиль. ' +
+        'c (code) — работает ли, минимально ли, идиоматично ли. ' +
+        'binary, никаких шкал 1–5. 3+ fail в одной области подряд — триггер обновления правила в claude.md. ' +
+        'дешёвый механизм, который через 2–3 недели заметно меняет качество и сглаживает разъезд между сессиями.',
+      source: { label: '~/.claude/evals/rubric.md', uri: 'file:///Users/alex/.claude/evals/rubric.md' }
+    },
+    {
+      id: 'ctx-protocol',
+      kind: 'rule',
+      title: 'context window: остаток токенов > проценты',
+      one: 'решения по компакту — по абсолютному ◇XXXk, не по процентам. 1м-окно ломает старое %-правило',
+      addresses: 'context',
+      body:
+        'на 200k окне 70% used = 60k остатка (crit). на 1m окне те же 70% = 300k остатка (ещё warn). ' +
+        'старое %-правило путается, нужно смотреть на абсолютный остаток. ' +
+        'три режима: ok (>400k), warn (150–400k, компактные ответы и заранее планируем handoff), crit (<150k — только handoff, новые задачи не начинаем). ' +
+        'на каждом содержательном ответе — footer с остатком и режимом. ' +
+        'при crit — структурный handoff с полями: что сделано, что осталось, точные пути, prompt для следующей сессии.',
+      source: { label: 'rules/{rule} Claude Context Management Protocol – 2026-02-08 – Claude Code.md', uri: obs('rules/{rule} Claude Context Management Protocol – 2026-02-08 – Claude Code.md') }
+    }
+  ];
+
+  // tags shown in filter bar
+  var TAGS = ['all','context','guardrail','naming','memory','review','communication'];
+
+  // ─── STATE ───────────────────────────────────────
+  var STORE_KEY = 'ainative-lab-2-rules-expanded';
+  var FILTER_KEY = 'ainative-lab-2-rules-filter';
+
+  function loadExpanded(){
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return {};
+      return JSON.parse(raw) || {};
+    } catch(e) { return {}; }
+  }
+  function saveExpanded(state){
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e){}
+  }
+  function loadFilter(){
+    try { return localStorage.getItem(FILTER_KEY) || 'all'; } catch(e) { return 'all'; }
+  }
+  function saveFilter(tag){
+    try { localStorage.setItem(FILTER_KEY, tag); } catch(e){}
+  }
+
+  var expanded = loadExpanded();
+  var activeTag = loadFilter();
+  if (TAGS.indexOf(activeTag) === -1) activeTag = 'all';
+
+  // ─── RENDER ──────────────────────────────────────
+
+  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function renderFilterBar(){
+    var bar = document.getElementById('filterbar');
+    bar.innerHTML = '';
+    TAGS.forEach(function(tag){
+      var count = tag === 'all'
+        ? CARDS.length
+        : CARDS.filter(function(c){ return c.addresses === tag; }).length;
+      var btn = document.createElement('button');
+      btn.className = 'chip' + (activeTag === tag ? ' active' : '');
+      btn.setAttribute('data-tag', tag);
+      btn.textContent = '[ ' + tag + ' · ' + count + ' ]';
+      btn.addEventListener('click', function(){
+        activeTag = tag;
+        saveFilter(activeTag);
+        renderFilterBar();
+        applyFilter();
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  function applyFilter(){
+    var nodes = document.querySelectorAll('[data-card-tag]');
+    for (var i = 0; i < nodes.length; i++){
+      var n = nodes[i];
+      var t = n.getAttribute('data-card-tag');
+      var hide = activeTag !== 'all' && t !== activeTag;
+      if (hide) n.classList.add('hidden'); else n.classList.remove('hidden');
+    }
+  }
+
+  function renderGrid(){
+    var grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    CARDS.forEach(function(card, idx){
+      var el = document.createElement('article');
+      el.className = 'card' + (expanded[card.id] ? ' open' : '');
+      el.setAttribute('data-card-tag', card.addresses);
+      el.setAttribute('data-card-id', card.id);
+
+      var eyebrow = document.createElement('div');
+      eyebrow.className = 'eyebrow';
+      eyebrow.textContent = card.kind;
+      el.appendChild(eyebrow);
+
+      var btn = document.createElement('button');
+      btn.className = 'ttl-btn';
+      btn.setAttribute('aria-expanded', expanded[card.id] ? 'true' : 'false');
+      btn.setAttribute('data-card-toggle', card.id);
+      btn.innerHTML =
+        '<span class="ttl-num">' + pad2(idx + 1) + '</span>' +
+        '<span class="ttl-txt">' + card.title + '</span>' +
+        '<span class="caret">' + (expanded[card.id] ? '[−]' : '[+]') + '</span>';
+      btn.addEventListener('click', function(){
+        toggle(card.id);
+      });
+      el.appendChild(btn);
+
+      var one = document.createElement('div');
+      one.className = 'one';
+      one.textContent = card.one;
+      el.appendChild(one);
+
+      var marker = document.createElement('div');
+      marker.className = 'marker';
+      marker.textContent = 'addresses · ' + card.addresses;
+      el.appendChild(marker);
+
+      var body = document.createElement('div');
+      body.className = 'body';
+      body.innerHTML = '<p>' + escapeHtml(card.body) + '</p>';
+      el.appendChild(body);
+
+      grid.appendChild(el);
+    });
+    applyFilter();
+  }
+
+  function toggle(id){
+    expanded[id] = !expanded[id];
+    saveExpanded(expanded);
+    var card = document.querySelector('[data-card-id="' + cssEscape(id) + '"]');
+    if (!card) return;
+    if (expanded[id]) card.classList.add('open'); else card.classList.remove('open');
+    var btn = card.querySelector('[data-card-toggle]');
+    if (btn) {
+      btn.setAttribute('aria-expanded', expanded[id] ? 'true' : 'false');
+      var caret = btn.querySelector('.caret');
+      if (caret) caret.textContent = expanded[id] ? '[−]' : '[+]';
+    }
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function cssEscape(s){
+    if (window.CSS && CSS.escape) return CSS.escape(s);
+    return String(s).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+  }
+
+  function renderSourceMap(){
+    var map = document.getElementById('srcmap');
+    map.innerHTML = '';
+    CARDS.forEach(function(card, idx){
+      var row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML =
+        '<div class="cell num">' + pad2(idx + 1) + '</div>' +
+        '<div class="cell ttl">' + card.title + '</div>' +
+        '<div class="cell path"><a href="' + card.source.uri + '">' + escapeHtml(card.source.label) + '</a></div>';
+      map.appendChild(row);
+    });
+  }
+
+  // ─── BOOT ────────────────────────────────────────
+  renderFilterBar();
+  renderGrid();
+  renderSourceMap();
+
+})();
+</script>
+
+</body>
+</html>

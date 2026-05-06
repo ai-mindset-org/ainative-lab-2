@@ -1,0 +1,25 @@
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=300, must-revalidate"
+
+[[redirects]]
+  from = "/lab"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/play"
+  to = "/playground.html"
+  status = 301
