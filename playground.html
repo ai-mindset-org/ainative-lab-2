@@ -472,6 +472,19 @@ body { padding-top: 52px; }
 .or-status{font-size:10px; color:var(--ink-dim); letter-spacing:0.10em; flex:1; min-width:200px}
 .or-status.ok{color:var(--green)}
 .or-status.err{color:var(--red)}
+.or-mode{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--font-code); font-size:10px;
+  letter-spacing:0.06em;
+  padding:3px 8px;
+  border:1px solid var(--line);
+  color:var(--ink-dim);
+  border-radius:0;
+}
+.or-mode.server{border-color:rgba(228,181,75,0.45); color:var(--amber, #e4b54b)}
+.or-mode.browser{border-color:rgba(92,218,204,0.45); color:var(--teal)}
+.or-mode .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor}
+.or-fallback-hint{font-size:10px; color:var(--ink-dim); letter-spacing:0.06em; margin-top:6px; line-height:1.5}
 .or-result{
   margin-top:14px;
   border:1px solid var(--line);
@@ -743,8 +756,9 @@ review обновляет rule, memory или eval. без этого цикла
     <div class="or-grid row">
       <div class="or-field">
         <label for="or-key">openrouter api key</label>
-        <input type="password" id="or-key" placeholder="sk-or-v1-…" autocomplete="off" spellcheck="false">
+        <input type="password" id="or-key" placeholder="sk-or-v1-… (необязательно)" autocomplete="off" spellcheck="false">
         <div class="hint">ключ сохраняется только в этом браузере (localStorage). ничего не уходит на наш сервер.</div>
+        <div class="or-fallback-hint">без ключа: используется server-side через netlify functions, лимит 4000 токенов.</div>
       </div>
       <div class="or-field">
         <label for="or-model">модель</label>
@@ -760,9 +774,10 @@ review обновляет rule, memory или eval. без этого цикла
     </div>
 
     <div class="or-actions">
-      <button class="btn primary" id="btn-or-run" disabled>нет ключа</button>
+      <button class="btn primary" id="btn-or-run">прогнать через модель</button>
       <button class="btn" id="btn-or-clear-result">скрыть ответ</button>
-      <span class="or-status" id="or-status">введи ключ → кнопка активируется</span>
+      <span class="or-mode" id="or-mode" title="источник ключа"><span class="dot"></span><span id="or-mode-label">server-side</span></span>
+      <span class="or-status" id="or-status">готов · server-side fallback активен</span>
     </div>
 
     <div class="or-result" id="or-result">
@@ -1147,6 +1162,8 @@ review обновляет rule, memory или eval. без этого цикла
   var orModel = document.getElementById('or-model');
   var orRun = document.getElementById('btn-or-run');
   var orStatus = document.getElementById('or-status');
+  var orMode = document.getElementById('or-mode');
+  var orModeLabel = document.getElementById('or-mode-label');
   var orResult = document.getElementById('or-result');
   var orResultBody = document.getElementById('or-result-body');
   var orResultModel = document.getElementById('or-result-model');
@@ -1161,19 +1178,28 @@ review обновляет rule, memory или eval. без этого цикла
     if (savedModel) orModel.value = savedModel;
   } catch(e){}
 
+  function getMode(){
+    var k = (orKey.value || '').trim();
+    return (k && k.indexOf('sk-or-') === 0) ? 'browser' : 'server';
+  }
+
   function refreshOrButton(){
-    var hasKey = (orKey.value || '').trim().length > 10;
-    if (!hasKey) {
-      orRun.disabled = true;
-      orRun.textContent = 'нет ключа';
-      orStatus.textContent = 'введи ключ → кнопка активируется';
-      orStatus.classList.remove('ok','err');
-    } else {
-      orRun.disabled = false;
-      orRun.textContent = 'прогнать через модель';
-      orStatus.textContent = 'ключ принят. ничего не уходит на наш сервер.';
+    var mode = getMode();
+    orRun.disabled = false;
+    orRun.textContent = 'прогнать через модель';
+    if (mode === 'browser') {
+      orMode.classList.remove('server');
+      orMode.classList.add('browser');
+      orModeLabel.textContent = 'browser key';
+      orStatus.textContent = 'ключ принят · напрямую к openrouter';
       orStatus.classList.remove('err');
       orStatus.classList.add('ok');
+    } else {
+      orMode.classList.remove('browser');
+      orMode.classList.add('server');
+      orModeLabel.textContent = 'server-side';
+      orStatus.textContent = 'готов · server-side через netlify (лимит 4000 токенов)';
+      orStatus.classList.remove('err','ok');
     }
   }
   refreshOrButton();
@@ -1191,21 +1217,9 @@ review обновляет rule, memory или eval. без этого цикла
     orResultBody.textContent = '';
   });
 
-  orRun.addEventListener('click', function(){
-    var key = (orKey.value || '').trim();
-    if (!key) { showToast('нет ключа'); return; }
-    var model = orModel.value;
-    var prompt = preview.dataset.plain || '';
-    if (!prompt.trim()) { showToast('сначала заполни хотя бы одно поле'); return; }
-
-    orRun.disabled = true;
-    orRun.textContent = 'отправляю…';
-    orStatus.textContent = 'модель: ' + model + ' · ' + prompt.length.toLocaleString('ru-RU') + ' символов промпта';
-    orStatus.classList.remove('err','ok');
-    orResult.classList.remove('show');
-
-    var t0 = Date.now();
-    fetch('https://openrouter.ai/api/v1/chat/completions', {
+  // Run via direct OpenRouter (user key)
+  function runWithUserKey(prompt, model, key){
+    return fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + key,
@@ -1218,9 +1232,72 @@ review обновляет rule, memory или eval. без этого цикла
         messages: [{ role: 'user', content: prompt }]
       })
     }).then(function(res){
-      return res.json().then(function(json){ return { status: res.status, json: json }; });
-    }).then(function(r){
+      return res.json().then(function(json){ return { status: res.status, json: json, mode: 'browser' }; });
+    });
+  }
+
+  // Run via server-side proxy (Netlify Function)
+  function runWithServerKey(prompt, model){
+    return fetch('/api/openrouter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompt }],
+        model: model,
+        max_tokens: 1500
+      })
+    }).then(function(res){
+      return res.json().then(function(json){ return { status: res.status, json: json, mode: 'server' }; });
+    });
+  }
+
+  orRun.addEventListener('click', function(){
+    var key = (orKey.value || '').trim();
+    var hasUserKey = key && key.indexOf('sk-or-') === 0;
+    var model = orModel.value;
+    var prompt = preview.dataset.plain || '';
+    if (!prompt.trim()) { showToast('сначала заполни хотя бы одно поле'); return; }
+
+    var mode = hasUserKey ? 'browser' : 'server';
+    orRun.disabled = true;
+    orRun.textContent = 'отправляю…';
+    orStatus.textContent = 'модель: ' + model + ' · ' + prompt.length.toLocaleString('ru-RU') + ' символов · '
+                         + (mode === 'browser' ? 'browser key' : 'server-side');
+    orStatus.classList.remove('err','ok');
+    orResult.classList.remove('show');
+
+    var t0 = Date.now();
+    var pending = hasUserKey ? runWithUserKey(prompt, model, key) : runWithServerKey(prompt, model);
+
+    pending.then(function(r){
       var dt = ((Date.now() - t0) / 1000).toFixed(1) + 's';
+
+      // server-mode shape: { ok, content, model, usage, error? }
+      if (r.mode === 'server') {
+        if (!r.json || r.json.ok !== true) {
+          var err = (r.json && r.json.error) || ('http ' + r.status);
+          var label = err;
+          if (err === 'no_server_key') label = 'server-side ключ не настроен · введи свой sk-or-… выше';
+          else if (err === 'auth_failed') label = 'server-side ключ недействителен';
+          else if (err === 'rate_limited') label = 'лимит на server-side · попробуй позже';
+          else if (err === 'no_credits') label = 'нет кредитов на server-side · введи свой ключ';
+          orStatus.textContent = 'ошибка: ' + label;
+          orStatus.classList.add('err');
+          return;
+        }
+        orResultBody.textContent = r.json.content || '— пустой ответ —';
+        orResultModel.textContent = (r.json.model || model) + ' · server-side';
+        var usage = r.json.usage;
+        var usageStr = usage ? ('in ' + (usage.prompt_tokens || 0) + ' / out ' + (usage.completion_tokens || 0) + ' · ' + dt) : dt;
+        orResultMeta.textContent = usageStr;
+        orResult.classList.add('show');
+        orStatus.textContent = 'готово · server-side · ' + dt;
+        orStatus.classList.remove('err');
+        orStatus.classList.add('ok');
+        return;
+      }
+
+      // browser-mode shape: raw OpenRouter response
       if (r.status === 401) {
         orStatus.textContent = 'неверный ключ';
         orStatus.classList.add('err');
@@ -1239,12 +1316,12 @@ review обновляет rule, memory или eval. без этого цикла
           content = JSON.stringify(r.json, null, 2);
         }
         orResultBody.textContent = content;
-        orResultModel.textContent = (r.json && r.json.model) || model;
-        var usage = r.json && r.json.usage;
-        var usageStr = usage ? ('in ' + (usage.prompt_tokens || 0) + ' / out ' + (usage.completion_tokens || 0) + ' · ' + dt) : dt;
-        orResultMeta.textContent = usageStr;
+        orResultModel.textContent = ((r.json && r.json.model) || model) + ' · browser key';
+        var usage2 = r.json && r.json.usage;
+        var usageStr2 = usage2 ? ('in ' + (usage2.prompt_tokens || 0) + ' / out ' + (usage2.completion_tokens || 0) + ' · ' + dt) : dt;
+        orResultMeta.textContent = usageStr2;
         orResult.classList.add('show');
-        orStatus.textContent = 'готово · ' + dt;
+        orStatus.textContent = 'готово · browser key · ' + dt;
         orStatus.classList.remove('err');
         orStatus.classList.add('ok');
       }
@@ -1252,7 +1329,9 @@ review обновляет rule, memory или eval. без этого цикла
       orStatus.textContent = 'ошибка сети: ' + (err && err.message ? err.message : err);
       orStatus.classList.add('err');
     }).then(function(){
-      refreshOrButton();
+      // restore button (don't lose ok/err status that was just set)
+      orRun.disabled = false;
+      orRun.textContent = 'прогнать через модель';
     });
   });
 

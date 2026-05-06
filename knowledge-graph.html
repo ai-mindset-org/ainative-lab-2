@@ -315,6 +315,18 @@
   .or-panel .status .ok{color:var(--green)}
   .or-panel .status .err{color:var(--red)}
   .or-panel.collapsed .or-body{display:none}
+  .or-mode-badge{
+    display:inline-flex; align-items:center; gap:5px;
+    margin-top:6px;
+    font-family:var(--font-code); font-size:9.5px;
+    letter-spacing:0.06em;
+    padding:2px 7px;
+    border:1px solid var(--line);
+    color:var(--ink-dim);
+  }
+  .or-mode-badge.server{border-color:rgba(228,181,75,0.45); color:#e4b54b}
+  .or-mode-badge.browser{border-color:rgba(92,218,204,0.45); color:var(--teal)}
+  .or-mode-badge .dot{display:inline-block; width:5px; height:5px; border-radius:50%; background:currentColor}
 
   /* OpenRouter modal */
   .modal-bg{
@@ -564,7 +576,7 @@
         <button id="orToggle" aria-label="collapse">−</button>
       </div>
       <div class="or-body">
-        <input id="orKey" type="password" placeholder="api key (sk-or-v1-...)" autocomplete="off" spellcheck="false">
+        <input id="orKey" type="password" placeholder="api key (sk-or-v1-…) необязательно" autocomplete="off" spellcheck="false">
         <select id="orModel">
           <option value="anthropic/claude-haiku-4.5">anthropic/claude-haiku-4.5</option>
           <option value="anthropic/claude-sonnet-4.5">anthropic/claude-sonnet-4.5</option>
@@ -572,8 +584,9 @@
           <option value="meta-llama/llama-3.3-70b-instruct">llama-3.3-70b</option>
           <option value="google/gemini-2.0-flash-001">gemini-2.0-flash</option>
         </select>
-        <button id="orAsk" class="btn" disabled>[ ask the graph ]</button>
-        <div class="status" id="orStatus">ключ только в localStorage этого браузера. граф в каждом запросе целиком — расход токенов ~3-5к</div>
+        <button id="orAsk" class="btn">[ ask the graph ]</button>
+        <span class="or-mode-badge" id="orModeBadge"><span class="dot"></span><span id="orModeLabel">server-side</span></span>
+        <div class="status" id="orStatus">без ключа — server-side через netlify (лимит 4000 токенов). свой ключ → напрямую к openrouter.</div>
       </div>
     </div>
 
@@ -1165,10 +1178,27 @@
     orToggleEl.textContent = '+';
   }
 
+  const orModeBadge = document.getElementById('orModeBadge');
+  const orModeLabel = document.getElementById('orModeLabel');
+
+  function getMode(){
+    const k = (orKeyEl.value || '').trim();
+    return (k && k.indexOf('sk-or-') === 0) ? 'browser' : 'server';
+  }
+
   function refreshAskButton(){
-    const has = orKeyEl.value.trim().length > 10;
-    orAskEl.disabled = !has;
-    orAskEl.textContent = has ? '[ ask the graph ]' : '[ нет ключа ]';
+    const mode = getMode();
+    orAskEl.disabled = false;
+    orAskEl.textContent = '[ ask the graph ]';
+    if (mode === 'browser') {
+      orModeBadge.classList.remove('server');
+      orModeBadge.classList.add('browser');
+      orModeLabel.textContent = 'browser key';
+    } else {
+      orModeBadge.classList.remove('browser');
+      orModeBadge.classList.add('server');
+      orModeLabel.textContent = 'server-side';
+    }
   }
   refreshAskButton();
 
@@ -1231,47 +1261,75 @@
     const q = modalQ.value.trim();
     if(!q){ modalQ.focus(); return; }
     const key = orKeyEl.value.trim();
-    if(!key){ showResp('нет ключа openrouter в панели справа.', 'err'); return; }
+    const hasUserKey = key && key.indexOf('sk-or-') === 0;
     const model = orModelEl.value;
 
     modalSubmit.disabled = true;
     modalSubmit.textContent = '…';
-    showResp('запрос → openrouter…', 'loading');
+    showResp(hasUserKey ? 'запрос → openrouter (browser key)…' : 'запрос → openrouter (server-side)…', 'loading');
 
     const sys = "ты — explainer для knowledge graph s3 (ai-native sprint vol2). у тебя есть JSON графа: {nodes: [...], edges: [...]}. отвечай на русском, lowercase, en dash, без эмоджи. формат: 3-5 коротких bullets.";
     const graph = JSON.stringify(buildGraphJSON());
     const userMsg = `вопрос: ${q}\n\nграф (json):\n${graph}`;
+    const messages = [
+      {role:'system', content: sys},
+      {role:'user',   content: userMsg}
+    ];
 
     try{
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer '+key,
-          'HTTP-Referer':'https://ainative-lab-2.netlify.app/',
-          'X-Title':'ainative-lab-2 knowledge-graph'
-        },
-        body: JSON.stringify({
-          model: model,
-          messages: [
-            {role:'system', content: sys},
-            {role:'user',   content: userMsg}
-          ]
-        })
-      });
-      if(!res.ok){
-        let label = 'ошибка';
-        if(res.status === 401) label = 'неверный ключ';
-        else if(res.status === 429) label = 'лимит';
-        else if(res.status === 402) label = 'нет кредитов';
-        let body = '';
-        try{ body = await res.text(); body = body.slice(0,200); }catch(e){}
-        showResp(`${label} (${res.status})${body? '\n\n'+body : ''}`, 'err');
-        return;
+      if (hasUserKey) {
+        // Direct call — preserves original behavior
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Authorization':'Bearer '+key,
+            'HTTP-Referer':'https://ainative-lab-2.netlify.app/',
+            'X-Title':'ainative-lab-2 knowledge-graph'
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: messages
+          })
+        });
+        if(!res.ok){
+          let label = 'ошибка';
+          if(res.status === 401) label = 'неверный ключ';
+          else if(res.status === 429) label = 'лимит';
+          else if(res.status === 402) label = 'нет кредитов';
+          let body = '';
+          try{ body = await res.text(); body = body.slice(0,200); }catch(e){}
+          showResp(`${label} (${res.status})${body? '\n\n'+body : ''}`, 'err');
+          return;
+        }
+        const j = await res.json();
+        const txt = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content || '— пустой ответ —';
+        showResp(txt + '\n\n— browser key —', 'ok');
+      } else {
+        // Server-side fallback via Netlify Function
+        const res = await fetch('/api/openrouter', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({
+            messages: messages,
+            model: model,
+            max_tokens: 1500
+          })
+        });
+        let j = null;
+        try { j = await res.json(); } catch(e) { j = null; }
+        if (!j || j.ok !== true) {
+          const err = (j && j.error) || ('http ' + res.status);
+          let label = err;
+          if (err === 'no_server_key') label = 'server-side ключ не настроен · введи свой sk-or-… в панели';
+          else if (err === 'auth_failed') label = 'server-side ключ недействителен';
+          else if (err === 'rate_limited') label = 'лимит на server-side · попробуй позже';
+          else if (err === 'no_credits') label = 'нет кредитов на server-side · введи свой ключ';
+          showResp(label, 'err');
+          return;
+        }
+        showResp((j.content || '— пустой ответ —') + '\n\n— server-side —', 'ok');
       }
-      const j = await res.json();
-      const txt = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content || '— пустой ответ —';
-      showResp(txt, 'ok');
     } catch(err){
       showResp('ошибка сети: ' + (err && err.message ? err.message : err), 'err');
     } finally {
