@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>knowledge graph · ainative-lab-2 · s3</title>
-<meta name="description" content="knowledge graph s3 — speakers, weeks, themes, artifacts, pages. minimal harness graph.">
+<meta name="description" content="knowledge graph s3 — speakers, weeks, themes, artifacts, pages. minimal harness graph + ask-the-graph via openrouter.">
 <meta property="og:title" content="knowledge graph · s3">
-<meta property="og:description" content="~40 узлов, 6 категорий, минимальный harness-граф ai-native sprint vol2.">
+<meta property="og:description" content="~36 узлов, 6 категорий, минимальный harness-граф ai-native sprint vol2 + ask the graph через openrouter.">
 <meta property="og:type" content="website">
 <link rel="icon" href="./assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,25 +56,127 @@
   a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
   a:hover{color:var(--teal);border-color:var(--teal)}
 
+  /* === unified nav === */
+  .ai-nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 90;
+    height: 52px; padding: 0 22px;
+    display: flex; align-items: center; gap: 18px;
+    background: rgba(7,9,13,0.86); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .ai-nav-brand {
+    display: flex; align-items: center; gap: 9px;
+    text-decoration: none; color: var(--ink);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .ai-nav-brand img {
+    height: 22px; width: auto;
+    filter: invert(1) brightness(1.2);
+  }
+  .ai-nav-brand span { color: var(--ink); }
+  .ai-nav-brand .ai-nav-tag {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--ink-dim);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+  .ai-nav-links {
+    flex: 1; display: flex; gap: 4px; align-items: center;
+    margin-left: 12px;
+  }
+  .ai-nav-links a {
+    text-decoration: none; color: var(--ink-dim);
+    padding: 6px 11px; border: 1px solid transparent; border-radius: 6px;
+    transition: all 0.16s ease;
+    font-size: 12px;
+  }
+  .ai-nav-links a:hover {
+    color: var(--teal);
+    border-color: var(--line);
+    background: rgba(92,218,204,0.06);
+  }
+  .ai-nav-links a.ext::after { content: " ↗"; opacity: 0.5; }
+  body[data-route="hub"] .ai-nav-links a[data-route="hub"],
+  body[data-route="play"] .ai-nav-links a[data-route="play"],
+  body[data-route="rules"] .ai-nav-links a[data-route="rules"],
+  body[data-route="naming"] .ai-nav-links a[data-route="naming"],
+  body[data-route="graph"] .ai-nav-links a[data-route="graph"] {
+    color: var(--teal);
+    border-color: var(--line-strong);
+    background: rgba(92,218,204,0.08);
+  }
+  .ai-nav-burger {
+    display: none;
+    background: none; border: 1px solid var(--line);
+    color: var(--ink); font: 18px var(--font-body);
+    width: 34px; height: 34px; border-radius: 6px; cursor: pointer;
+  }
+  @media (max-width: 760px) {
+    .ai-nav { padding: 0 14px; }
+    .ai-nav-links {
+      position: absolute; top: 52px; left: 0; right: 0;
+      flex-direction: column; gap: 0; align-items: stretch;
+      background: rgba(7,9,13,0.96); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      padding: 8px;
+      display: none;
+    }
+    .ai-nav-links a { padding: 12px 14px; border-radius: 0; }
+    .ai-nav.open .ai-nav-links { display: flex; }
+    .ai-nav-burger { display: grid; place-items: center; }
+    .ai-nav-brand .ai-nav-tag { display: none; }
+  }
+  body { padding-top: 52px; }
+  @media print {
+    .ai-nav, .ai-foot { display: none; }
+    body { padding-top: 0; }
+  }
+  /* === unified footer === */
+  .ai-foot {
+    margin-top: 16px;
+    padding: 22px;
+    border-top: 1px solid var(--line);
+    display: grid; gap: 6px;
+    color: var(--ink-dim);
+    font-family: var(--font-body);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .ai-foot-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; }
+  .ai-foot a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--line); }
+  .ai-foot a:hover { color: var(--teal); border-bottom-color: var(--line-strong); }
+  /* === role chip === */
+  .ai-role {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--teal);
+    font-family: var(--font-body);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
   .app{
     position:relative;z-index:1;
     display:grid;
-    grid-template-rows:auto auto auto 1fr auto auto;
-    height:100vh;
+    grid-template-rows:auto auto auto auto auto;
     max-width:1400px;
     margin:0 auto;
-    padding:14px 18px 10px;
+    padding:14px 18px 0;
     gap:10px;
   }
-
-  /* nav */
-  .nav{display:flex;align-items:center;justify-content:space-between;gap:14px}
-  .nav .left{display:flex;align-items:center;gap:10px}
-  .nav .left img{height:22px;filter:invert(1) brightness(1.2);opacity:.92}
-  .nav .left .id{font-family:var(--font-body);font-size:10px;color:var(--ink-dim);letter-spacing:.08em;text-transform:uppercase}
-  .nav .right{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-body);font-size:11px}
-  .nav .right a{color:var(--ink-soft);border-bottom:none}
-  .nav .right a:hover{color:var(--teal)}
 
   /* header band */
   .header{
@@ -88,10 +190,6 @@
   .header::before{
     content:'';position:absolute;inset:-1px;border:1px solid var(--line-strong);
     border-radius:1px;opacity:.4;pointer-events:none;
-  }
-  .header .eyebrow{
-    font-family:var(--font-body);font-size:10px;color:var(--teal);
-    letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px;
   }
   .header h1{
     font-family:var(--font-heading);
@@ -126,20 +224,6 @@
   .chip.on{color:#07090d}
   .chip.off{opacity:.45}
   .chip.off .ct{color:var(--ink-dim)}
-  .search{
-    margin-left:auto;
-    background:transparent;
-    border:1px solid var(--line);
-    color:var(--ink);
-    padding:5px 10px;
-    font-family:var(--font-code);
-    font-size:11px;
-    width:220px;
-    outline:none;
-    text-transform:lowercase;
-  }
-  .search:focus{border-color:var(--teal)}
-  .search::placeholder{color:var(--ink-dim)}
 
   /* canvas area */
   .canvas-wrap{
@@ -147,7 +231,8 @@
     border:1px solid var(--line);
     background:var(--bg-2);
     overflow:hidden;
-    min-height:380px;
+    height:65vh;
+    min-height:420px;
   }
   #graph{position:absolute;inset:0}
   .canvas-corner{
@@ -165,6 +250,164 @@
     pointer-events:none;
   }
   .canvas-meta .v{color:var(--teal)}
+
+  /* OpenRouter floating panel */
+  .or-panel{
+    position:absolute;top:14px;right:14px;
+    width:300px;
+    border:1px solid var(--line-strong);
+    background:rgba(7,9,13,0.78);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    padding:10px 12px;
+    z-index:8;
+    font-family:var(--font-code);
+    font-size:11px;
+  }
+  .or-panel .h{
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--font-body);font-size:9.5px;
+    color:var(--teal);letter-spacing:.16em;text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .or-panel .h button{
+    background:transparent;border:1px solid var(--line);
+    color:var(--ink-dim);font-family:var(--font-code);
+    font-size:10px;padding:1px 6px;cursor:pointer;
+  }
+  .or-panel .h button:hover{color:var(--teal);border-color:var(--teal)}
+  .or-panel input, .or-panel select{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:5px 8px;
+    font-family:var(--font-code);
+    font-size:11px;
+    margin-bottom:6px;
+    outline:none;
+    text-transform:lowercase;
+  }
+  .or-panel input:focus, .or-panel select:focus{border-color:var(--teal)}
+  .or-panel input::placeholder{color:var(--ink-dim)}
+  .or-panel select option{background:#0b0f15;color:var(--ink)}
+  .or-panel .btn{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--teal);
+    color:var(--teal);
+    padding:7px 10px;
+    font-family:var(--font-code);
+    font-size:11px;
+    cursor:pointer;
+    text-align:center;
+    text-transform:lowercase;
+    transition:all .15s ease;
+    letter-spacing:.04em;
+  }
+  .or-panel .btn:hover:not(:disabled){background:var(--teal);color:#07090d}
+  .or-panel .btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--line)}
+  .or-panel .status{
+    margin-top:6px;
+    font-family:var(--font-body);font-size:9.5px;
+    color:var(--ink-dim);line-height:1.45;
+  }
+  .or-panel .status .ok{color:var(--green)}
+  .or-panel .status .err{color:var(--red)}
+  .or-panel.collapsed .or-body{display:none}
+
+  /* OpenRouter modal */
+  .modal-bg{
+    position:fixed;inset:0;z-index:200;
+    background:rgba(7,9,13,0.78);
+    backdrop-filter:blur(6px);
+    display:none;
+    align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .modal-bg.open{display:flex}
+  .modal{
+    width:100%;max-width:680px;
+    border:1px solid var(--line-strong);
+    background:var(--panel-strong);
+    padding:18px 20px;
+    font-family:var(--font-code);
+    position:relative;
+    max-height:90vh;
+    overflow-y:auto;
+  }
+  .modal h3{
+    font-family:var(--font-heading);font-weight:500;font-size:18px;
+    color:var(--ink);margin-bottom:4px;
+  }
+  .modal .modal-sub{
+    font-family:var(--font-body);font-size:10px;
+    color:var(--ink-dim);letter-spacing:.12em;text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .modal .modal-x{
+    position:absolute;top:12px;right:14px;
+    background:transparent;border:1px solid var(--line);
+    color:var(--ink-soft);width:26px;height:26px;
+    cursor:pointer;font-family:var(--font-code);font-size:13px;
+  }
+  .modal .modal-x:hover{border-color:var(--teal);color:var(--teal)}
+  .modal textarea{
+    width:100%;min-height:100px;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:10px 12px;
+    font-family:var(--font-code);
+    font-size:12px;
+    line-height:1.5;
+    resize:vertical;
+    outline:none;
+    text-transform:lowercase;
+    margin-bottom:10px;
+  }
+  .modal textarea:focus{border-color:var(--teal)}
+  .modal .examples{
+    display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;
+  }
+  .modal .ex{
+    display:inline-block;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    padding:3px 8px;
+    font-size:10px;
+    cursor:pointer;
+    transition:all .15s ease;
+    font-family:var(--font-body);
+  }
+  .modal .ex:hover{border-color:var(--teal);color:var(--teal)}
+  .modal .actions{display:flex;gap:8px;align-items:center;justify-content:flex-end}
+  .modal .actions .info{font-family:var(--font-body);font-size:10px;color:var(--ink-dim);margin-right:auto}
+  .modal .btn{
+    background:transparent;
+    border:1px solid var(--teal);
+    color:var(--teal);
+    padding:8px 16px;
+    font-family:var(--font-code);
+    font-size:11px;
+    cursor:pointer;
+    text-transform:lowercase;
+    transition:all .15s ease;
+  }
+  .modal .btn:hover:not(:disabled){background:var(--teal);color:#07090d}
+  .modal .btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--line);color:var(--ink-dim)}
+  .modal .btn.alt{border-color:var(--line);color:var(--ink-soft)}
+  .modal .btn.alt:hover{border-color:var(--ink-soft);background:transparent;color:var(--ink)}
+  .modal .response{
+    margin-top:14px;
+    border-top:1px dashed var(--line);
+    padding-top:14px;
+    font-size:12px;line-height:1.6;color:var(--ink-soft);
+    white-space:pre-wrap;word-wrap:break-word;
+    min-height:30px;
+  }
+  .modal .response.err{color:var(--red)}
+  .modal .response.loading{color:var(--ink-dim);font-style:italic}
 
   /* side panel */
   .side{
@@ -204,7 +447,7 @@
     margin-bottom:8px;
     font-family:var(--font-body);
   }
-  .side h2{
+  .side h3{
     font-family:var(--font-heading);
     font-weight:500;font-size:18px;
     color:var(--ink);
@@ -213,11 +456,25 @@
   }
   .side .id{font-size:10px;color:var(--ink-dim);font-family:var(--font-body);letter-spacing:.08em;margin-bottom:10px}
   .side .desc{font-size:11px;color:var(--ink-soft);line-height:1.6;margin-bottom:14px;padding:8px 0;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
-  .side .conn-h{
+  .side .extra-h{
     font-family:var(--font-body);font-size:9.5px;
     color:var(--ink-dim);letter-spacing:.14em;text-transform:uppercase;
     margin:14px 0 6px;
   }
+  .side .meta-row{
+    display:flex;justify-content:space-between;
+    font-size:11px;color:var(--ink-soft);
+    padding:4px 0;border-bottom:1px dashed var(--line);
+  }
+  .side .meta-row .k{color:var(--ink-dim);font-family:var(--font-body);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+  .side .extra-link{
+    display:inline-block;margin-top:10px;
+    font-size:11px;color:var(--teal);
+    border-bottom:1px solid var(--line-strong);
+    cursor:pointer;
+  }
+  .side .extra-link:hover{color:var(--ink);border-color:var(--teal)}
+  .conn-list{margin-top:6px}
   .conn{
     display:flex;align-items:center;gap:8px;
     padding:5px 8px;cursor:pointer;
@@ -227,8 +484,6 @@
   }
   .conn:hover{border-color:var(--line);background:rgba(92,218,204,.04);color:var(--ink)}
   .conn .sw{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-  .conn .arr{font-size:10px;color:var(--ink-dim);width:14px}
-  .conn .rel{margin-left:auto;font-size:9.5px;color:var(--ink-dim);font-family:var(--font-body);letter-spacing:.08em}
 
   /* legend */
   .legend{
@@ -246,50 +501,51 @@
   .legend .lr .sw{width:10px;height:10px;border-radius:50%;flex-shrink:0}
   .legend .lr .ct{margin-left:auto;color:var(--ink-dim);font-size:10px;font-family:var(--font-body)}
 
-  /* footer */
-  .foot{
-    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
-    font-family:var(--font-body);font-size:10px;
-    color:var(--ink-dim);
-    padding-top:6px;border-top:1px solid var(--line);
+  @media (max-width:760px){
+    .or-panel{width:260px;font-size:10.5px}
   }
-  .foot a{color:var(--ink-dim);border-bottom:none}
-  .foot a:hover{color:var(--teal)}
-  .foot .links{display:flex;gap:14px;flex-wrap:wrap}
-  .foot .v{letter-spacing:.1em;text-transform:uppercase}
 </style>
 </head>
-<body>
+<body data-route="graph">
+
+<header class="ai-nav" id="aiNav">
+  <a class="ai-nav-brand" href="./index.html">
+    <img src="./assets/aim-logo.png" alt="ai mindset" />
+    <span>ainative-lab-2</span>
+    <span class="ai-nav-tag">s3</span>
+  </a>
+  <nav class="ai-nav-links">
+    <a href="./index.html" data-route="hub">hub</a>
+    <a href="./playground.html" data-route="play">playground</a>
+    <a href="./rules.html" data-route="rules">rules</a>
+    <a href="./naming.html" data-route="naming">naming</a>
+    <a href="./knowledge-graph.html" data-route="graph">graph</a>
+    <a href="https://ainative-lab-deck.netlify.app/" class="ext" target="_blank" rel="noreferrer">deck</a>
+  </nav>
+  <button class="ai-nav-burger" id="aiBurger" aria-label="menu">≡</button>
+</header>
+
+<script>
+  (function(){
+    var nav = document.getElementById('aiNav');
+    var b = document.getElementById('aiBurger');
+    if (b && nav) b.addEventListener('click', function(){ nav.classList.toggle('open'); });
+  })();
+</script>
 
 <div class="app">
 
-  <!-- nav -->
-  <div class="nav">
-    <div class="left">
-      <img src="./assets/aim-logo.png" alt="aim">
-      <span class="id">ainative-lab-2 / s3 / knowledge-graph</span>
-    </div>
-    <div class="right">
-      <a href="./index.html">← hub</a>
-      <a href="./naming.html">→ naming</a>
-      <a href="./rules.html">→ rules</a>
-      <a href="./playground.html">→ playground</a>
-      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">→ deck</a>
-    </div>
-  </div>
-
   <!-- header band -->
   <div class="header">
-    <div class="eyebrow">knowledge graph · s3</div>
-    <h1>граф лабы — спикеры · недели · темы · артефакты</h1>
-    <div class="sub">~40 узлов, 6 категорий, минимальный harness-граф</div>
+    <span class="ai-role">explore · connections</span>
+    <h1>граф лабы</h1>
+    <div class="sub">~36 узлов · 6 категорий · клик по узлу — детали справа</div>
   </div>
 
   <!-- filter bar -->
   <div class="filters" id="filters">
     <span class="label">filters</span>
     <!-- chips injected -->
-    <input class="search" id="search" type="text" placeholder="найти узел">
   </div>
 
   <!-- canvas -->
@@ -300,6 +556,26 @@
     <div class="canvas-corner corner-br"></div>
     <div class="canvas-meta"><span>fig.0 · graph</span> · <span class="v" id="metaCounts">0n / 0e</span></div>
     <div id="graph"></div>
+
+    <!-- floating openrouter panel -->
+    <div class="or-panel" id="orPanel">
+      <div class="h">
+        <span>openrouter · ask</span>
+        <button id="orToggle" aria-label="collapse">−</button>
+      </div>
+      <div class="or-body">
+        <input id="orKey" type="password" placeholder="api key (sk-or-v1-...)" autocomplete="off" spellcheck="false">
+        <select id="orModel">
+          <option value="anthropic/claude-haiku-4.5">anthropic/claude-haiku-4.5</option>
+          <option value="anthropic/claude-sonnet-4.5">anthropic/claude-sonnet-4.5</option>
+          <option value="openai/gpt-4o-mini">openai/gpt-4o-mini</option>
+          <option value="meta-llama/llama-3.3-70b-instruct">llama-3.3-70b</option>
+          <option value="google/gemini-2.0-flash-001">gemini-2.0-flash</option>
+        </select>
+        <button id="orAsk" class="btn" disabled>[ ask the graph ]</button>
+        <div class="status" id="orStatus">ключ только в localStorage этого браузера. граф в каждом запросе целиком — расход токенов ~3-5к</div>
+      </div>
+    </div>
 
     <!-- side panel -->
     <aside class="side" id="side">
@@ -314,19 +590,44 @@
     <div class="rows" id="legend"></div>
   </div>
 
-  <!-- footer -->
-  <div class="foot">
-    <div class="links">
-      <a href="./index.html">hub</a>
-      <a href="./naming.html">naming</a>
-      <a href="./rules.html">rules</a>
-      <a href="./playground.html">playground</a>
-      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">deck</a>
-    </div>
-    <div class="v">ainative-lab-2 · knowledge graph · v1 · 2026-05-06</div>
-  </div>
-
 </div>
+
+<!-- modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-x" id="modalX" aria-label="close">×</button>
+    <h3>ask the graph</h3>
+    <div class="modal-sub">openrouter · <span id="modalModel">claude-haiku-4.5</span></div>
+    <textarea id="modalQ" placeholder="о чём спросить про граф?"></textarea>
+    <div class="examples">
+      <span class="ex">какие темы пересекаются у kleban и buzko?</span>
+      <span class="ex">какие неисследованные узлы?</span>
+      <span class="ex">кто на каких неделях?</span>
+      <span class="ex">какая тема самая центральная?</span>
+    </div>
+    <div class="actions">
+      <span class="info">~3-5к токенов / запрос</span>
+      <button class="btn alt" id="modalCancel">отмена</button>
+      <button class="btn" id="modalSubmit">[ ask ]</button>
+    </div>
+    <div class="response" id="modalResponse"></div>
+  </div>
+</div>
+
+<footer class="ai-foot">
+  <div class="ai-foot-row">
+    <span>ainative-lab-2 · ai-native sprint vol2 · s3 · 2026-05-06</span>
+    <span>
+      <a href="https://github.com/ai-mindset-org/ainative-lab-2" target="_blank" rel="noreferrer">github</a> ·
+      <a href="https://aimindset.org" target="_blank" rel="noreferrer">ai mindset</a> ·
+      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noreferrer">deck</a>
+    </span>
+  </div>
+  <div class="ai-foot-row">
+    <span style="opacity:0.55">dragon-dna · space grotesk + ibm plex mono + jetbrains mono · single-file</span>
+    <span style="opacity:0.55">v0.3 · 2026-05-06</span>
+  </div>
+</footer>
 
 <script>
 (function(){
@@ -334,7 +635,7 @@
 
   // ════════════════ CATEGORIES ════════════════
   const CATS = {
-    speakers:    {label:'speakers',    color:'#5cdacc', radius:6},
+    speakers:    {label:'speakers',    color:'#5cdacc', radius:10},
     weeks:       {label:'weeks',       color:'#e4b54b', radius:8},
     themes:      {label:'themes',      color:'#56e39f', radius:5},
     artifacts:   {label:'artifacts',   color:'#6db2ff', radius:5},
@@ -343,24 +644,25 @@
   };
 
   // ════════════════ NODES ════════════════
-  const N = (id, name, cat, desc) => ({id, name, cat, desc:desc||''});
+  // speakers get extra fields: week, topic, slug
+  const N = (id, name, cat, desc, extra) => Object.assign({id, name, cat, desc:desc||''}, extra||{});
 
   const nodes = [
-    // speakers (14)
-    N('alex-povaliaev',    'alex povaliaev',    'speakers', 'host & founder, ai mindset. ведёт лабу.'),
-    N('stepan-gershuni',   'stepan gershuni',   'speakers', 'co-author, cybos.ai. 3 лекции (w1, w2, w3).'),
-    N('sereja-ris',        'sereja ris',        'speakers', 'w1 workshop — claude code и github harness.'),
-    N('denis-smirnov',     'denis smirnov',     'speakers', 'w1–w3 community modules, акме labs.'),
-    N('alex-smirnov',      'alex smirnov',      'speakers', 'w2 alumni — context-engineering practitioner.'),
-    N('konstantin-urvantsev','konstantin urvantsev','speakers','w2 alumni — agent systems.'),
-    N('bayram-annakov',    'bayram annakov',    'speakers', 'w3 — sales automation, app in the air.'),
-    N('roman-buzko',       'roman buzko',       'speakers', 'w2 — ai × law, buzko legal ai.'),
-    N('vitaly-kleban',     'vitaly kleban',     'speakers', 'w2 — self-improving agents, evidence loops.'),
-    N('gleb-sidora',       'gleb sidora',       'speakers', 'tbd — technical coworking.'),
-    N('dima-kharin',       'dima kharin',       'speakers', 'tbd — process audit, transformation.'),
-    N('evgeny-kuryshev',   'evgeny kuryshev',   'speakers', 'w2 — founding-engineer playbook.'),
-    N('egor-egerev',       'egor egerev',       'speakers', 'tbd — внутренний контур.'),
-    N('vsevolod-ustinov',  'vsevolod ustinov',  'speakers', 'w3 — plurio, продукт-агент.'),
+    // speakers (14) — circular nodes with initials
+    N('alex-povaliaev',     'alex povaliaev',     'speakers', 'host & founder, ai mindset. ведёт лабу.',                 {week:'all',  topic:'host · personal os',         slug:'alex-povaliaev'}),
+    N('stepan-gershuni',    'stepan gershuni',    'speakers', 'co-author, cybos.ai. 3 лекции (w1, w2, w3).',             {week:'w1-w3',topic:'harness · context',           slug:'stepan-gershuni'}),
+    N('sereja-ris',         'sereja ris',         'speakers', 'w1 workshop — claude code и github harness.',             {week:'w1',   topic:'harness workshop',           slug:'sereja-ris'}),
+    N('denis-smirnov',      'denis smirnov',      'speakers', 'w1–w3 community modules, акме labs.',                     {week:'w1-w3',topic:'community · evidence',       slug:'denis-smirnov'}),
+    N('alex-smirnov',       'alex smirnov',       'speakers', 'w2 alumni — context-engineering practitioner.',           {week:'w2',   topic:'context engineering',        slug:'alex-smirnov'}),
+    N('konstantin-urvantsev','konstantin urvantsev','speakers','w2 alumni — agent systems.',                              {week:'w2',   topic:'agent systems',              slug:'konstantin-urvantsev'}),
+    N('bayram-annakov',     'bayram annakov',     'speakers', 'w3 — sales automation, app in the air.',                  {week:'w3',   topic:'sales automation',           slug:'bayram-annakov'}),
+    N('roman-buzko',        'roman buzko',        'speakers', 'w2 — ai × law, buzko legal ai.',                          {week:'w2',   topic:'ai × law · guardrails',      slug:'roman-buzko'}),
+    N('vitaly-kleban',      'vitaly kleban',      'speakers', 'w2 — self-improving agents, evidence loops.',             {week:'w2',   topic:'self-improving agents',      slug:'vitaly-kleban'}),
+    N('gleb-sidora',        'gleb sidora',        'speakers', 'tbd — technical coworking.',                               {week:'tbd',  topic:'technical coworking',        slug:'gleb-sidora'}),
+    N('dima-kharin',        'dima kharin',        'speakers', 'tbd — process audit, transformation.',                     {week:'tbd',  topic:'process audit',              slug:'dima-kharin'}),
+    N('evgeny-kuryshev',    'evgeny kuryshev',    'speakers', 'w2 — founding-engineer playbook.',                        {week:'w2',   topic:'founding engineer',          slug:'evgeny-kuryshev'}),
+    N('egor-egerev',        'egor egerev',        'speakers', 'tbd — внутренний контур.',                                 {week:'tbd',  topic:'internal loop',              slug:'egor-egerev'}),
+    N('vsevolod-ustinov',   'vsevolod ustinov',   'speakers', 'w3 — plurio, продукт-агент.',                              {week:'w3',   topic:'product as agent',           slug:'vsevolod-ustinov'}),
 
     // weeks (5)
     N('w0-intro',       'w0 — intro',      'weeks', 'sat 2 may. вход в лабу, харнесс-разогрев.'),
@@ -397,7 +699,13 @@
     N('s3',                   's3',                   'organization', 'третий sprint, ainative-lab-2.')
   ];
 
+  // initials helper for speaker circular avatars
+  function initialsOf(name){
+    return name.split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase();
+  }
+
   // ════════════════ EDGES ════════════════
+  // v2: NO speaker→week edges. Speakers connect to themes only.
   const E = (s, t, rel) => ({source:s, target:t, rel:rel||''});
 
   const links = [
@@ -416,32 +724,8 @@
     E('w2-horizontal','w3-vertical','next'),
     E('w3-vertical','demo-day','next'),
 
-    // host / co-author across weeks
-    E('alex-povaliaev','w0-intro','hosts'),
-    E('alex-povaliaev','w1-foundation','hosts'),
-    E('alex-povaliaev','w2-horizontal','hosts'),
-    E('alex-povaliaev','w3-vertical','hosts'),
-    E('alex-povaliaev','demo-day','hosts'),
+    // host/founder relationship (alex only — keep these, they're not speaker-noise)
     E('alex-povaliaev','ai-mindset','founder'),
-    E('stepan-gershuni','w1-foundation','lectures'),
-    E('stepan-gershuni','w2-horizontal','lectures'),
-    E('stepan-gershuni','w3-vertical','lectures'),
-
-    // speakers → weeks
-    E('sereja-ris','w1-foundation','workshop'),
-    E('denis-smirnov','w1-foundation','community'),
-    E('denis-smirnov','w2-horizontal','community'),
-    E('denis-smirnov','w3-vertical','community'),
-    E('alex-smirnov','w2-horizontal','alumni'),
-    E('konstantin-urvantsev','w2-horizontal','alumni'),
-    E('bayram-annakov','w3-vertical','speaks'),
-    E('roman-buzko','w2-horizontal','speaks'),
-    E('vitaly-kleban','w2-horizontal','speaks'),
-    E('gleb-sidora','w2-horizontal','speaks'),
-    E('dima-kharin','w1-foundation','speaks'),
-    E('evgeny-kuryshev','w2-horizontal','speaks'),
-    E('egor-egerev','w3-vertical','speaks'),
-    E('vsevolod-ustinov','w3-vertical','speaks'),
 
     // weeks → themes (covers)
     E('w0-intro','harness','covers'),
@@ -455,11 +739,12 @@
     E('w3-vertical','agent-systems','covers'),
     E('w3-vertical','evidence','covers'),
 
-    // speakers → themes (teaches)
+    // speakers → themes (teaches) — primary speaker linkage
     E('stepan-gershuni','harness','teaches'),
     E('stepan-gershuni','context-engineering','teaches'),
     E('alex-povaliaev','personal-os','teaches'),
     E('alex-povaliaev','naming-as-os','teaches'),
+    E('alex-povaliaev','harness','teaches'),
     E('sereja-ris','harness','teaches'),
     E('vitaly-kleban','agent-systems','teaches'),
     E('vitaly-kleban','evidence','teaches'),
@@ -471,6 +756,8 @@
     E('evgeny-kuryshev','personal-os','teaches'),
     E('dima-kharin','personal-os','teaches'),
     E('denis-smirnov','evidence','teaches'),
+    E('gleb-sidora','harness','teaches'),
+    E('egor-egerev','agent-systems','teaches'),
 
     // themes → artifacts (produces)
     E('context-engineering','context-seed','produces'),
@@ -504,18 +791,22 @@
 
   // ════════════════ STATE ════════════════
   const STORAGE_KEY = 'ainative-lab-2-graph-state';
+  const OR_KEY_STORAGE = 'ainative-lab-2-openrouter-key';
+  const OR_MODEL_STORAGE = 'ainative-lab-2-openrouter-model';
   const state = {
     selectedId: null,
-    filters: Object.fromEntries(Object.keys(CATS).map(k => [k, true]))
+    filters: Object.fromEntries(Object.keys(CATS).map(k => [k, true])),
+    orCollapsed: false
   };
   try{
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     if(s.filters) Object.keys(state.filters).forEach(k => { if(typeof s.filters[k]==='boolean') state.filters[k]=s.filters[k]; });
     if(s.selectedId) state.selectedId = s.selectedId;
+    if(typeof s.orCollapsed==='boolean') state.orCollapsed = s.orCollapsed;
   }catch(e){}
 
   function saveState(){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({selectedId:state.selectedId, filters:state.filters})); }catch(e){}
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({selectedId:state.selectedId, filters:state.filters, orCollapsed:state.orCollapsed})); }catch(e){}
   }
 
   // ════════════════ FILTER CHIPS ════════════════
@@ -524,9 +815,7 @@
   nodes.forEach(n => { counts[n.cat] = (counts[n.cat]||0)+1; });
 
   function renderChips(){
-    // remove existing chips
     filterEl.querySelectorAll('.chip').forEach(c=>c.remove());
-    const search = filterEl.querySelector('.search');
     Object.entries(CATS).forEach(([key, cat])=>{
       const on = state.filters[key];
       const chip = document.createElement('span');
@@ -537,7 +826,7 @@
       chip.style.color = on ? '#07090d' : 'var(--ink-soft)';
       chip.innerHTML = `<span class="sw" style="background:${on?'#07090d':cat.color}"></span>${cat.label}<span class="ct">${counts[key]}</span>`;
       chip.onclick = ()=>{ state.filters[key]=!state.filters[key]; saveState(); renderChips(); applyFilters(); };
-      filterEl.insertBefore(chip, search);
+      filterEl.appendChild(chip);
     });
   }
 
@@ -574,20 +863,8 @@
     .backgroundColor('rgba(0,0,0,0)')
     .nodeId('id')
     .nodeRelSize(1)
-    .linkColor(l=>{
-      const sId = typeof l.source==='object' ? l.source.id : l.source;
-      const tId = typeof l.target==='object' ? l.target.id : l.target;
-      const involved = (selected && (sId===selected.id || tId===selected.id))
-                    || (hovered  && (sId===hovered.id  || tId===hovered.id));
-      return involved ? 'rgba(92,218,204,0.55)' : 'rgba(92,218,204,0.18)';
-    })
-    .linkWidth(l=>{
-      const sId = typeof l.source==='object' ? l.source.id : l.source;
-      const tId = typeof l.target==='object' ? l.target.id : l.target;
-      const involved = (selected && (sId===selected.id || tId===selected.id))
-                    || (hovered  && (sId===hovered.id  || tId===hovered.id));
-      return involved ? 1.4 : 0.6;
-    })
+    .linkColor(linkColorFn)
+    .linkWidth(linkWidthFn)
     .linkVisibility(l=>{
       const sId = typeof l.source==='object' ? l.source.id : l.source;
       const tId = typeof l.target==='object' ? l.target.id : l.target;
@@ -611,19 +888,40 @@
         ctx.stroke();
       }
 
-      // node body
-      ctx.beginPath();
-      ctx.arc(node.x, node.y, r, 0, Math.PI*2);
-      ctx.fillStyle = cat.color;
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(7,9,13,0.9)';
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
+      if(node.cat === 'speakers'){
+        // circular avatar with initials
+        // outer teal ring
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, r, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(7,9,13,0.95)';
+        ctx.fill();
+        ctx.strokeStyle = isSelect || isHover ? '#5cdacc' : 'rgba(92,218,204,0.55)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        // initials in teal
+        const initials = initialsOf(node.name);
+        const fs = Math.max(7, r * 0.95);
+        ctx.font = `500 ${fs}px JetBrains Mono, ui-monospace, monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#5cdacc';
+        ctx.fillText(initials, node.x, node.y);
+      } else {
+        // standard filled circle
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, r, 0, Math.PI*2);
+        ctx.fillStyle = cat.color;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(7,9,13,0.9)';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
 
       // label
       const showLabel = isHover || isSelect || globalScale > 1.2 || node.cat === 'weeks' || node.cat === 'organization';
       if(showLabel){
-        const fs = Math.min(11/globalScale, 13);
+        const fontSize = node.cat === 'speakers' ? 10 : 11;
+        const fs = Math.min(fontSize/globalScale, fontSize+2);
         ctx.font = `400 ${fs}px JetBrains Mono, ui-monospace, monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
@@ -648,10 +946,10 @@
     .warmupTicks(40);
 
   // tune forces
-  fg.d3Force('charge').strength(-180);
+  fg.d3Force('charge').strength(-200);
   fg.d3Force('link').distance(l=>{
     const r = l.rel || '';
-    if(r==='hosts' || r==='founder') return 90;
+    if(r==='founder') return 90;
     if(r==='contains' || r==='runs') return 60;
     if(r==='next') return 50;
     if(r==='covers' || r==='teaches') return 70;
@@ -659,6 +957,21 @@
     if(r==='links' || r==='documented') return 55;
     return 80;
   });
+
+  function linkColorFn(l){
+    const sId = typeof l.source==='object' ? l.source.id : l.source;
+    const tId = typeof l.target==='object' ? l.target.id : l.target;
+    const involved = (selected && (sId===selected.id || tId===selected.id))
+                  || (hovered  && (sId===hovered.id  || tId===hovered.id));
+    return involved ? 'rgba(92,218,204,0.65)' : 'rgba(92,218,204,0.18)';
+  }
+  function linkWidthFn(l){
+    const sId = typeof l.source==='object' ? l.source.id : l.source;
+    const tId = typeof l.target==='object' ? l.target.id : l.target;
+    const involved = (selected && (sId===selected.id || tId===selected.id))
+                  || (hovered  && (sId===hovered.id  || tId===hovered.id));
+    return involved ? 1.6 : 0.6;
+  }
 
   // resize
   function resize(){
@@ -672,8 +985,8 @@
   document.getElementById('metaCounts').textContent = `${data.nodes.length}n / ${data.links.length}e`;
 
   // initial fit
-  setTimeout(()=>fg.zoomToFit(500, 50), 250);
-  setTimeout(()=>fg.zoomToFit(500, 50), 1400);
+  setTimeout(()=>fg.zoomToFit(500, 60), 250);
+  setTimeout(()=>fg.zoomToFit(500, 60), 1400);
 
   // ════════════════ FILTERS APPLY ════════════════
   function applyFilters(){
@@ -703,21 +1016,6 @@
     fg.linkColor(linkColorFn).linkWidth(linkWidthFn);
   }
 
-  function linkColorFn(l){
-    const sId = typeof l.source==='object' ? l.source.id : l.source;
-    const tId = typeof l.target==='object' ? l.target.id : l.target;
-    const involved = (selected && (sId===selected.id || tId===selected.id))
-                  || (hovered  && (sId===hovered.id  || tId===hovered.id));
-    return involved ? 'rgba(92,218,204,0.55)' : 'rgba(92,218,204,0.18)';
-  }
-  function linkWidthFn(l){
-    const sId = typeof l.source==='object' ? l.source.id : l.source;
-    const tId = typeof l.target==='object' ? l.target.id : l.target;
-    const involved = (selected && (sId===selected.id || tId===selected.id))
-                  || (hovered  && (sId===hovered.id  || tId===hovered.id));
-    return involved ? 1.4 : 0.6;
-  }
-
   function selectNode(n){
     if(!n) return;
     selected = n;
@@ -730,64 +1028,262 @@
     fg.linkColor(linkColorFn).linkWidth(linkWidthFn);
   }
 
-  function renderSide(n){
-    const cat = CATS[n.cat] || {label:n.cat, color:'#888'};
-    // collect connections
-    const conns = [];
+  // helper — find connected nodes by relation type
+  function connectedVia(nodeId, relFilter, dir){
+    const out = [];
     data.links.forEach(l=>{
       const sId = typeof l.source==='object' ? l.source.id : l.source;
       const tId = typeof l.target==='object' ? l.target.id : l.target;
-      if(sId===n.id){
-        const o = idToNode[tId];
-        if(o) conns.push({node:o, rel:l.rel, dir:'→'});
-      } else if(tId===n.id){
-        const o = idToNode[sId];
-        if(o) conns.push({node:o, rel:l.rel, dir:'←'});
+      if(relFilter && l.rel !== relFilter) return;
+      if(dir === 'out' && sId === nodeId){
+        const o = idToNode[tId]; if(o) out.push({node:o, rel:l.rel});
+      } else if(dir === 'in' && tId === nodeId){
+        const o = idToNode[sId]; if(o) out.push({node:o, rel:l.rel});
+      } else if(!dir){
+        if(sId === nodeId){ const o = idToNode[tId]; if(o) out.push({node:o, rel:l.rel, dir:'→'}); }
+        else if(tId === nodeId){ const o = idToNode[sId]; if(o) out.push({node:o, rel:l.rel, dir:'←'}); }
       }
     });
+    return out;
+  }
+
+  function renderSide(n){
+    const cat = CATS[n.cat] || {label:n.cat, color:'#888'};
+    let extraHtml = '';
+
+    if(n.cat === 'speakers'){
+      // week + topic + future link to /speakers/{slug}.html
+      extraHtml = `
+        <div class="extra-h">профиль</div>
+        <div class="meta-row"><span class="k">week</span><span>${n.week || '—'}</span></div>
+        <div class="meta-row"><span class="k">topic</span><span>${n.topic || '—'}</span></div>
+        <a class="extra-link" href="./speakers/${n.slug}.html" onclick="event.preventDefault();alert('страница спикера ещё не готова — ./speakers/${n.slug}.html');">→ страница спикера</a>
+      `;
+    } else if(n.cat === 'themes'){
+      // 3 rules referencing this theme (placeholder mapping)
+      const themeRules = {
+        'harness':            ['80/20 harness vs model','single-file harness first','no premature abstraction'],
+        'context-engineering':['seed before prompt','retrieval over context-stuffing','context as artifact'],
+        'personal-os':        ['vault as substrate','skills as commands','mcp as bridges'],
+        'agent-systems':      ['orchestration > prompts','loops with eval gates','one agent · one passport'],
+        'evidence':           ['claims need cites','eval-loop on every output','quote, not paraphrase'],
+        'guardrails':         ['policy before action','agent passport mandatory','red-team your own loop'],
+        'naming-as-os':       ['name = operating system','convention over creativity','find via name, not folder']
+      };
+      const list = themeRules[n.id] || [];
+      extraHtml = `
+        <div class="extra-h">правила, ссылающиеся на тему</div>
+        ${list.length ? list.map(r=>`<div class="meta-row"><span>· ${r}</span></div>`).join('') : '<div class="meta-row"><span class="k">нет</span></div>'}
+      `;
+    } else if(n.cat === 'artifacts'){
+      const anchor = n.id.replace(/-/g,'_');
+      extraHtml = `
+        <div class="extra-h">playground</div>
+        <a class="extra-link" href="./playground.html#${anchor}">→ открыть в playground</a>
+      `;
+    } else if(n.cat === 'pages'){
+      const map = {
+        'naming-html':    './naming.html',
+        'rules-html':     './rules.html',
+        'playground-html':'./playground.html',
+        'dragon-deck':    'https://ainative-lab-deck.netlify.app/'
+      };
+      const url = map[n.id] || '#';
+      const ext = url.startsWith('http') ? ' target="_blank" rel="noreferrer"' : '';
+      extraHtml = `
+        <div class="extra-h">страница</div>
+        <a class="extra-link" href="${url}"${ext}>→ открыть</a>
+      `;
+    } else if(n.cat === 'weeks'){
+      // derived speakers — those teaching themes covered by this week
+      const themesCovered = connectedVia(n.id, 'covers', 'out').map(c=>c.node.id);
+      const speakerSet = new Set();
+      themesCovered.forEach(themeId=>{
+        connectedVia(themeId, 'teaches', 'in').forEach(c=>{
+          if(c.node.cat === 'speakers') speakerSet.add(c.node.id);
+        });
+      });
+      const speakers = [...speakerSet].map(id=>idToNode[id]).filter(Boolean);
+      extraHtml = `
+        <div class="extra-h">спикеры недели · ${speakers.length} (по теме)</div>
+        ${speakers.length ? '<div class="conn-list">' + speakers.map(s=>`
+          <div class="conn" data-go="${s.id}">
+            <span class="sw" style="background:${CATS.speakers.color}"></span>
+            <span>${s.name}</span>
+          </div>`).join('') + '</div>' : '<div class="meta-row"><span class="k">нет</span></div>'}
+      `;
+    } else if(n.cat === 'organization'){
+      extraHtml = `
+        <div class="extra-h">контейнер</div>
+        <div class="meta-row"><span class="k">role</span><span>container</span></div>
+      `;
+    }
 
     sideBd.innerHTML = `
       <span class="badge" style="color:${cat.color};border-color:${cat.color};background:${cat.color}14">${cat.label}</span>
-      <h2>${n.name}</h2>
+      <h3>${n.name}</h3>
       <div class="id">id · ${n.id}</div>
       <div class="desc">${n.desc || '— описание не задано —'}</div>
-      <div class="conn-h">connections · ${conns.length}</div>
-      <div id="connList"></div>
+      ${extraHtml}
     `;
-    const list = sideBd.querySelector('#connList');
-    conns.forEach(c=>{
-      const cat2 = CATS[c.node.cat] || {color:'#888'};
-      const row = document.createElement('div');
-      row.className = 'conn';
-      row.innerHTML = `
-        <span class="sw" style="background:${cat2.color}"></span>
-        <span class="arr">${c.dir}</span>
-        <span>${c.node.name}</span>
-        <span class="rel">${c.rel}</span>
-      `;
-      row.onclick = ()=>selectNode(c.node);
-      list.appendChild(row);
+    // attach click handlers for derived speaker rows
+    sideBd.querySelectorAll('.conn[data-go]').forEach(el=>{
+      el.onclick = ()=>{ const target = idToNode[el.dataset.go]; if(target) selectNode(target); };
     });
   }
 
-  // ════════════════ SEARCH ════════════════
-  const searchEl = document.getElementById('search');
-  searchEl.addEventListener('input', e=>{
-    const q = e.target.value.trim().toLowerCase();
-    if(!q) return;
-    const hit = data.nodes.find(n =>
-      n.visible !== false &&
-      (n.name.toLowerCase().includes(q) || n.id.toLowerCase().includes(q))
-    );
-    if(hit) selectNode(hit);
-  });
-  searchEl.addEventListener('keydown', e=>{
-    if(e.key==='Escape'){ searchEl.value=''; searchEl.blur(); }
-  });
+  // ════════════════ KEYBOARD ════════════════
   document.addEventListener('keydown', e=>{
-    if(e.key==='Escape') closePanel();
-    if((e.metaKey||e.ctrlKey) && e.key==='k'){ e.preventDefault(); searchEl.focus(); }
+    if(e.key==='Escape'){
+      if(document.getElementById('modalBg').classList.contains('open')) closeModal();
+      else closePanel();
+    }
   });
+
+  // ════════════════ OPENROUTER PANEL ════════════════
+  const orKeyEl    = document.getElementById('orKey');
+  const orModelEl  = document.getElementById('orModel');
+  const orAskEl    = document.getElementById('orAsk');
+  const orStatusEl = document.getElementById('orStatus');
+  const orPanelEl  = document.getElementById('orPanel');
+  const orToggleEl = document.getElementById('orToggle');
+
+  // restore
+  try{
+    const k = localStorage.getItem(OR_KEY_STORAGE);
+    if(k){ orKeyEl.value = k; }
+    const m = localStorage.getItem(OR_MODEL_STORAGE);
+    if(m){
+      // ensure option exists
+      let found = false;
+      for(const opt of orModelEl.options){ if(opt.value===m){ found=true; break; } }
+      if(found) orModelEl.value = m;
+    }
+  }catch(e){}
+  if(state.orCollapsed){
+    orPanelEl.classList.add('collapsed');
+    orToggleEl.textContent = '+';
+  }
+
+  function refreshAskButton(){
+    const has = orKeyEl.value.trim().length > 10;
+    orAskEl.disabled = !has;
+    orAskEl.textContent = has ? '[ ask the graph ]' : '[ нет ключа ]';
+  }
+  refreshAskButton();
+
+  orKeyEl.addEventListener('input', ()=>{
+    try{ localStorage.setItem(OR_KEY_STORAGE, orKeyEl.value.trim()); }catch(e){}
+    refreshAskButton();
+  });
+  orModelEl.addEventListener('change', ()=>{
+    try{ localStorage.setItem(OR_MODEL_STORAGE, orModelEl.value); }catch(e){}
+    document.getElementById('modalModel').textContent = orModelEl.value.split('/').pop();
+  });
+  document.getElementById('modalModel').textContent = orModelEl.value.split('/').pop();
+
+  orToggleEl.onclick = ()=>{
+    state.orCollapsed = !state.orCollapsed;
+    orPanelEl.classList.toggle('collapsed', state.orCollapsed);
+    orToggleEl.textContent = state.orCollapsed ? '+' : '−';
+    saveState();
+  };
+
+  orAskEl.onclick = ()=>openModal();
+
+  // ════════════════ MODAL ════════════════
+  const modalBg     = document.getElementById('modalBg');
+  const modalQ      = document.getElementById('modalQ');
+  const modalSubmit = document.getElementById('modalSubmit');
+  const modalCancel = document.getElementById('modalCancel');
+  const modalX      = document.getElementById('modalX');
+  const modalResp   = document.getElementById('modalResponse');
+
+  function openModal(){
+    modalBg.classList.add('open');
+    setTimeout(()=>modalQ.focus(), 50);
+  }
+  function closeModal(){
+    modalBg.classList.remove('open');
+  }
+  modalCancel.onclick = closeModal;
+  modalX.onclick      = closeModal;
+  modalBg.addEventListener('click', e=>{ if(e.target === modalBg) closeModal(); });
+
+  // example chip clicks
+  document.querySelectorAll('.modal .ex').forEach(el=>{
+    el.onclick = ()=>{ modalQ.value = el.textContent; modalQ.focus(); };
+  });
+
+  // build compact graph JSON for prompt
+  function buildGraphJSON(){
+    return {
+      nodes: nodes.map(n=>({
+        id:n.id, name:n.name, cat:n.cat, desc:n.desc,
+        ...(n.week ? {week:n.week} : {}),
+        ...(n.topic ? {topic:n.topic} : {})
+      })),
+      edges: links.map(l=>({s:l.source, t:l.target, r:l.rel}))
+    };
+  }
+
+  modalSubmit.onclick = async ()=>{
+    const q = modalQ.value.trim();
+    if(!q){ modalQ.focus(); return; }
+    const key = orKeyEl.value.trim();
+    if(!key){ showResp('нет ключа openrouter в панели справа.', 'err'); return; }
+    const model = orModelEl.value;
+
+    modalSubmit.disabled = true;
+    modalSubmit.textContent = '…';
+    showResp('запрос → openrouter…', 'loading');
+
+    const sys = "ты — explainer для knowledge graph s3 (ai-native sprint vol2). у тебя есть JSON графа: {nodes: [...], edges: [...]}. отвечай на русском, lowercase, en dash, без эмоджи. формат: 3-5 коротких bullets.";
+    const graph = JSON.stringify(buildGraphJSON());
+    const userMsg = `вопрос: ${q}\n\nграф (json):\n${graph}`;
+
+    try{
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer '+key,
+          'HTTP-Referer':'https://ainative-lab-2.netlify.app/',
+          'X-Title':'ainative-lab-2 knowledge-graph'
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: [
+            {role:'system', content: sys},
+            {role:'user',   content: userMsg}
+          ]
+        })
+      });
+      if(!res.ok){
+        let label = 'ошибка';
+        if(res.status === 401) label = 'неверный ключ';
+        else if(res.status === 429) label = 'лимит';
+        else if(res.status === 402) label = 'нет кредитов';
+        let body = '';
+        try{ body = await res.text(); body = body.slice(0,200); }catch(e){}
+        showResp(`${label} (${res.status})${body? '\n\n'+body : ''}`, 'err');
+        return;
+      }
+      const j = await res.json();
+      const txt = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content || '— пустой ответ —';
+      showResp(txt, 'ok');
+    } catch(err){
+      showResp('ошибка сети: ' + (err && err.message ? err.message : err), 'err');
+    } finally {
+      modalSubmit.disabled = false;
+      modalSubmit.textContent = '[ ask ]';
+    }
+  };
+
+  function showResp(text, kind){
+    modalResp.className = 'response' + (kind==='err' ? ' err' : (kind==='loading' ? ' loading' : ''));
+    modalResp.textContent = text;
+  }
 
   // ════════════════ INIT ════════════════
   renderChips();

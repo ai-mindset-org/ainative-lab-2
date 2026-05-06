@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ainative-lab-2 · prompt compiler · realtime context → prompt</title>
-<meta name="description" content="заполни поля справа — слева соберётся длинный prompt в тональности сегодняшней лекции. ai-native sprint vol2 · w1.">
+<meta name="description" content="плотный личный контекст → готовый prompt в тональности сегодняшней лекции. встроенные примеры из w26 + research notes. опционально — прогон через openrouter.">
 <meta property="og:title" content="ainative-lab-2 · prompt compiler">
 <meta property="og:description" content="плотный контекст → готовый промпт. ai-native sprint vol2 · w1.">
 <meta property="og:type" content="website">
@@ -58,29 +58,118 @@ a:hover{border-bottom-color:var(--teal)}
 ::selection{background:var(--teal); color:#07090d}
 button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
 
+/* === unified nav === */
+.ai-nav {
+  position: fixed; inset: 0 0 auto 0; z-index: 90;
+  height: 52px; padding: 0 22px;
+  display: flex; align-items: center; gap: 18px;
+  background: rgba(7,9,13,0.86); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.ai-nav-brand {
+  display: flex; align-items: center; gap: 9px;
+  text-decoration: none; color: var(--ink);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.ai-nav-brand img {
+  height: 22px; width: auto;
+  filter: invert(1) brightness(1.2);
+}
+.ai-nav-brand span { color: var(--ink); }
+.ai-nav-brand .ai-nav-tag {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.ai-nav-links {
+  flex: 1; display: flex; gap: 4px; align-items: center;
+  margin-left: 12px;
+}
+.ai-nav-links a {
+  text-decoration: none; color: var(--ink-dim);
+  padding: 6px 11px; border: 1px solid transparent; border-radius: 6px;
+  transition: all 0.16s ease;
+  font-size: 12px;
+}
+.ai-nav-links a:hover {
+  color: var(--teal);
+  border-color: var(--line);
+  background: rgba(92,218,204,0.06);
+}
+.ai-nav-links a.ext::after { content: " ↗"; opacity: 0.5; }
+body[data-route="hub"] .ai-nav-links a[data-route="hub"],
+body[data-route="play"] .ai-nav-links a[data-route="play"],
+body[data-route="rules"] .ai-nav-links a[data-route="rules"],
+body[data-route="naming"] .ai-nav-links a[data-route="naming"],
+body[data-route="graph"] .ai-nav-links a[data-route="graph"] {
+  color: var(--teal);
+  border-color: var(--line-strong);
+  background: rgba(92,218,204,0.08);
+}
+.ai-nav-burger {
+  display: none;
+  background: none; border: 1px solid var(--line);
+  color: var(--ink); font: 18px var(--font-body);
+  width: 34px; height: 34px; border-radius: 6px; cursor: pointer;
+}
+@media (max-width: 760px) {
+  .ai-nav { padding: 0 14px; }
+  .ai-nav-links {
+    position: absolute; top: 52px; left: 0; right: 0;
+    flex-direction: column; gap: 0; align-items: stretch;
+    background: rgba(7,9,13,0.96); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+    padding: 8px;
+    display: none;
+  }
+  .ai-nav-links a { padding: 12px 14px; border-radius: 0; }
+  .ai-nav.open .ai-nav-links { display: flex; }
+  .ai-nav-burger { display: grid; place-items: center; }
+  .ai-nav-brand .ai-nav-tag { display: none; }
+}
+body { padding-top: 52px; }
+@media print {
+  .ai-nav, .ai-foot { display: none; }
+  body { padding-top: 0; }
+}
+.ai-foot {
+  margin-top: 64px;
+  padding: 22px;
+  border-top: 1px solid var(--line);
+  display: grid; gap: 6px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.ai-foot-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; }
+.ai-foot a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--line); }
+.ai-foot a:hover { color: var(--teal); border-bottom-color: var(--line-strong); }
+.ai-role {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--teal);
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
 /* layout */
 .wrap{position:relative; z-index:1; max-width:1480px; margin:0 auto; padding:18px 22px 60px}
-
-/* topnav */
-.topnav{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:18px; padding:10px 14px;
-  border:1px solid var(--line);
-  background:var(--panel);
-  backdrop-filter: blur(6px);
-  margin-bottom:18px;
-}
-.topnav .brand{display:flex; align-items:center; gap:10px}
-.topnav .brand img{width:22px;height:22px; opacity:0.95; filter:invert(1) hue-rotate(140deg) saturate(0.8) brightness(1.15)}
-.topnav .brand .name{font-family:var(--font-heading); font-weight:500; font-size:13px; letter-spacing:0.04em; color:var(--ink)}
-.topnav .brand .tag{font-size:10px; letter-spacing:0.18em; color:var(--ink-dim); text-transform:uppercase}
-.topnav nav{display:flex; gap:14px; flex-wrap:wrap}
-.topnav nav a{
-  font-size:11px; letter-spacing:0.10em; color:var(--ink-soft);
-  padding:4px 8px; border:1px solid transparent;
-}
-.topnav nav a:hover{color:var(--teal); border-color:var(--line); border-bottom-color:var(--line)}
-.topnav nav a.active{color:var(--teal); border-color:var(--line-strong); border-bottom-color:var(--line-strong)}
 
 /* header band */
 .headband{
@@ -164,6 +253,18 @@ button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transfo
 .field.compact textarea{min-height:54px}
 .field.medium textarea{min-height:96px}
 .field.tall textarea{min-height:130px}
+.field.xtall textarea{min-height:200px}
+
+/* divider inside panel */
+.field-divider{
+  height:1px; background:var(--line); margin:22px -18px 22px;
+  position:relative;
+}
+.field-divider::after{
+  content:"новые поля v3 · опциональные"; position:absolute; left:18px; top:-6px;
+  background:var(--panel); padding:0 8px;
+  font-size:9px; letter-spacing:0.18em; color:var(--ink-dim); text-transform:uppercase;
+}
 
 /* six fields micro grid */
 .six{
@@ -191,8 +292,8 @@ button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transfo
   background:var(--panel-2);
   padding:0;
   display:flex; flex-direction:column;
-  position:sticky; top:14px;
-  max-height:calc(100vh - 36px);
+  position:sticky; top:66px;
+  max-height:calc(100vh - 88px);
 }
 @media (max-width:1023px){
   .preview-panel{position:static; max-height:none}
@@ -235,6 +336,8 @@ button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transfo
 .btn.primary{border-color:var(--line-strong); color:var(--teal)}
 .btn.primary:hover{background:rgba(92,218,204,0.1)}
 .btn.danger:hover{border-color:rgba(255,109,97,0.5); color:var(--red)}
+.btn[disabled]{opacity:0.5; cursor:not-allowed}
+.btn[disabled]:hover{border-color:var(--line); color:var(--ink-soft); background:transparent}
 
 /* prompt pre */
 .preview-body{
@@ -265,6 +368,7 @@ button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transfo
 .preview-pre .filled{color:var(--ink)}
 .preview-pre .h1, .preview-pre .h2{color:var(--teal); font-weight:500}
 .preview-pre .em{color:var(--amber)}
+.preview-pre .dim{color:var(--ink-dim); font-style:italic}
 .preview-pre.dim{opacity:0.5; transition:opacity .3s ease}
 
 /* toast */
@@ -281,22 +385,24 @@ button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transfo
 }
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
 
-/* fig.3 lecture context */
-.lecture{
+/* fig.3 / fig.4 / fig.5 sections */
+.section-fold{
   margin-top:22px;
   border:1px solid var(--line);
   background:var(--panel);
   padding:18px;
 }
-.lecture summary{
+.section-fold summary{
   cursor:pointer; list-style:none;
   font-family:var(--font-heading); font-size:13px; letter-spacing:0.02em; color:var(--ink);
   display:flex; align-items:baseline; gap:10px;
 }
-.lecture summary::-webkit-details-marker{display:none}
-.lecture summary::before{content:"▸"; color:var(--teal); transition:transform .15s ease}
-.lecture[open] summary::before{transform:rotate(90deg); display:inline-block}
-.lecture .desc{margin-left:auto; font-size:10px; color:var(--ink-dim); letter-spacing:0.10em}
+.section-fold summary::-webkit-details-marker{display:none}
+.section-fold summary::before{content:"▸"; color:var(--teal); transition:transform .15s ease; display:inline-block}
+.section-fold[open] summary::before{transform:rotate(90deg)}
+.section-fold .desc{margin-left:auto; font-size:10px; color:var(--ink-dim); letter-spacing:0.10em}
+
+/* fig.3 chips */
 .chips{
   display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
   gap:8px; margin-top:14px;
@@ -309,54 +415,132 @@ button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transfo
 .chip .k{font-family:var(--font-heading); font-size:11px; color:var(--teal); letter-spacing:0.04em; margin-bottom:4px}
 .chip .v{font-size:11px; color:var(--ink-soft); letter-spacing:0.01em}
 
-/* footer */
-footer.bottom{
-  margin-top:30px;
-  border-top:1px solid var(--line);
-  padding-top:14px;
-  display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap;
-  font-size:10px; color:var(--ink-dim); letter-spacing:0.14em; text-transform:uppercase;
+/* fig.4 examples */
+.examples{display:grid; gap:12px; margin-top:14px}
+.example{
+  border:1px solid var(--line);
+  background:rgba(7,9,13,0.5);
 }
-footer.bottom nav{display:flex; gap:14px; flex-wrap:wrap}
-footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
+.example-head{
+  display:flex; align-items:baseline; gap:10px; padding:10px 14px;
+  border-bottom:1px solid var(--line);
+}
+.example-head .tag{
+  font-family:var(--font-heading); font-size:10px; color:var(--teal);
+  letter-spacing:0.18em; text-transform:uppercase;
+}
+.example-head .name{color:var(--ink-soft); font-size:11px; letter-spacing:0.04em}
+.example-head .copy{margin-left:auto}
+.example pre{
+  margin:0; padding:14px 16px;
+  font-family:var(--font-code); font-size:11.5px; line-height:1.6;
+  color:var(--ink-soft); white-space:pre-wrap; word-break:break-word;
+  text-transform:none; letter-spacing:0.005em;
+  background:rgba(7,9,13,0.4);
+}
+
+/* fig.5 openrouter */
+.or-grid{display:grid; gap:12px; margin-top:14px}
+@media (min-width:680px){
+  .or-grid.row{grid-template-columns:1fr 1fr}
+}
+.or-field label{
+  display:block; font-family:var(--font-heading); font-size:11px;
+  letter-spacing:0.04em; color:var(--ink); margin-bottom:6px;
+}
+.or-field input[type=password], .or-field select{
+  width:100%; background:rgba(7,9,13,0.6); color:var(--ink);
+  font-family:var(--font-code); font-size:12px;
+  border:1px solid var(--line); padding:9px 11px; outline:none; border-radius:0;
+  text-transform:none; letter-spacing:0.005em;
+  -webkit-appearance:none; appearance:none;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.or-field input[type=password]:focus, .or-field select:focus{
+  border-color:var(--line-strong);
+  box-shadow:0 0 0 1px rgba(92,218,204,0.18);
+}
+.or-field select{
+  background-image:linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%),
+                   linear-gradient(135deg, var(--ink-soft) 50%, transparent 50%);
+  background-position:calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+  background-size:6px 6px, 6px 6px; background-repeat:no-repeat;
+  padding-right:32px;
+}
+.or-field .hint{font-size:10px; color:var(--ink-dim); letter-spacing:0.06em; margin-top:6px}
+.or-actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px}
+.or-status{font-size:10px; color:var(--ink-dim); letter-spacing:0.10em; flex:1; min-width:200px}
+.or-status.ok{color:var(--green)}
+.or-status.err{color:var(--red)}
+.or-result{
+  margin-top:14px;
+  border:1px solid var(--line);
+  background:var(--panel-2);
+  display:none;
+}
+.or-result.show{display:block}
+.or-result-head{
+  display:flex; align-items:baseline; gap:10px; padding:10px 14px;
+  border-bottom:1px solid var(--line);
+}
+.or-result-head .tag{
+  font-family:var(--font-heading); font-size:10px; color:var(--teal);
+  letter-spacing:0.18em; text-transform:uppercase;
+}
+.or-result-head .meta{font-size:10px; color:var(--ink-dim); letter-spacing:0.06em; margin-left:auto}
+.or-result pre{
+  margin:0; padding:14px 16px;
+  font-family:var(--font-code); font-size:12px; line-height:1.65;
+  color:var(--ink); white-space:pre-wrap; word-break:break-word;
+  text-transform:none; letter-spacing:0.005em;
+  max-height:500px; overflow:auto;
+}
 
 /* scrollbar */
-.preview-body::-webkit-scrollbar{width:8px; height:8px}
-.preview-body::-webkit-scrollbar-track{background:transparent}
-.preview-body::-webkit-scrollbar-thumb{background:rgba(92,218,204,0.18); border-radius:0}
-.preview-body::-webkit-scrollbar-thumb:hover{background:rgba(92,218,204,0.35)}
+.preview-body::-webkit-scrollbar,
+.or-result pre::-webkit-scrollbar{width:8px; height:8px}
+.preview-body::-webkit-scrollbar-track,
+.or-result pre::-webkit-scrollbar-track{background:transparent}
+.preview-body::-webkit-scrollbar-thumb,
+.or-result pre::-webkit-scrollbar-thumb{background:rgba(92,218,204,0.18); border-radius:0}
+.preview-body::-webkit-scrollbar-thumb:hover,
+.or-result pre::-webkit-scrollbar-thumb:hover{background:rgba(92,218,204,0.35)}
 
 @media print{
   body::before{display:none}
-  .topnav, footer.bottom, .lecture{display:none}
+  .ai-nav, .ai-foot, .section-fold{display:none}
   .split{grid-template-columns:1fr}
 }
 </style>
 </head>
-<body>
-<div class="wrap">
+<body data-route="play">
 
-  <!-- TOPNAV -->
-  <div class="topnav">
-    <div class="brand">
-      <img src="./assets/aim-logo.png" alt="aim">
-      <span class="name">ai-native sprint vol2</span>
-      <span class="tag">s3 · w1</span>
-    </div>
-    <nav>
-      <a href="./index.html">← hub</a>
-      <a href="./naming.html">→ naming</a>
-      <a href="./rules.html">→ rules</a>
-      <a href="./" class="active">→ playground</a>
-      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">→ deck</a>
-    </nav>
-  </div>
+<!-- unified nav -->
+<header class="ai-nav" id="aiNav">
+  <a class="ai-nav-brand" href="./index.html">
+    <img src="./assets/aim-logo.png" alt="ai mindset" />
+    <span>ainative-lab-2</span>
+    <span class="ai-nav-tag">s3</span>
+  </a>
+  <nav class="ai-nav-links">
+    <a href="./index.html" data-route="hub">hub</a>
+    <a href="./playground.html" data-route="play">playground</a>
+    <a href="./rules.html" data-route="rules">rules</a>
+    <a href="./naming.html" data-route="naming">naming</a>
+    <a href="./knowledge-graph.html" data-route="graph">graph</a>
+    <a href="https://ainative-lab-deck.netlify.app/" class="ext" target="_blank" rel="noreferrer">deck</a>
+  </nav>
+  <button class="ai-nav-burger" id="aiBurger" aria-label="menu">≡</button>
+</header>
+
+<div class="wrap">
 
   <!-- HEADER BAND -->
   <header class="headband">
+    <span class="ai-role">output · prompt compiler</span>
     <div class="eyebrow">prompt compiler · ai-native sprint vol2 · w1</div>
     <h1>плотный контекст → готовый промпт</h1>
-    <p class="sub">заполни поля справа — слева соберётся длинный prompt в тональности сегодняшней лекции. скопируй и вставь в свой агент. без llm в петле — чистый локальный контур, ты сам режиссируешь силу.</p>
+    <p class="sub">внешняя сила приходит готовой — capability от model providers, cloud, chips, policy. твоя задача — собрать вокруг неё управляемый контур: <em style="color:var(--teal);font-style:normal">external capability → context route → boundary → evidence → owner → review</em>. контекст — русло, модель — течение. заполни поля справа, скопируй промпт, прогони через свою модель — или прямо здесь через openrouter.</p>
   </header>
 
   <!-- SPLIT: INPUTS LEFT (smaller) ↔ PROMPT RIGHT (larger) -->
@@ -367,7 +551,7 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
       <div class="fig" id="fig1">
         <span class="num">fig.1</span>
         <span class="name">personal context</span>
-        <span class="tag">free notes · autosave</span>
+        <span class="tag">15 полей · autosave</span>
       </div>
 
       <div class="field tall">
@@ -420,7 +604,7 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
       <div class="field medium">
         <div class="row">
           <label for="f-passport">owner и passport</label>
-          <span class="hint">кто отвечает · scope · expiry</span>
+          <span class="hint">кто отвечает · scope · expiry · rotation</span>
         </div>
         <textarea id="f-passport" data-key="passport" placeholder="solutions team owner, scope = только клиентский success тикет, expiry 30 дней, токены rotation еженедельно"></textarea>
       </div>
@@ -439,6 +623,24 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
           <span class="hint">когда возвращаешься к workflow</span>
         </div>
         <textarea id="f-cadence" data-key="cadence" placeholder="еженедельный 30-мин обзор по пятницам, kill-or-keep решение через 3 недели"></textarea>
+      </div>
+
+      <div class="field-divider"></div>
+
+      <div class="field xtall">
+        <div class="row">
+          <label for="f-notes">личные заметки <span style="color:var(--ink-dim)">(опционально)</span></label>
+          <span class="hint">200–1000 слов · seed для personal-notes-analysis</span>
+        </div>
+        <textarea id="f-notes" data-key="notes" placeholder="вставь сюда 200-1000 слов из своего obsidian / inbox — последние записи о работе, болях, мыслях. это станет seed для personal-notes-analysis блока в prompt'е."></textarea>
+      </div>
+
+      <div class="field tall">
+        <div class="row">
+          <label for="f-ask">что хочу получить от модели</label>
+          <span class="hint">эхо в блок «что прошу»</span>
+        </div>
+        <textarea id="f-ask" data-key="ask" placeholder="три практических действия на эту неделю · одну формулу для своего workflow · один вопрос на который у меня нет ответа"></textarea>
       </div>
     </section>
 
@@ -467,48 +669,157 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
 
   </div>
 
-  <!-- LECTURE CONTEXT -->
-  <details class="lecture">
+  <!-- fig.3 LECTURE CONTEXT -->
+  <details class="section-fold" id="fig3">
     <summary>fig.3 контекст лекции <span class="desc">тональность, в которой собирается prompt</span></summary>
     <div class="chips">
       <div class="chip"><div class="k">harness</div><div class="v">внешняя сила обуздана управляемым контуром, а не прямым доступом</div></div>
-      <div class="chip"><div class="k">context as riverbed</div><div class="v">контекст — русло, модель — течение. без русла нет направления</div></div>
+      <div class="chip"><div class="k">context as riverbed, model as current</div><div class="v">контекст — русло, модель — течение. без русла нет направления</div></div>
       <div class="chip"><div class="k">templates before dashboards</div><div class="v">сначала шаблон процесса, потом метрики поверх него</div></div>
-      <div class="chip"><div class="k">evidence > logs</div><div class="v">логи показывают что произошло. evidence — зачем</div></div>
-      <div class="chip"><div class="k">agent passport</div><div class="v">scope, owner, expiry, rotation — паспорт уже хочет себе скоуп</div></div>
+      <div class="chip"><div class="k">evidence is decision memory, not just logs</div><div class="v">логи показывают что произошло. evidence — зачем</div></div>
+      <div class="chip"><div class="k">agent passport</div><div class="v">owner, scope, tools, expiry — паспорт уже хочет себе скоуп</div></div>
       <div class="chip"><div class="k">replay-ability</div><div class="v">любое решение должно проигрываться обратно по следу</div></div>
-      <div class="chip"><div class="k">human review как сигнал</div><div class="v">не bottleneck, а точка калибровки russlа. где правят — там слабое место контекста</div></div>
+      <div class="chip"><div class="k">hooks</div><div class="v">автоматические контрольные точки в потоке — где проверять, не спрашивая</div></div>
+      <div class="chip"><div class="k">hitl as learning signal, not approval theater</div><div class="v">человек правит — там слабое место контекста, а не bottleneck</div></div>
+      <div class="chip"><div class="k">closed loop: trigger → check → action → evidence → review</div><div class="v">→ rule/memory/eval update. без петли — open loop, дрейф</div></div>
+      <div class="chip"><div class="k">registry before governance</div><div class="v">сначала реестр агентов и капабилити, потом политики поверх него</div></div>
     </div>
   </details>
 
-  <!-- FOOTER -->
-  <footer class="bottom">
-    <div>ainative-lab-2 · prompt compiler · v2 · 2026-05-06</div>
-    <nav>
-      <a href="./index.html">hub</a>
-      <a href="./naming.html">naming</a>
-      <a href="./rules.html">rules</a>
-      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">deck</a>
-    </nav>
-  </footer>
+  <!-- fig.4 EXAMPLES -->
+  <details class="section-fold" id="fig4">
+    <summary>fig.4 примеры из лаб <span class="desc">копируй фрагмент → вставляй в prompt</span></summary>
+    <div class="examples">
+
+      <div class="example">
+        <div class="example-head">
+          <span class="tag">a</span>
+          <span class="name">w26 personal-notes-analysis tail · winter lab pattern</span>
+          <button class="btn copy" data-example="a">копировать</button>
+        </div>
+        <pre id="ex-a">## personal-notes-analysis (w26 winter lab pattern)
+
+проанализируй мои заметки выше как корпус. найди:
+- 3 повторяющихся темы (что я думаю чаще всего)
+- 2 противоречия (где я говорю одно, делаю другое)
+- 1 слепое пятно (тема которой нет, но должна быть)
+
+формат ответа: bullet list, lowercase, en dash.</pre>
+      </div>
+
+      <div class="example">
+        <div class="example-head">
+          <span class="tag">b</span>
+          <span class="name">research note framing · context route</span>
+          <button class="btn copy" data-example="b">копировать</button>
+        </div>
+        <pre id="ex-b">## context route
+
+моя сила — внешняя capability (model providers, cloud, chips, policy).
+моя задача — собрать управляемый контур: контекст → граница → evidence → owner → review.
+harness ≠ приручение силы. harness — обвязка вокруг неё.</pre>
+      </div>
+
+      <div class="example">
+        <div class="example-head">
+          <span class="tag">c</span>
+          <span class="name">closed loop reminder</span>
+          <button class="btn copy" data-example="c">копировать</button>
+        </div>
+        <pre id="ex-c">## closed loop
+
+trigger → check → action → evidence → review → rule/memory/eval update.
+каждое действие порождает evidence. каждое evidence добавляет signal в review.
+review обновляет rule, memory или eval. без этого цикла — open loop, дрейф.</pre>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- fig.5 OPENROUTER -->
+  <details class="section-fold" id="fig5">
+    <summary>fig.5 прогон через openrouter <span class="desc">опционально · ключ хранится только в браузере</span></summary>
+
+    <div class="or-grid row">
+      <div class="or-field">
+        <label for="or-key">openrouter api key</label>
+        <input type="password" id="or-key" placeholder="sk-or-v1-…" autocomplete="off" spellcheck="false">
+        <div class="hint">ключ сохраняется только в этом браузере (localStorage). ничего не уходит на наш сервер.</div>
+      </div>
+      <div class="or-field">
+        <label for="or-model">модель</label>
+        <select id="or-model">
+          <option value="anthropic/claude-haiku-4.5" selected>anthropic/claude-haiku-4.5 — fast</option>
+          <option value="anthropic/claude-sonnet-4.6">anthropic/claude-sonnet-4.6</option>
+          <option value="openai/gpt-5">openai/gpt-5</option>
+          <option value="google/gemini-2.5-pro">google/gemini-2.5-pro</option>
+          <option value="openrouter/auto">openrouter/auto</option>
+        </select>
+        <div class="hint">по умолчанию haiku — быстрый и дешёвый. свайп на sonnet/gpt-5/gemini для глубины.</div>
+      </div>
+    </div>
+
+    <div class="or-actions">
+      <button class="btn primary" id="btn-or-run" disabled>нет ключа</button>
+      <button class="btn" id="btn-or-clear-result">скрыть ответ</button>
+      <span class="or-status" id="or-status">введи ключ → кнопка активируется</span>
+    </div>
+
+    <div class="or-result" id="or-result">
+      <div class="or-result-head">
+        <span class="tag">response</span>
+        <span class="name" id="or-result-model">—</span>
+        <span class="meta" id="or-result-meta">—</span>
+      </div>
+      <pre id="or-result-body"></pre>
+    </div>
+
+  </details>
 
 </div>
 
+<!-- unified footer -->
+<footer class="ai-foot">
+  <div class="ai-foot-row">
+    <span>ainative-lab-2 · ai-native sprint vol2 · s3 · 2026-05-06</span>
+    <span>
+      <a href="https://github.com/ai-mindset-org/ainative-lab-2" target="_blank" rel="noreferrer">github</a> ·
+      <a href="https://aimindset.org" target="_blank" rel="noreferrer">ai mindset</a> ·
+      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noreferrer">deck</a>
+    </span>
+  </div>
+  <div class="ai-foot-row">
+    <span style="opacity:0.55">dragon-dna · space grotesk + ibm plex mono + jetbrains mono · single-file</span>
+    <span style="opacity:0.55">v0.3 · 2026-05-06</span>
+  </div>
+</footer>
+
 <div class="toast" id="toast">скопировано</div>
+
+<script>
+  (function(){
+    var nav = document.getElementById('aiNav');
+    var b = document.getElementById('aiBurger');
+    if (b && nav) b.addEventListener('click', function(){ nav.classList.toggle('open'); });
+  })();
+</script>
 
 <script>
 (function(){
   'use strict';
 
   var STORE_KEY = 'ain-ws01-prompt-compiler-v2';
+  var OR_KEY_STORE = 'ainative-lab-2-openrouter-key';
+  var OR_MODEL_STORE = 'ainative-lab-2-openrouter-model';
 
   var FIELDS = [
     'role','workflow',
     'trigger','input','action','review','output','metric',
-    'force','boundary','passport','evidence','cadence'
+    'force','boundary','passport','evidence','cadence',
+    // new v3 fields
+    'notes','ask'
   ];
 
-  // placeholders shown inside the prompt when a field is empty
   var PLACEHOLDERS = {
     role: '{кто ты, какая команда, какой текущий фокус}',
     workflow: '{один workflow, который болит — опиши свободно: триггер, шаги, узкое место}',
@@ -520,9 +831,11 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
     metric: '{по какой метрике оцениваешь}',
     force: '{claude code · claude api · openrouter · postgres · slack api · …}',
     boundary: '{где человек решает сам, любая автоматика требует approval}',
-    passport: '{owner + scope + expiry + rotation}',
+    passport: '{owner + scope + tools + expiry + rotation}',
     evidence: '{какой след доказывает, что workflow сработал}',
-    cadence: '{когда возвращаешься: еженедельно? kill-or-keep через сколько?}'
+    cadence: '{когда возвращаешься: еженедельно? kill-or-keep через сколько?}',
+    notes: '',
+    ask: '{три практических действия · одна формула · один открытый вопрос}'
   };
 
   // ---------- state ----------
@@ -549,7 +862,6 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
   }
 
   // ---------- prompt assembly ----------
-  // Returns { plain: string, html: string }
   function composePrompt(s){
     function v(key){
       var x = (s[key] || '').trim();
@@ -569,29 +881,35 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
     var passport = v('passport');
     var evidence = v('evidence');
     var cadence = v('cadence');
+    var notes = v('notes');
+    var ask = v('ask');
 
-    // build as array of segments {text, kind} where kind: 'plain'|'ph'|'h1'|'h2'|'em'
     var segs = [];
     function add(text, kind){ segs.push({ t: text, k: kind || 'plain' }); }
     function field(f){
       if (f.has) segs.push({ t: f.val, k: 'plain' });
-      else segs.push({ t: f.ph, k: 'ph' });
+      else if (f.ph) segs.push({ t: f.ph, k: 'ph' });
     }
     function nl(n){ segs.push({ t: '\n'.repeat(n||1), k: 'plain' }); }
 
     add('# context для agentного workflow', 'h1');
     nl(2);
+    add('// собрано в ainative-lab-2 prompt compiler · ai-native sprint vol2 · w1', 'dim');
+    nl(2);
 
+    // === роль и сила ===
     add('## роль и сила', 'h2'); nl(1);
     field(role); nl(2);
     add('я работаю в режиме ', 'plain');
     add('harness', 'em');
-    add(' вокруг внешней силы — capability приходит от: ', 'plain');
+    add(' вокруг внешней силы. capability приходит от: ', 'plain');
     field(force); add('.', 'plain'); nl(1);
     add('моя задача — собрать управляемый ', 'plain');
     add('контур', 'em');
-    add(': контекст → граница → evidence → owner → review.', 'plain'); nl(2);
+    add(': external capability → context route → boundary → evidence → owner → review.', 'plain'); nl(1);
+    add('контекст — ', 'plain'); add('русло', 'em'); add(', модель — ', 'plain'); add('течение', 'em'); add('. без русла нет направления.', 'plain'); nl(2);
 
+    // === workflow ===
     add('## workflow', 'h2'); nl(1);
     field(workflow); nl(2);
     add('шесть полей одного процесса:', 'plain'); nl(1);
@@ -601,46 +919,79 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
     add('- review: ', 'plain'); field(review); nl(1);
     add('- output: ', 'plain'); field(output); nl(1);
     add('- metric: ', 'plain'); field(metric); nl(2);
+    add('templates before dashboards', 'em'); add(' — сначала шаблон процесса, потом метрика поверх.', 'plain'); nl(2);
 
+    // === граница ===
     add('## граница', 'h2'); nl(1);
     field(boundary); nl(1);
-    add('здесь human-only — любое автоматическое действие требует approval. это не bottleneck, а точка калибровки русла: где правят, там слабое место контекста.', 'plain'); nl(2);
+    add('здесь human-only. ', 'plain');
+    add('hitl как learning signal, не approval theater', 'em');
+    add(' — где правят, там слабое место контекста, а не bottleneck.', 'plain'); nl(2);
 
-    add('## passport агента', 'h2'); nl(1);
+    // === passport ===
+    add('## agent passport', 'h2'); nl(1);
     field(passport); nl(1);
-    add('scope не должен быть шире, чем у меня самого. истечение обязательно. ротация токенов — по расписанию, не по факту инцидента.', 'plain'); nl(2);
+    add('passport = owner, scope, tools, expiry', 'em'); add('. scope не должен быть шире, чем у меня самого. истечение обязательно. ротация токенов — по расписанию, не по факту инцидента. ', 'plain');
+    add('registry before governance', 'em'); add(' — сначала реестр агентов и капабилити, потом политики поверх.', 'plain'); nl(2);
 
+    // === evidence ===
     add('## evidence', 'h2'); nl(1);
     field(evidence); nl(1);
-    add('logs показывают, что произошло. ', 'plain');
-    add('evidence', 'em');
-    add(' показывает, зачем — это память решений, а не байтов. каждое действие должно проигрываться обратно по следу.', 'plain'); nl(2);
+    add('evidence is decision memory, not just logs', 'em');
+    add('. logs показывают, что произошло. evidence показывает, зачем. каждое действие должно проигрываться обратно по следу.', 'plain'); nl(2);
 
+    // === личные заметки ===
+    add('## личные заметки', 'h2'); nl(1);
+    if (notes.has) {
+      add(notes.val, 'plain'); nl(2);
+      add('// — это seed для personal-notes-analysis блока ниже', 'dim'); nl(2);
+    } else {
+      add('— личных заметок нет — пропускаю personal-notes-analysis блок.', 'dim'); nl(2);
+    }
+
+    // === review cadence ===
     add('## review cadence', 'h2'); nl(1);
     field(cadence); nl(1);
-    add('возврат — обязательная часть контура. без review-date workflow не workflow, а одноразовый скрипт.', 'plain'); nl(2);
+    add('возврат — обязательная часть контура. ', 'plain');
+    add('hooks', 'em'); add(' = автоматические контрольные точки в потоке. ', 'plain');
+    add('closed loop', 'em');
+    add(': trigger → check → action → evidence → review → rule/memory/eval update. без петли — open loop, дрейф.', 'plain'); nl(2);
 
+    // === что прошу ===
     add('---', 'plain'); nl(2);
+    add('## что прошу', 'h2'); nl(1);
+    field(ask); nl(2);
 
-    add('## что мне нужно от тебя', 'h2'); nl(2);
-
-    add('1. предложи ', 'plain'); add('seed', 'em'); add(' под этот workflow в формате: source · signal · ask · output · evidence — одной плотной таблицей.', 'plain'); nl(2);
-    add('2. покажи 2–3 точки compensation: где blast-radius выше — там guardrail должен быть толще. укажи конкретно, какой guardrail и почему.', 'plain'); nl(2);
-    add('3. пометь, какие из шести полей ', 'plain'); add('самые слабые', 'em'); add(' сейчас (нет владельца / метрики / явного review-date / непрозрачный input). дай по каждому — как починить за один шаг.', 'plain'); nl(2);
-    add('4. дай первый шаг на следующие 48 часов: ', 'plain'); add('один артефакт', 'em'); add(', который снимет неопределённость. не план — артефакт.', 'plain'); nl(2);
-    add('5. дай ', 'plain'); add('replay-чек', 'em'); add(': по каким трём вопросам через неделю я смогу проиграть назад это решение и понять, было оно правильным или нет.', 'plain'); nl(2);
-
+    // === что нужно от тебя — 5 пунктов ===
     add('---', 'plain'); nl(2);
+    add('## что нужно от тебя', 'h2'); nl(2);
 
+    add('1. предложи ', 'plain'); add('seed', 'em');
+    add(' под этот workflow в формате: source · signal · ask · output · evidence — одной плотной таблицей.', 'plain'); nl(2);
+
+    add('2. покажи 2–3 точки ', 'plain'); add('compensation', 'em');
+    add(': где blast-radius выше — там guardrail должен быть толще. укажи конкретно, какой guardrail и почему.', 'plain'); nl(2);
+
+    add('3. пометь, какие из шести полей ', 'plain'); add('самые слабые', 'em');
+    add(' (нет владельца / метрики / явного review-date / непрозрачный input). дай по каждому — как починить за один шаг.', 'plain'); nl(2);
+
+    add('4. дай первый шаг на следующие 48 часов: ', 'plain'); add('один артефакт', 'em');
+    add(', который снимет неопределённость. не план — артефакт.', 'plain'); nl(2);
+
+    add('5. выбери ', 'plain'); add('одну зону harness\'a', 'em');
+    add(' (context · memory · guardrail · review · naming · communication), которую усилить в первую очередь. почему именно эту, что именно сделать на этой неделе, какое evidence покажет, что зона усилилась.', 'plain'); nl(2);
+
+    // === тональность ===
+    add('---', 'plain'); nl(2);
     add('## тональность ответа', 'h2'); nl(1);
     add('— прямая, lowercase, без «помогу тебе» и «давайте».', 'plain'); nl(1);
-    add('— говори про harness, контур, силу, evidence, owner, scope, expiry, replay.', 'plain'); nl(1);
+    add('— говори про harness, контур, силу, evidence, owner, scope, expiry, replay, hooks, registry.', 'plain'); nl(1);
     add('— en dash «–» для тире, не em dash.', 'plain'); nl(1);
     add('— никаких обещаний «ai заменит» — речь о том, как ', 'plain'); add('я', 'em'); add(' держу контур.', 'plain'); nl(1);
     add('— шаблон важнее дашборда: сначала русло, потом метрика поверх.', 'plain'); nl(1);
     add('— evidence важнее логов: log = что, evidence = зачем.', 'plain'); nl(2);
 
-    add('respond with: { 1.seed-таблица, 2.compensation-точки, 3.слабые-поля, 4.артефакт-48ч, 5.replay-чек }', 'em');
+    add('respond with: { 1.seed-таблица, 2.compensation-точки, 3.слабые-поля, 4.артефакт-48ч, 5.зона-harness-на-неделю }', 'em');
 
     // render two outputs
     var plain = '';
@@ -652,6 +1003,7 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
       if (seg.k === 'ph') html += '<span class="ph">' + t + '</span>';
       else if (seg.k === 'h1' || seg.k === 'h2') html += '<span class="h1">' + t + '</span>';
       else if (seg.k === 'em') html += '<span class="em">' + t + '</span>';
+      else if (seg.k === 'dim') html += '<span class="dim">' + t + '</span>';
       else html += t;
     }
 
@@ -681,17 +1033,14 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
   function render(){
     var compiled = composePrompt(state);
     preview.classList.add('dim');
-    // small RAF tick so the dim transition shows
     requestAnimationFrame(function(){
       preview.innerHTML = compiled.html;
       requestAnimationFrame(function(){ preview.classList.remove('dim'); });
     });
-    // meta
     var chars = compiled.plain.length;
     var lines = compiled.plain.split('\n').length;
     metaText.textContent = '~' + chars.toLocaleString('ru-RU') + ' символов · ' + lines + ' строк';
 
-    // status
     var filled = countFilled();
     statusPill.classList.remove('empty','ready');
     if (filled === 0) {
@@ -704,7 +1053,6 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
       statusText.textContent = 'готово';
     }
 
-    // store last plain for copy/download
     preview.dataset.plain = compiled.plain;
   }
 
@@ -735,23 +1083,26 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
     toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1600);
   }
 
-  // copy
-  document.getElementById('btn-copy').addEventListener('click', function(){
-    var text = preview.dataset.plain || '';
+  function copyText(text, label){
     if (!navigator.clipboard) {
-      // fallback
       var ta = document.createElement('textarea');
       ta.value = text; document.body.appendChild(ta); ta.select();
       try { document.execCommand('copy'); } catch(e){}
       document.body.removeChild(ta);
-      showToast('скопировано');
+      showToast(label || 'скопировано');
       return;
     }
     navigator.clipboard.writeText(text).then(function(){
-      showToast('скопировано — ' + text.length.toLocaleString('ru-RU') + ' символов');
+      showToast(label || ('скопировано — ' + text.length.toLocaleString('ru-RU') + ' символов'));
     }).catch(function(){
       showToast('не удалось скопировать');
     });
+  }
+
+  // copy main prompt
+  document.getElementById('btn-copy').addEventListener('click', function(){
+    var text = preview.dataset.plain || '';
+    copyText(text, 'скопировано — ' + text.length.toLocaleString('ru-RU') + ' символов');
   });
 
   // download
@@ -773,12 +1124,136 @@ footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
 
   // clear
   document.getElementById('btn-clear').addEventListener('click', function(){
-    if (!confirm('очистить все 13 полей и стереть локальный сохранённый контекст?')) return;
+    if (!confirm('очистить все ' + FIELDS.length + ' полей и стереть локальный сохранённый контекст?')) return;
     FIELDS.forEach(function(k){ state[k] = ''; });
     document.querySelectorAll('textarea[data-key]').forEach(function(ta){ ta.value = ''; });
     try { localStorage.removeItem(STORE_KEY); } catch(e){}
     render();
     showToast('очищено');
+  });
+
+  // example copy buttons
+  document.querySelectorAll('.example .copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-example');
+      var pre = document.getElementById('ex-' + id);
+      if (!pre) return;
+      copyText(pre.textContent, 'фрагмент ' + id + ' скопирован');
+    });
+  });
+
+  // ---------- openrouter integration ----------
+  var orKey = document.getElementById('or-key');
+  var orModel = document.getElementById('or-model');
+  var orRun = document.getElementById('btn-or-run');
+  var orStatus = document.getElementById('or-status');
+  var orResult = document.getElementById('or-result');
+  var orResultBody = document.getElementById('or-result-body');
+  var orResultModel = document.getElementById('or-result-model');
+  var orResultMeta = document.getElementById('or-result-meta');
+  var orClear = document.getElementById('btn-or-clear-result');
+
+  // load saved
+  try {
+    var savedKey = localStorage.getItem(OR_KEY_STORE) || '';
+    if (savedKey) orKey.value = savedKey;
+    var savedModel = localStorage.getItem(OR_MODEL_STORE);
+    if (savedModel) orModel.value = savedModel;
+  } catch(e){}
+
+  function refreshOrButton(){
+    var hasKey = (orKey.value || '').trim().length > 10;
+    if (!hasKey) {
+      orRun.disabled = true;
+      orRun.textContent = 'нет ключа';
+      orStatus.textContent = 'введи ключ → кнопка активируется';
+      orStatus.classList.remove('ok','err');
+    } else {
+      orRun.disabled = false;
+      orRun.textContent = 'прогнать через модель';
+      orStatus.textContent = 'ключ принят. ничего не уходит на наш сервер.';
+      orStatus.classList.remove('err');
+      orStatus.classList.add('ok');
+    }
+  }
+  refreshOrButton();
+
+  orKey.addEventListener('input', function(){
+    try { localStorage.setItem(OR_KEY_STORE, orKey.value || ''); } catch(e){}
+    refreshOrButton();
+  });
+  orModel.addEventListener('change', function(){
+    try { localStorage.setItem(OR_MODEL_STORE, orModel.value); } catch(e){}
+  });
+
+  orClear.addEventListener('click', function(){
+    orResult.classList.remove('show');
+    orResultBody.textContent = '';
+  });
+
+  orRun.addEventListener('click', function(){
+    var key = (orKey.value || '').trim();
+    if (!key) { showToast('нет ключа'); return; }
+    var model = orModel.value;
+    var prompt = preview.dataset.plain || '';
+    if (!prompt.trim()) { showToast('сначала заполни хотя бы одно поле'); return; }
+
+    orRun.disabled = true;
+    orRun.textContent = 'отправляю…';
+    orStatus.textContent = 'модель: ' + model + ' · ' + prompt.length.toLocaleString('ru-RU') + ' символов промпта';
+    orStatus.classList.remove('err','ok');
+    orResult.classList.remove('show');
+
+    var t0 = Date.now();
+    fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + key,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': location.origin,
+        'X-Title': 'ainative-lab-2 prompt compiler'
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    }).then(function(res){
+      return res.json().then(function(json){ return { status: res.status, json: json }; });
+    }).then(function(r){
+      var dt = ((Date.now() - t0) / 1000).toFixed(1) + 's';
+      if (r.status === 401) {
+        orStatus.textContent = 'неверный ключ';
+        orStatus.classList.add('err');
+      } else if (r.status === 429) {
+        orStatus.textContent = 'лимит — попробуй позже';
+        orStatus.classList.add('err');
+      } else if (r.status >= 400) {
+        var msg = (r.json && r.json.error && r.json.error.message) || ('http ' + r.status);
+        orStatus.textContent = 'ошибка: ' + msg;
+        orStatus.classList.add('err');
+      } else {
+        var content = '';
+        try {
+          content = r.json.choices[0].message.content || '';
+        } catch(e){
+          content = JSON.stringify(r.json, null, 2);
+        }
+        orResultBody.textContent = content;
+        orResultModel.textContent = (r.json && r.json.model) || model;
+        var usage = r.json && r.json.usage;
+        var usageStr = usage ? ('in ' + (usage.prompt_tokens || 0) + ' / out ' + (usage.completion_tokens || 0) + ' · ' + dt) : dt;
+        orResultMeta.textContent = usageStr;
+        orResult.classList.add('show');
+        orStatus.textContent = 'готово · ' + dt;
+        orStatus.classList.remove('err');
+        orStatus.classList.add('ok');
+      }
+    }).catch(function(err){
+      orStatus.textContent = 'ошибка сети: ' + (err && err.message ? err.message : err);
+      orStatus.classList.add('err');
+    }).then(function(){
+      refreshOrButton();
+    });
   });
 
   // init
