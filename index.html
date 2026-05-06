@@ -3,330 +3,681 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ainative-lab-2 · ai-native sprint vol2 · s3</title>
-<meta name="description" content="entry hub for ai-native sprint vol2 (s3). 4 may – 25 may 2026. ai mindset org.">
-<meta property="og:title" content="ainative-lab-2 · s3">
-<meta property="og:description" content="ai-native sprint vol2 · 4 may – 25 may 2026 · ai mindset org">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://ainative-lab-2.netlify.app/">
-<meta name="twitter:card" content="summary">
+<title>ai-native sprint vol2 · s3 · ai mindset</title>
+<meta name="description" content="harness вокруг силы — personal os как первый контур, который масштабируется до команды и компании. ai-native sprint vol2, 2 may – 25 may 2026.">
+<link rel="icon" href="./assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
-  :root{
-    --ink:#000;
-    --paper:#fff;
-    --dim:#bdbdbd;
-    --line:1px solid #000;
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-weight:400;
-    font-size:13px;
-    line-height:1.55;
-    text-transform:lowercase;
-    letter-spacing:.01em;
-    padding:18px;
-  }
-  a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink)}
-  a:hover{background:var(--ink); color:var(--paper)}
-  .wrap{max-width:1280px; margin:0 auto}
-  .frame{border:var(--line); padding:18px; margin-bottom:16px}
-  .row{display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start; justify-content:space-between}
-  .row-end{justify-content:flex-end}
-  .muted{color:var(--dim)}
-  .tiny{font-size:11px}
-  .num{font-feature-settings:"tnum" 1}
+:root {
+  --bg: #07090d;
+  --ink: #f0f7f4;
+  --ink-soft: rgba(240,247,244,0.74);
+  --ink-dim: rgba(240,247,244,0.48);
+  --panel: rgba(12,17,23,0.78);
+  --line: rgba(92,218,204,0.2);
+  --line-strong: rgba(92,218,204,0.48);
+  --teal: #5cdacc;
+  --green: #56e39f;
+  --amber: #e4b54b;
+  --red: #ff6d61;
+  --blue: #6db2ff;
+  --violet: #9c86ff;
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "IBM Plex Mono", ui-monospace, monospace;
+  --font-code: "JetBrains Mono", ui-monospace, monospace;
+}
 
-  /* header */
-  header.frame h1{
-    font-size:34px;
-    font-weight:500;
-    margin:0 0 6px 0;
-    letter-spacing:.02em;
-  }
-  header .sub{font-size:13px}
-  header .right{font-size:11px; text-align:right}
-  @media (max-width:640px){
-    header .right{text-align:left; margin-top:8px}
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  /* fig label */
-  .fig{
-    display:inline-block;
-    border:var(--line);
-    padding:2px 8px;
-    font-size:11px;
-    font-weight:500;
-    margin-bottom:10px;
-  }
-  .fig.invert{background:var(--ink); color:var(--paper)}
-  .fig-title{
-    font-size:16px;
-    font-weight:500;
-    margin:0 0 12px 0;
-  }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  text-transform: lowercase;
+  position: relative;
+  overflow-x: hidden;
+}
 
-  /* fig.1 today */
-  .today{position:relative}
-  .today .band{
-    background:var(--ink);
-    color:var(--paper);
-    padding:10px 14px;
-    margin:-18px -18px 14px -18px;
-    border-bottom:var(--line);
-    display:flex; gap:12px; justify-content:space-between; flex-wrap:wrap;
-  }
-  .today .band .when{font-size:11px}
-  .today p{margin:0 0 16px 0; max-width:780px}
-  .cta{display:flex; gap:12px; flex-wrap:wrap}
-  .cta a{
-    display:inline-block;
-    border:var(--line);
-    padding:10px 14px;
-    font-weight:500;
-    font-size:13px;
-  }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
 
-  /* grids */
-  .grid{display:grid; gap:12px}
-  .grid-5{grid-template-columns:repeat(5, 1fr)}
-  .grid-3{grid-template-columns:repeat(3, 1fr)}
-  @media (max-width:1000px){
-    .grid-5{grid-template-columns:repeat(2, 1fr)}
-    .grid-3{grid-template-columns:1fr}
-  }
-  @media (max-width:560px){
-    .grid-5{grid-template-columns:1fr}
-  }
-  .card{
-    border:var(--line);
-    padding:12px;
-    display:flex; flex-direction:column; gap:8px;
-    min-height:90px;
-    background:var(--paper);
-  }
-  .card .n{font-size:18px; font-weight:500}
-  .card .t{font-weight:500}
-  .card .arrow{margin-top:auto; font-size:11px}
-  .card a{border-bottom:none}
-  .card:hover{background:var(--ink); color:var(--paper)}
-  .card:hover a{color:var(--paper)}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    conic-gradient(from 220deg at 80% 20%, rgba(92,218,204,0.09), transparent 35%),
+    conic-gradient(from 40deg at 15% 85%, rgba(86,227,159,0.06), transparent 40%),
+    radial-gradient(ellipse at 50% 0%, rgba(92,218,204,0.05), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-  /* ported list */
-  .ported{display:flex; flex-direction:column; gap:0}
-  .ported .item{
-    display:grid;
-    grid-template-columns:1fr 2fr;
-    gap:14px;
-    padding:10px 0;
-    border-top:var(--line);
-  }
-  .ported .item:last-child{border-bottom:var(--line)}
-  .ported .item .desc{color:var(--ink)}
-  @media (max-width:640px){
-    .ported .item{grid-template-columns:1fr}
-  }
-  .stub{
-    display:inline-block;
-    border:var(--line);
-    padding:0 6px;
-    font-size:10px;
-    margin-left:6px;
-    vertical-align:middle;
-  }
+main, nav, footer { position: relative; z-index: 1; }
 
-  /* context list */
-  .ctx{list-style:none; margin:0; padding:0}
-  .ctx li{
-    display:grid;
-    grid-template-columns:140px 1fr;
-    gap:14px;
-    padding:8px 0;
-    border-top:var(--line);
-  }
-  .ctx li:last-child{border-bottom:var(--line)}
-  .ctx li .k{font-weight:500}
-  @media (max-width:640px){
-    .ctx li{grid-template-columns:1fr}
-    .ctx li .k{color:var(--dim); font-size:11px}
-  }
+a { color: var(--teal); text-decoration: none; transition: color .2s, opacity .2s; }
+a:hover { color: var(--ink); }
 
-  /* roadmap */
-  .road{list-style:none; margin:0; padding:0}
-  .road li{
-    padding:6px 0;
-    border-top:var(--line);
-    display:flex; gap:10px; align-items:baseline;
-  }
-  .road li:last-child{border-bottom:var(--line)}
-  .road .box{
-    display:inline-block;
-    width:18px; height:18px;
-    border:var(--line);
-    text-align:center;
-    line-height:16px;
-    font-size:12px;
-    flex:0 0 18px;
-  }
-  .road .box.done{background:var(--ink); color:var(--paper)}
-  .road .done-text{text-decoration:line-through; color:var(--dim)}
+nav.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--line-strong);
+  box-shadow: 0 1px 24px rgba(92,218,204,0.08);
+  background: rgba(7,9,13,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-  /* footer */
-  footer{font-size:11px; color:var(--ink)}
-  footer .line{padding:2px 0}
-  footer a{font-size:11px}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { height: 24px; filter: invert(1) brightness(1.2); }
+.brand span { font-family: var(--font-code); font-size: 13px; letter-spacing: 0.04em; color: var(--ink-soft); }
 
-  /* note block */
-  .note{
-    margin-top:14px;
-    padding:10px 12px;
-    border:var(--line);
-    border-style:dashed;
-    font-size:12px;
-    color:var(--ink);
-    background:var(--paper);
-  }
+.nav-links { display: flex; gap: 22px; font-family: var(--font-code); font-size: 13px; }
+.nav-links a { color: var(--ink-soft); }
+.nav-links a:hover { color: var(--teal); }
 
-  @media print{
-    body{padding:0; font-size:11px}
-    a{color:var(--ink); border-bottom:none}
-    .frame{break-inside:avoid; page-break-inside:avoid}
-    .card:hover{background:var(--paper); color:var(--ink)}
-    .cta a{background:var(--paper); color:var(--ink)}
-  }
+main { max-width: 1280px; margin: 0 auto; padding: 64px 32px 96px; }
+section { margin-bottom: 88px; }
+
+.fig-label {
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.eyebrow {
+  font-family: var(--font-code);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.hero { padding: 72px 0 32px; }
+
+.hero h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+
+.hero h2 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.3;
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+  max-width: 820px;
+}
+
+.hero p.framing {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 720px;
+  margin-bottom: 36px;
+}
+
+.cta-row { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel);
+  color: var(--ink);
+  font-family: var(--font-code);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.btn:hover {
+  background: rgba(92,218,204,0.08);
+  border-color: var(--teal);
+  color: var(--ink);
+  box-shadow: 0 0 24px rgba(92,218,204,0.18);
+  transform: translateY(-1px);
+}
+.btn.primary { border-color: var(--teal); color: var(--teal); }
+.btn.primary:hover { background: rgba(92,218,204,0.12); color: var(--ink); }
+
+.today {
+  border: 1px solid var(--teal);
+  background: linear-gradient(180deg, rgba(92,218,204,0.06), rgba(92,218,204,0.01));
+  padding: 32px;
+  border-radius: 2px;
+  position: relative;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(92,218,204,0), inset 0 0 24px rgba(92,218,204,0.04); border-color: rgba(92,218,204,0.55); }
+  50%      { box-shadow: 0 0 32px rgba(92,218,204,0.25), inset 0 0 32px rgba(92,218,204,0.08); border-color: rgba(92,218,204,0.85); }
+}
+
+.today .label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-code);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.today h3 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: clamp(28px, 3.5vw, 40px);
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.today p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 680px;
+  margin-bottom: 22px;
+}
+
+.today .links {
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-code);
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.speaker {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 20px;
+  transition: all .2s ease;
+  position: relative;
+}
+.speaker:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px rgba(92,218,204,0.1);
+}
+
+.speaker h3 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 10px;
+  letter-spacing: -0.005em;
+}
+
+.chip {
+  display: inline-block;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border: 1px solid rgba(228,181,75,0.4);
+  color: var(--amber);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  border-radius: 1px;
+}
+.chip.tbd { border-color: rgba(240,247,244,0.2); color: var(--ink-dim); }
+
+.speaker p {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.weeks { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+.week {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 18px 16px;
+  transition: all .2s ease;
+}
+.week:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.week.current { border-color: var(--teal); box-shadow: 0 0 24px rgba(92,218,204,0.12); }
+.week.dim { border-color: rgba(240,247,244,0.14); }
+
+.week .w-eyebrow {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: var(--ink-soft);
+}
+.week.current .w-eyebrow { color: var(--teal); }
+.week.dim .w-eyebrow { color: var(--ink-dim); }
+
+.week h4 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.week p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.tool, .dash-card {
+  display: block;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 22px 20px;
+  transition: all .2s ease;
+  color: var(--ink);
+}
+.tool:hover, .dash-card:hover {
+  border-color: var(--teal);
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px rgba(92,218,204,0.12);
+}
+
+.tool .num {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+.tool h4 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 4px;
+  letter-spacing: -0.005em;
+}
+
+.dash-card h4 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--teal);
+  margin-bottom: 10px;
+  letter-spacing: -0.005em;
+}
+.dash-card p {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.section-sub {
+  font-family: var(--font-code);
+  font-size: 12px;
+  color: var(--ink-dim);
+  margin-top: 16px;
+  letter-spacing: 0.04em;
+}
+
+.roadmap-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 32px;
+  font-family: var(--font-code);
+  font-size: 13px;
+}
+
+.roadmap-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(240,247,244,0.06);
+  color: var(--ink-soft);
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.roadmap-list li .mark { font-family: var(--font-code); width: 24px; display: inline-block; }
+.roadmap-list li.done { color: var(--ink-dim); }
+.roadmap-list li.done .mark { color: var(--green); }
+.roadmap-list li.todo .mark { color: var(--amber); }
+
+h2.section-title {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: clamp(28px, 3.5vw, 40px);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 28px;
+}
+
+footer {
+  border-top: 1px solid var(--line-strong);
+  box-shadow: 0 -1px 24px rgba(92,218,204,0.06);
+  padding: 28px 32px;
+  font-family: var(--font-code);
+  font-size: 12px;
+  color: var(--ink-dim);
+  background: rgba(7,9,13,0.7);
+  backdrop-filter: blur(8px);
+}
+footer .row {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+footer .row + .row { margin-top: 14px; }
+footer .links { display: flex; gap: 18px; flex-wrap: wrap; }
+footer a { color: var(--ink-soft); }
+footer a:hover { color: var(--teal); }
+
+@media (max-width: 1024px) {
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-5 { grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .weeks  { grid-template-columns: repeat(2, 1fr); }
+  .roadmap-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  nav.top { padding: 14px 18px; flex-wrap: wrap; gap: 12px; }
+  .nav-links { gap: 14px; font-size: 12px; }
+  main { padding: 40px 18px 64px; }
+  section { margin-bottom: 64px; }
+  .grid-3, .grid-5, .grid-4, .weeks { grid-template-columns: 1fr; }
+  .hero { padding: 32px 0 16px; }
+  .today { padding: 22px; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <!-- HEADER -->
-  <header class="frame">
-    <div class="row">
-      <div>
-        <h1>ainative-lab-2</h1>
-        <div class="sub">ai-native sprint vol2 · s3 · 4 may – 25 may 2026 · ai mindset org</div>
-      </div>
-      <div class="right tiny muted">
-        successor to <a href="https://ai-mindset-org.github.io/ainative-lab/">ai-mindset-org/ainative-lab</a> (s2)
-      </div>
-    </div>
-  </header>
+<nav class="top">
+  <div class="brand">
+    <img src="./assets/aim-logo.png" alt="ai mindset">
+    <span>ai mindset</span>
+  </div>
+  <div class="nav-links">
+    <a href="./naming.html">→ naming</a>
+    <a href="./rules.html">→ rules</a>
+    <a href="./knowledge-graph.html">→ knowledge graph</a>
+    <a href="./playground.html">→ playground</a>
+    <a href="https://ainative-lab-deck.netlify.app/">→ deck</a>
+  </div>
+</nav>
 
-  <!-- FIG.1 TODAY -->
-  <section id="fig-1-today" class="frame today">
-    <div class="band">
-      <span class="fig invert">fig.1 · today · active</span>
-      <span class="when num">2026-05-06 · 17:00 cet</span>
-    </div>
-    <h2 class="fig-title">w1 workshop · personal os / harness · povaliaev · 2026-05-06 17:00 cet</h2>
-    <p>контекст-инжиниринг как harness вокруг внешней силы. соберём первую версию personal os с context, шаблонами, инструментами и границами под одну задачу. поиск, не лекция.</p>
-    <div class="cta">
-      <a href="./playground.html">→ open playground</a>
-      <a href="https://ainative-lab-deck.netlify.app/">→ open deck</a>
+<main>
+
+  <section class="hero">
+    <div class="eyebrow">ai-native sprint vol2 · s3 · 2 may – 25 may 2026</div>
+    <h1>harness вокруг силы</h1>
+    <h2>personal os как первый контур, который масштабируется до команды и компании</h2>
+    <p class="framing">четыре недели разбираем, как собирать управляемый ai-контур: контекст, граница, evidence, owner, review. меньше лекций — больше воркшопов. внешняя сила есть, наша задача — построить вокруг неё harness.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="./playground.html">→ открыть playground</a>
+      <a class="btn" href="https://ainative-lab-deck.netlify.app/">→ открыть deck</a>
     </div>
   </section>
 
-  <!-- FIG.2 ARTIFACT TOOLKIT -->
-  <section id="fig-2-toolkit" class="frame">
-    <span class="fig">fig.2 · artifact toolkit</span>
-    <h2 class="fig-title">artifact toolkit · 5 шаблонов под один workflow</h2>
-    <div class="grid grid-5">
-      <a class="card" href="./playground.html#fig-2-workcase">
-        <span class="n">①</span>
-        <span class="t">workcase canvas</span>
-        <span class="arrow">→ playground#fig-2-workcase</span>
-      </a>
-      <a class="card" href="./playground.html#fig-2-seed">
-        <span class="n">②</span>
-        <span class="t">context seed</span>
-        <span class="arrow">→ playground#fig-2-seed</span>
-      </a>
-      <a class="card" href="./playground.html#fig-2-passport">
-        <span class="n">③</span>
-        <span class="t">agent passport</span>
-        <span class="arrow">→ playground#fig-2-passport</span>
-      </a>
-      <a class="card" href="./playground.html#fig-2-guardrail">
-        <span class="n">④</span>
-        <span class="t">guardrail checklist</span>
-        <span class="arrow">→ playground#fig-2-guardrail</span>
-      </a>
-      <a class="card" href="./playground.html#fig-2-evidence">
-        <span class="n">⑤</span>
-        <span class="t">evidence note</span>
-        <span class="arrow">→ playground#fig-2-evidence</span>
-      </a>
-    </div>
-    <div class="note">
-      artifact chain — переносимые шаблоны для одного workflow. лежат в playground'е, копируются в твой vault через export .md
+  <section id="today">
+    <div class="fig-label">fig.1 — сегодня</div>
+    <div class="today">
+      <div class="label-row">
+        <span>сейчас w1 · среда 6 мая · 17:00 cet</span>
+        <span style="color: var(--ink-dim)">live</span>
+      </div>
+      <h3>setup personal os — povaliaev</h3>
+      <p>первая настройка skills, контекст, первые рабочие артефакты. поиск, не лекция. подключайтесь параллельно с cursor / claude code / любым агентом — на выходе будет первая версия personal os с переносимыми шаблонами.</p>
+      <div class="links">
+        <a href="./playground.html">→ playground (заполняй на воркшопе)</a>
+        <a href="obsidian://open?vault=notes&amp;file=AI%20mindset%20%7Bshared%7D%2Fai-mindset-2026%2Finbox%2F%7BAIM%7D%20%7Bresearch%7D%20Setup%20Personal%20OS%20W1%20%E2%80%93%202026-05-06.md">→ research note (что готовил)</a>
+      </div>
     </div>
   </section>
 
-  <!-- FIG.3 PORTED FROM S2 -->
-  <section id="fig-3-ported" class="frame">
-    <span class="fig">fig.3 · ported from s2</span>
-    <h2 class="fig-title">ported from s2 · cherry-picked, adapted to s3</h2>
-    <div class="ported">
-      <div class="item">
-        <div><a href="./naming.html">→ naming convention (s3)</a> <span class="stub">stub</span></div>
-        <div class="desc">короткая интерактивная форма для имени файла</div>
+  <section id="speakers">
+    <div class="fig-label">fig.2 — спикеры лабы</div>
+    <h2 class="section-title">13 спикеров · 4 недели</h2>
+    <div class="grid-3">
+      <div class="speaker">
+        <h3>alex povaliaev</h3>
+        <span class="chip">w0/w1/closing</span>
+        <p>host, personal os, harness</p>
       </div>
-      <div class="item">
-        <div><a href="./rules.html">→ rules &amp; skills explorer (s3)</a> <span class="stub">stub</span></div>
-        <div class="desc">правила и навыки команды и личной оси</div>
+      <div class="speaker">
+        <h3>stepan gershuni</h3>
+        <span class="chip">w1/w2/w3 lectures</span>
+        <p>co-author, why-ai-transformation, system above model, vertical focus</p>
       </div>
-      <div class="item">
-        <div><a href="https://ai-mindset-org.github.io/ainative-lab/">→ s2 archive (read-only reference)</a></div>
-        <div class="desc">прошлый sprint целиком</div>
+      <div class="speaker">
+        <h3>sereja ris</h3>
+        <span class="chip">w1 · 5 may</span>
+        <p>workshop — ai-first setup + первый артефакт, vibe-coders stack</p>
       </div>
-    </div>
-    <div class="note">
-      naming.html и rules.html — placeholders, заполняются параллельными агентами. могут рендериться пустыми на первой итерации.
+      <div class="speaker">
+        <h3>denis smirnov</h3>
+        <span class="chip">w1–w3 modules</span>
+        <p>community track — диагностика, версионирование, сравнение, acme labs demo</p>
+      </div>
+      <div class="speaker">
+        <h3>alex smirnov</h3>
+        <span class="chip">w2 alumni</span>
+        <p>кейс участника предыдущей лабы</p>
+      </div>
+      <div class="speaker">
+        <h3>konstantin urvantsev</h3>
+        <span class="chip">w2 alumni</span>
+        <p>кейс — altairika edtech (w26 alumni)</p>
+      </div>
+      <div class="speaker">
+        <h3>bayram annakov</h3>
+        <span class="chip">w3</span>
+        <p>sales automation</p>
+      </div>
+      <div class="speaker">
+        <h3>roman buzko</h3>
+        <span class="chip">w2</span>
+        <p>ai × law, governance baseline</p>
+      </div>
+      <div class="speaker">
+        <h3>vitaly kleban</h3>
+        <span class="chip">w2</span>
+        <p>self-improving agents, gepa, ooda</p>
+      </div>
+      <div class="speaker">
+        <h3>gleb sidora</h3>
+        <span class="chip tbd">tbd</span>
+        <p>tbd</p>
+      </div>
+      <div class="speaker">
+        <h3>dima kharin</h3>
+        <span class="chip tbd">tbd</span>
+        <p>transformation framework</p>
+      </div>
+      <div class="speaker">
+        <h3>evgeny kuryshev</h3>
+        <span class="chip">w2</span>
+        <p>founding-engineer perspective, scaling без bloat</p>
+      </div>
+      <div class="speaker">
+        <h3>egor egerev</h3>
+        <span class="chip tbd">tbd</span>
+        <p>tbd</p>
+      </div>
+      <div class="speaker">
+        <h3>vsevolod ustinov</h3>
+        <span class="chip">w3 · 22 may</span>
+        <p>plurio shared workspace, claude.md как продукт</p>
+      </div>
     </div>
   </section>
 
-  <!-- FIG.4 LAB CONTEXT -->
-  <section id="fig-4-context" class="frame">
-    <span class="fig">fig.4 · lab context</span>
-    <h2 class="fig-title">lab context · числа и сигналы</h2>
-    <ul class="ctx">
-      <li><span class="k">dates</span><span>4 may – 25 may 2026 (demo day)</span></li>
-      <li><span class="k">scale</span><span>~160 participants · 141 profiles · co-curators povaliaev + gershuni</span></li>
-      <li><span class="k">cohorts compared</span><span>s2: 217 people, 16 demo projects (broader) · s3: smaller, deeper, ops/agents focus</span></li>
-      <li><span class="k">audience signals</span><span>69% agents · 65% team/company · 58% ops · 54% dev stack · 32% context layer</span></li>
+  <section id="weeks">
+    <div class="fig-label">fig.3 — структура лабы</div>
+    <h2 class="section-title">пять контуров</h2>
+    <div class="weeks">
+      <div class="week dim">
+        <div class="w-eyebrow">w0 · сб 2 мая 12:00 cet</div>
+        <h4>kickoff</h4>
+        <p>intro + знакомство, рамка спринта</p>
+      </div>
+      <div class="week current">
+        <div class="w-eyebrow">w1 · 4–8 мая · current</div>
+        <h4>foundation</h4>
+        <p>setup personal os, первый артефакт</p>
+      </div>
+      <div class="week">
+        <div class="w-eyebrow">w2 · 11–15 мая</div>
+        <h4>horizontal</h4>
+        <p>graphs, people, systems, governance</p>
+      </div>
+      <div class="week">
+        <div class="w-eyebrow">w3 · 18–22 мая</div>
+        <h4>vertical</h4>
+        <p>sales, marketing, growth automation</p>
+      </div>
+      <div class="week">
+        <div class="w-eyebrow">demo · пн 25 мая 16:00 cet</div>
+        <h4>demo day</h4>
+        <p>артефакты участников</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="toolkit">
+    <div class="fig-label">fig.4 — artifact toolkit</div>
+    <h2 class="section-title">пять артефактов harness</h2>
+    <div class="grid-5">
+      <a class="tool" href="./playground.html">
+        <div class="num">①</div>
+        <h4>workcase canvas</h4>
+      </a>
+      <a class="tool" href="./playground.html">
+        <div class="num">②</div>
+        <h4>context seed</h4>
+      </a>
+      <a class="tool" href="/rules-public/agent-passport.html">
+        <div class="num">③</div>
+        <h4>agent passport</h4>
+      </a>
+      <a class="tool" href="/rules-public/guardrails-blast-radius.html">
+        <div class="num">④</div>
+        <h4>guardrail checklist</h4>
+      </a>
+      <a class="tool" href="/rules-public/evidence-over-logs.html">
+        <div class="num">⑤</div>
+        <h4>evidence note</h4>
+      </a>
+    </div>
+    <div class="section-sub">artifact chain · переносимые шаблоны для одного workflow</div>
+  </section>
+
+  <section id="dashboard">
+    <div class="fig-label">fig.5 — dashboard вторая половина</div>
+    <h2 class="section-title">страницы</h2>
+    <div class="grid-4">
+      <a class="dash-card" href="./naming.html">
+        <h4>→ naming convention</h4>
+        <p>копируемые примеры под s3</p>
+      </a>
+      <a class="dash-card" href="./rules.html">
+        <h4>→ rules &amp; skills</h4>
+        <p>диаграмма зон harness</p>
+      </a>
+      <a class="dash-card" href="./knowledge-graph.html">
+        <h4>→ knowledge graph</h4>
+        <p>спикеры × недели × темы × артефакты</p>
+      </a>
+      <a class="dash-card" href="./playground.html">
+        <h4>→ prompt compiler</h4>
+        <p>плотный контекст → готовый промпт</p>
+      </a>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="fig-label">fig.6 — roadmap</div>
+    <h2 class="section-title">что сделано · что впереди</h2>
+    <ul class="roadmap-list">
+      <li class="done"><span class="mark">[x]</span>playground v1 → v2 prompt-compiler — shipped 2026-05-06</li>
+      <li class="done"><span class="mark">[x]</span>naming.html — copyable cards под s3</li>
+      <li class="done"><span class="mark">[x]</span>rules.html v2 — диаграмма зон harness</li>
+      <li class="done"><span class="mark">[x]</span>knowledge graph — 40 узлов 6 категорий</li>
+      <li class="done"><span class="mark">[x]</span>/rules-public/ — 12 анонимизированных страниц правил</li>
+      <li class="todo"><span class="mark">[ ]</span>w1 evidence collection (после воркшопа поваляева 6 мая)</li>
+      <li class="todo"><span class="mark">[ ]</span>speaker cards с фото — после w1</li>
+      <li class="todo"><span class="mark">[ ]</span>participants explorer (~160) — после w2 alumni showcase</li>
+      <li class="todo"><span class="mark">[ ]</span>weeks/w1.html через w4.html — материалы каждой недели</li>
+      <li class="todo"><span class="mark">[ ]</span>custom subdomain — s3.aimindset.org или harness.aimindset.org</li>
+      <li class="todo"><span class="mark">[ ]</span>github actions auto-deploy</li>
+      <li class="todo"><span class="mark">[ ]</span>prompt-compiler с openrouter мостом — vNext</li>
     </ul>
   </section>
 
-  <!-- FIG.5 ROADMAP -->
-  <section id="fig-5-roadmap" class="frame">
-    <span class="fig">fig.5 · roadmap</span>
-    <h2 class="fig-title">roadmap · v0.1 → s3 demo day</h2>
-    <ul class="road">
-      <li><span class="box done">x</span><span class="done-text">playground v1 (today, 2026-05-06)</span></li>
-      <li><span class="box"></span><span>knowledge graph v2 (s3 nodes from vault)</span></li>
-      <li><span class="box"></span><span>speakers page (s3 co-curators + invited)</span></li>
-      <li><span class="box"></span><span>participants explorer (~160, no s2 data shown)</span></li>
-      <li><span class="box"></span><span>naming.html v2 (live tool, not docs)</span></li>
-      <li><span class="box"></span><span>rules.html v2 (live tool, not docs)</span></li>
-      <li><span class="box"></span><span>weeks (w1 done, w2–w4)</span></li>
-      <li><span class="box"></span><span>custom subdomain (s3.aimindset.org? harness.aimindset.org?)</span></li>
-    </ul>
-  </section>
+</main>
 
-  <!-- FOOTER -->
-  <footer class="frame">
-    <div class="line">ainative-lab-2 · ai mindset org · v0.1 · 2026-05-06</div>
-    <div class="line muted">built on shaper-style aesthetic · jetbrains mono · single file</div>
-    <div class="line"><a href="https://github.com/ai-mindset-org/ainative-lab-2">https://github.com/ai-mindset-org/ainative-lab-2</a></div>
-  </footer>
+<footer>
+  <div class="row">
+    <span>ainative-lab-2 · ai-native sprint vol2 · s3 · 2026-05-06</span>
+  </div>
+  <div class="row">
+    <div class="links">
+      <a href="./naming.html">→ naming</a>
+      <a href="./rules.html">→ rules</a>
+      <a href="./knowledge-graph.html">→ knowledge graph</a>
+      <a href="./playground.html">→ playground</a>
+      <a href="https://ainative-lab-deck.netlify.app/">→ deck</a>
+      <a href="https://github.com/ai-mindset-org/ainative-lab-2">→ github</a>
+    </div>
+  </div>
+</footer>
 
-</div>
 </body>
 </html>

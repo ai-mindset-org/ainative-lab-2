@@ -2,419 +2,606 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ainative-lab-2 · naming convention</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>naming convention · ainative-lab-2</title>
+<meta name="description" content="naming convention for ai-native sprint vol2 (s3). vault-as-os file naming with copyable examples.">
+<meta property="og:title" content="naming convention · ainative-lab-2">
+<meta property="og:description" content="имя — это операционная ось. naming convention с копируемыми примерами.">
+<meta property="og:type" content="website">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#ffffff;--ink:#000000;--soft:#d9d9d9;--hair:#ececec;--muted:#8a8a8a;--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--frame:1px;--gutter:22px}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{font-size:14px}body{background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.55;letter-spacing:0.04em;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;text-transform:lowercase;padding:0}a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink)}a:hover{background:var(--ink);color:var(--bg);border-bottom-color:var(--ink)}::selection{background:var(--ink);color:var(--bg)}.wrapper{max-width:980px;margin:0 auto;padding:32px 40px 80px}header.top{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:baseline;border-bottom:var(--frame) solid var(--ink);padding-bottom:14px;margin-bottom:28px}header.top .brand{font-weight:600;letter-spacing:0.18em;font-size:14px}header.top .crumb{color:var(--muted);font-size:11px;letter-spacing:0.10em}header.top .meta{color:var(--muted);font-size:11px;letter-spacing:0.10em;justify-self:end}header.top .meta b{color:var(--ink);font-weight:500;letter-spacing:0.08em}.title-block{border:var(--frame) solid var(--ink);padding:28px 24px 24px;margin-bottom:36px;position:relative}.title-block .h1{font-size:28px;font-weight:500;letter-spacing:0.02em;line-height:1.15;margin-bottom:14px}.title-block .formula{display:inline-block;border:var(--frame) solid var(--ink);padding:8px 14px;font-size:13px;letter-spacing:0.06em;background:var(--ink);color:var(--bg);margin-bottom:14px}.title-block .lede{color:var(--muted);font-size:12px;letter-spacing:0.06em;max-width:640px}.title-block .back{position:absolute;top:14px;right:16px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--soft)}.title-block .back:hover{color:var(--bg);background:var(--ink);border-bottom-color:var(--ink)}section.fig{margin-bottom:40px}section.fig>.label{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:baseline;border-bottom:var(--frame) solid var(--ink);padding-bottom:6px;margin-bottom:18px}section.fig>.label .num{font-weight:600;letter-spacing:0.18em;font-size:11px;text-transform:uppercase}section.fig>.label .name{color:var(--muted);font-size:11px;letter-spacing:0.16em;text-transform:uppercase}section.fig>.label .tag{color:var(--muted);font-size:10px;letter-spacing:0.14em;text-transform:uppercase}.builder{border:var(--frame) solid var(--ink);padding:22px}.builder-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}.builder-row.full{grid-template-columns:1fr}@media (max-width:640px){.builder-row{grid-template-columns:1fr}}.field label{display:block;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.field select,.field input{width:100%;padding:9px 12px;background:var(--bg);border:var(--frame) solid var(--ink);color:var(--ink);font-family:var(--mono);font-size:13px;letter-spacing:0.04em;text-transform:lowercase;outline:none;border-radius:0;-webkit-appearance:none;appearance:none}.field select{background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) center,calc(100% - 12px) center;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:32px}.field select:focus,.field input:focus{background-color:var(--hair)}.field input::placeholder{color:var(--muted);letter-spacing:0.04em}.preview{border:var(--frame) solid var(--ink);padding:18px 18px 14px;margin-top:18px;background:var(--hair)}.preview .plabel{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}.preview .pfile{font-size:15px;letter-spacing:0.02em;word-break:break-all;line-height:1.45;color:var(--ink)}.preview .pfile .dim{color:var(--muted)}.actions{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}.btn{background:var(--bg);border:var(--frame) solid var(--ink);padding:8px 16px;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);cursor:pointer;border-radius:0}.btn:hover{background:var(--ink);color:var(--bg)}.btn.copied{background:var(--ink);color:var(--bg)}.charcount{margin-left:auto;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}.charcount.over{color:var(--ink);font-weight:600}.checks{margin-top:16px;display:grid;gap:6px}.checks .ck{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:baseline;font-size:11px;letter-spacing:0.04em;color:var(--muted);border-top:1px dashed var(--soft);padding-top:6px}.checks .ck .mark{width:16px;height:16px;display:inline-grid;place-items:center;border:var(--frame) solid var(--soft);font-size:10px;color:var(--muted)}.checks .ck.pass .mark{background:var(--ink);color:var(--bg);border-color:var(--ink)}.checks .ck.pass{color:var(--ink)}.checks .ck.fail .mark{background:var(--bg);color:var(--ink);border-color:var(--ink)}.checks .ck.fail{color:var(--ink)}.examples{border:var(--frame) solid var(--ink)}.ex-row{display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:baseline;padding:12px 16px;border-bottom:var(--frame) solid var(--soft);cursor:pointer;transition:background 0.08s ease}.ex-row:last-child{border-bottom:none}.ex-row:hover{background:var(--hair)}.ex-row .ix{font-size:10px;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase}.ex-row .name{font-size:12px;letter-spacing:0.02em;word-break:break-all}.ex-row .name .dim{color:var(--muted)}.ex-row .hint{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}.ex-row:hover .hint{color:var(--ink)}.table{border:var(--frame) solid var(--ink)}.table .row{display:grid;grid-template-columns:160px 1fr;border-bottom:var(--frame) solid var(--soft)}.table .row:last-child{border-bottom:none}.table .row .k{padding:10px 14px;border-right:var(--frame) solid var(--soft);font-size:12px;letter-spacing:0.04em}.table .row .v{padding:10px 14px;font-size:11px;color:var(--muted);letter-spacing:0.04em}.table .group{background:var(--ink);color:var(--bg);padding:6px 14px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase}.prose{border:var(--frame) solid var(--ink);padding:22px;display:grid;gap:14px}.prose p{font-size:12px;letter-spacing:0.04em;color:var(--ink);max-width:75ch}.prose p .k{font-weight:600;letter-spacing:0.10em;text-transform:uppercase;font-size:10px;color:var(--muted);display:block;margin-bottom:4px}footer.bottom{border-top:var(--frame) solid var(--ink);margin-top:48px;padding-top:14px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:baseline;color:var(--muted);font-size:10px;letter-spacing:0.14em;text-transform:uppercase}@media print{body{font-size:11px}.wrapper{max-width:none;padding:16px 20px}.btn,.actions{display:none}section.fig{break-inside:avoid}.builder,.examples,.table,.prose{break-inside:avoid}a{border-bottom:none}.preview{background:var(--bg)}}
+:root{
+  --bg:#07090d;
+  --ink:#f0f7f4;
+  --ink-soft:rgba(240,247,244,0.74);
+  --ink-dim:rgba(240,247,244,0.48);
+  --ink-faint:rgba(240,247,244,0.28);
+  --panel:rgba(12,17,23,0.78);
+  --panel-strong:rgba(18,26,34,0.92);
+  --line:rgba(92,218,204,0.2);
+  --line-strong:rgba(92,218,204,0.48);
+  --teal:#5cdacc;
+  --green:#56e39f;
+  --amber:#e4b54b;
+  --red:#ff6d61;
+  --blue:#6db2ff;
+  --violet:#9c86ff;
+  --font-heading:"Space Grotesk", system-ui, sans-serif;
+  --font-body:"IBM Plex Mono", ui-monospace, monospace;
+  --font-code:"JetBrains Mono", ui-monospace, monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:13px;
+  line-height:1.55;
+  text-transform:lowercase;
+  letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(92,218,204,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(92,218,204,0.05) 1px, transparent 1px);
+  background-size:58px 58px;
+  pointer-events:none;
+  z-index:0;
+}
+body::after{
+  content:"";
+  position:fixed; inset:0;
+  background:
+    linear-gradient(180deg, rgba(7,9,13,0.54), rgba(7,9,13,0.96) 72%),
+    conic-gradient(from 220deg at 52% 46%, rgba(92,218,204,0.18), rgba(9,13,18,0.1), rgba(86,227,159,0.08), rgba(228,181,75,0.08), rgba(9,13,18,0.1), rgba(92,218,204,0.18));
+  pointer-events:none;
+  z-index:1;
+}
+.wrap{position:relative; z-index:10; max-width:1180px; margin:0 auto; padding:18px 22px 64px}
+
+nav.top{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 4px 16px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:24px;
+  flex-wrap:wrap; gap:12px;
+}
+nav.top .brand{display:flex; align-items:center; gap:10px}
+nav.top .brand img{height:24px; filter:invert(1) brightness(1.2)}
+nav.top .brand .label{font-size:11px; color:var(--ink-dim); letter-spacing:.08em}
+nav.top .links{display:flex; gap:8px; flex-wrap:wrap}
+nav.top a{
+  color:var(--ink-soft);
+  text-decoration:none;
+  font-size:11px;
+  letter-spacing:.05em;
+  padding:5px 9px;
+  border:1px solid transparent;
+  border-radius:4px;
+  transition:all .18s ease;
+}
+nav.top a:hover{
+  color:var(--teal);
+  border-color:var(--line-strong);
+  background:rgba(92,218,204,0.08);
+}
+
+section{
+  margin-bottom:28px;
+  opacity:0;
+  animation:fadein .4s ease forwards;
+}
+section:nth-of-type(1){animation-delay:.05s}
+section:nth-of-type(2){animation-delay:.10s}
+section:nth-of-type(3){animation-delay:.15s}
+section:nth-of-type(4){animation-delay:.20s}
+section:nth-of-type(5){animation-delay:.25s}
+section:nth-of-type(6){animation-delay:.30s}
+section:nth-of-type(7){animation-delay:.35s}
+@keyframes fadein{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+.frame{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:22px;
+  border-radius:6px;
+  position:relative;
+  overflow:hidden;
+}
+.frame::before{
+  content:"";
+  position:absolute;
+  top:0; left:-40%;
+  width:30%; height:1px;
+  background:linear-gradient(90deg, transparent, var(--teal), transparent);
+  animation:scan 9s linear infinite;
+  pointer-events:none;
+}
+@keyframes scan{from{transform:translateX(-40%)} to{transform:translateX(135%)}}
+
+.eyebrow{
+  font-size:10px;
+  color:var(--ink-dim);
+  letter-spacing:.18em;
+  margin-bottom:8px;
+}
+h1{
+  font-family:var(--font-heading);
+  font-weight:500;
+  font-size:32px;
+  margin:0 0 14px;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  text-transform:lowercase;
+}
+h2.fig-title{
+  font-family:var(--font-heading);
+  font-weight:500;
+  font-size:18px;
+  margin:0 0 16px;
+  color:var(--ink);
+}
+.lead{
+  color:var(--ink-soft);
+  max-width:760px;
+  margin:0 0 18px;
+}
+.fig-tag{
+  display:inline-block;
+  font-family:var(--font-code);
+  font-size:10px;
+  color:var(--teal);
+  border:1px solid var(--line-strong);
+  padding:2px 8px;
+  border-radius:4px;
+  margin-bottom:14px;
+  letter-spacing:.1em;
+}
+
+.formula-display{
+  font-family:var(--font-code);
+  font-size:18px;
+  color:var(--teal);
+  text-shadow:0 0 8px rgba(92,218,204,0.42);
+  padding:18px 0;
+  text-align:center;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  margin:14px 0 18px;
+  letter-spacing:.02em;
+  word-break:break-word;
+}
+.formula-display .part{display:inline-block; padding:0 2px}
+.formula-parts{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:14px;
+  margin-top:14px;
+}
+.formula-parts .part-card{
+  border-left:1px solid var(--line-strong);
+  padding:6px 10px;
+}
+.formula-parts .part-card .key{
+  font-family:var(--font-code);
+  color:var(--teal);
+  font-size:12px;
+  margin-bottom:4px;
+}
+.formula-parts .part-card .val{
+  font-size:11px;
+  color:var(--ink-soft);
+}
+@media (max-width:780px){.formula-parts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.formula-parts{grid-template-columns:1fr}}
+
+.examples{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+}
+@media (max-width:780px){.examples{grid-template-columns:1fr}}
+.ex{
+  border:1px solid var(--line);
+  background:var(--panel-strong);
+  padding:14px;
+  border-radius:5px;
+  position:relative;
+  cursor:pointer;
+  transition:all .18s ease;
+}
+.ex:hover{
+  border-color:var(--line-strong);
+  background:rgba(92,218,204,0.08);
+}
+.ex .filename{
+  font-family:var(--font-code);
+  font-size:11.5px;
+  color:var(--ink);
+  word-break:break-all;
+  padding-right:48px;
+}
+.ex .role{
+  margin-top:8px;
+  font-size:11px;
+  color:var(--ink-dim);
+}
+.ex .copy-btn{
+  position:absolute;
+  top:10px; right:10px;
+  background:transparent;
+  border:1px solid var(--line);
+  color:var(--teal);
+  font-family:var(--font-code);
+  font-size:10px;
+  padding:3px 7px;
+  border-radius:3px;
+  cursor:pointer;
+  transition:all .18s ease;
+}
+.ex .copy-btn:hover{
+  background:var(--teal);
+  color:var(--bg);
+  border-color:var(--teal);
+}
+
+.rules-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+@media (max-width:780px){.rules-grid{grid-template-columns:1fr}}
+.rule-panel{
+  border:1px solid var(--line);
+  padding:14px;
+  border-radius:5px;
+  background:var(--panel-strong);
+}
+.rule-panel .head{
+  font-family:var(--font-heading);
+  font-weight:500;
+  color:var(--teal);
+  font-size:13px;
+  margin-bottom:6px;
+}
+.rule-panel .body{font-size:11.5px; color:var(--ink-soft)}
+.rule-panel .body code{
+  font-family:var(--font-code);
+  background:rgba(92,218,204,0.08);
+  padding:1px 5px;
+  border-radius:3px;
+  color:var(--teal);
+  font-size:10.5px;
+}
+
+.codes{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+@media (max-width:780px){.codes{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.codes{grid-template-columns:1fr}}
+.code-chip{
+  border:1px solid var(--line);
+  padding:10px 12px;
+  border-radius:5px;
+  background:var(--panel-strong);
+}
+.code-chip .code{
+  font-family:var(--font-code);
+  color:var(--teal);
+  font-size:13px;
+  margin-bottom:4px;
+}
+.code-chip .use{font-size:10.5px; color:var(--ink-dim)}
+
+.types-list{display:flex; flex-direction:column; gap:0}
+.types-row{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:14px;
+  padding:10px 0;
+  border-top:1px solid var(--line);
+  align-items:baseline;
+}
+.types-row:last-child{border-bottom:1px solid var(--line)}
+.types-row .domain{
+  font-family:var(--font-heading);
+  font-weight:500;
+  color:var(--teal);
+  font-size:11px;
+  letter-spacing:.08em;
+}
+.types-row .chips{display:flex; flex-wrap:wrap; gap:6px}
+.types-row .chip{
+  font-family:var(--font-code);
+  font-size:10.5px;
+  color:var(--ink-soft);
+  border:1px solid var(--line);
+  padding:2px 8px;
+  border-radius:3px;
+}
+@media (max-width:640px){.types-row{grid-template-columns:1fr}}
+
+footer{
+  margin-top:36px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:11px;
+  color:var(--ink-dim);
+  display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+}
+footer .fnav{display:flex; flex-wrap:wrap; gap:14px}
+footer a{
+  color:var(--ink-soft);
+  text-decoration:none;
+  transition:color .18s ease;
+}
+footer a:hover{color:var(--teal)}
+
+.toast{
+  position:fixed;
+  top:24px; left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  background:var(--panel-strong);
+  border:1px solid var(--line-strong);
+  color:var(--teal);
+  font-family:var(--font-code);
+  font-size:12px;
+  padding:8px 16px;
+  border-radius:5px;
+  opacity:0;
+  pointer-events:none;
+  transition:all .22s ease;
+  z-index:1000;
+  box-shadow:0 0 24px rgba(92,218,204,0.18);
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+@media print{
+  body::before, body::after, .frame::before, nav.top, .toast{display:none}
+  body{background:#fff; color:#000}
+  .examples{grid-template-columns:1fr}
+  .frame{border-color:#000; background:#fff; break-inside:avoid}
+}
 </style>
 </head>
 <body>
-<div class="wrapper">
-<!-- ──────────────────────── HEADER ──────────────────────── -->
-<header class="top">
-<div class="brand">ainative-lab-2</div>
-<div class="crumb">naming convention · interactive builder</div>
-<div class="meta"><b>v1</b> · 2026-05-06 · s3</div>
-</header>
-<!-- ──────────────────────── TITLE ──────────────────────── -->
-<section class="title-block">
-<a href="./index.html" class="back">← back to hub</a>
-<div class="h1">naming convention</div>
-<div class="formula">{project} {type} description &ndash; yyyy-mm-dd.md</div>
-<div class="lede">a contract between you, your team, and your agents. without naming, the agent is blind. this builder helps you name files for the obsidian vault that drives ai-native sprint vol2 (s3).</div>
-</section>
-<!-- ──────────────────────── FIG.1 BUILDER ────────────────── -->
-<section class="fig" id="fig1">
-<div class="label">
-<span class="num">fig.1</span>
-<span class="name">interactive builder</span>
-<span class="tag">live preview</span>
+<div class="wrap">
+
+  <nav class="top">
+    <div class="brand">
+      <img src="./assets/aim-logo.png" alt="AI Mindset">
+      <span class="label">ainative-lab-2 · s3</span>
+    </div>
+    <div class="links">
+      <a href="./index.html">← hub</a>
+      <a href="./rules.html">→ rules</a>
+      <a href="./knowledge-graph.html">→ knowledge graph</a>
+      <a href="./playground.html">→ playground</a>
+      <a href="https://ainative-lab-deck.netlify.app/">→ deck</a>
+    </div>
+  </nav>
+
+  <section>
+    <div class="eyebrow">naming convention · ai-native sprint vol2</div>
+    <h1>имя — это операционная ось</h1>
+    <p class="lead">в vault-as-os имя файла — это адрес, тип и время одновременно. читается человеком, грепается агентом, сортируется по дате.</p>
+  </section>
+
+  <section class="frame">
+    <span class="fig-tag">fig.1 · формула</span>
+    <h2 class="fig-title">формула имени</h2>
+    <div class="formula-display">
+      <span class="part">{project}</span>
+      <span class="part">{type}</span>
+      <span class="part">description</span>
+      <span class="part">– yyyy-mm-dd</span>
+      <span class="part">.md</span>
+    </div>
+    <div class="formula-parts">
+      <div class="part-card">
+        <div class="key">{project}</div>
+        <div class="val">code лабы или инициативы</div>
+      </div>
+      <div class="part-card">
+        <div class="key">{type}</div>
+        <div class="val">тип артефакта</div>
+      </div>
+      <div class="part-card">
+        <div class="key">description</div>
+        <div class="val">короткое имя задачи</div>
+      </div>
+      <div class="part-card">
+        <div class="key">yyyy-mm-dd</div>
+        <div class="val">дата в конце, всегда</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="frame">
+    <span class="fig-tag">fig.2 · примеры под s3</span>
+    <h2 class="fig-title">копируемые примеры</h2>
+    <p class="lead">клик по карточке или кнопке copy — имя в буфере. меняй описание, дату, тип под свой кейс.</p>
+    <div class="examples" id="examples"></div>
+  </section>
+
+  <section class="frame">
+    <span class="fig-tag">fig.3 · правила</span>
+    <h2 class="fig-title">четыре правила</h2>
+    <div class="rules-grid">
+      <div class="rule-panel">
+        <div class="head">дата в конце, всегда</div>
+        <div class="body">никогда в середине, en dash <code>–</code> (НЕ em <code>—</code>, НЕ дефис <code>-</code>)</div>
+      </div>
+      <div class="rule-panel">
+        <div class="head">lowercase описание</div>
+        <div class="body">proper nouns ok (имена, названия проектов: Povaliaev, Buzko, Smirnov)</div>
+      </div>
+      <div class="rule-panel">
+        <div class="head">80 символов max</div>
+        <div class="body">для terminal/sidebar совместимости — длинное имя обрезается в навигации</div>
+      </div>
+      <div class="rule-panel">
+        <div class="head">без интерфейс-суффикса</div>
+        <div class="body"><code>– claude code</code> / <code>– cursor</code> / <code>– chatgpt</code> deprecated с 2026-02-20</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="frame">
+    <span class="fig-tag">fig.4 · коды проектов</span>
+    <h2 class="fig-title">активные {project} коды</h2>
+    <div class="codes">
+      <div class="code-chip">
+        <div class="code">{AIM}</div>
+        <div class="use">team-wide ai mindset</div>
+      </div>
+      <div class="code-chip">
+        <div class="code">{s3}</div>
+        <div class="use">эта лаба, ai-native vol2</div>
+      </div>
+      <div class="code-chip">
+        <div class="code">{ai-native}</div>
+        <div class="use">концепт-тэг, кросс-лабовый</div>
+      </div>
+      <div class="code-chip">
+        <div class="code">{pos}</div>
+        <div class="use">personal os артефакты</div>
+      </div>
+      <div class="code-chip">
+        <div class="code">{circle}</div>
+        <div class="use">circle community контент</div>
+      </div>
+      <div class="code-chip">
+        <div class="code">{core}</div>
+        <div class="use">стратегический core chat</div>
+      </div>
+      <div class="code-chip">
+        <div class="code">{x26}</div>
+        <div class="use">parallel spring lab x26</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="frame">
+    <span class="fig-tag">fig.5 · типы артефактов</span>
+    <h2 class="fig-title">{type} по доменам</h2>
+    <div class="types-list">
+      <div class="types-row">
+        <div class="domain">core</div>
+        <div class="chips">
+          <span class="chip">rule</span><span class="chip">prd</span><span class="chip">skill</span><span class="chip">prompt</span><span class="chip">tool</span>
+        </div>
+      </div>
+      <div class="types-row">
+        <div class="domain">meetings</div>
+        <div class="chips">
+          <span class="chip">meeting</span><span class="chip">transcript</span>
+        </div>
+      </div>
+      <div class="types-row">
+        <div class="domain">research</div>
+        <div class="chips">
+          <span class="chip">research</span><span class="chip">analysis</span><span class="chip">overview</span>
+        </div>
+      </div>
+      <div class="types-row">
+        <div class="domain">workshop</div>
+        <div class="chips">
+          <span class="chip">program</span><span class="chip">material</span><span class="chip">brief</span><span class="chip">playbook</span><span class="chip">template</span><span class="chip">evidence</span>
+        </div>
+      </div>
+      <div class="types-row">
+        <div class="domain">communication</div>
+        <div class="chips">
+          <span class="chip">announce</span><span class="chip">promo</span>
+        </div>
+      </div>
+      <div class="types-row">
+        <div class="domain">strategy</div>
+        <div class="chips">
+          <span class="chip">plan</span><span class="chip">flow-map</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>ainative-lab-2 · naming convention · ai-native sprint vol2 · 2026-05-06</div>
+    <div class="fnav">
+      <a href="./index.html">← hub</a>
+      <a href="./rules.html">→ rules</a>
+      <a href="./knowledge-graph.html">→ knowledge graph</a>
+      <a href="./playground.html">→ playground</a>
+      <a href="https://ainative-lab-deck.netlify.app/">→ deck</a>
+    </div>
+  </footer>
+
 </div>
-<div class="builder">
-<div class="builder-row">
-<div class="field">
-<label>project code</label>
-<select id="projectSelect">
-<option value="">— select project —</option>
-<option value="{AIM}">{AIM} — ai mindset (team rituals, ops)</option>
-<option value="{space}">{space} — ai mindset space community</option>
-<option value="{f25}">{f25} — lab fall 2025</option>
-<option value="{x26}">{x26} — spring lab x26</option>
-<option value="{s3}">{s3} — ai-native sprint vol2 (current)</option>
-<option value="{ai-native}">{ai-native} — ai-native organizations program</option>
-<option value="{pos}">{pos} — personal operating system</option>
-<option value="{circle}">{circle} — circle product</option>
-<option value="{core}">{core} — core strategic chat / decisions</option>
-<option value="{self}">{self} — personal / self research</option>
-<option value="{consulting}">{consulting} — consulting projects</option>
-<option value="{channel}">{channel} — content channel, blog</option>
-<option value="other">other (type custom code)…</option>
-</select>
-</div>
-<div class="field">
-<label>content type</label>
-<select id="typeSelect">
-<option value="">— select type —</option>
-<optgroup label="core / personal">
-<option value="{rule}">{rule} — rule, standard</option>
-<option value="{prd}">{prd} — product requirements</option>
-<option value="{skill}">{skill} — claude skill</option>
-<option value="{prompt}">{prompt} — ai prompt</option>
-<option value="{tool}">{tool} — tool, instrument</option>
-<option value="{template}">{template} — reusable template</option>
-<option value="{context}">{context} — context document</option>
-</optgroup>
-<optgroup label="meetings">
-<option value="{meeting}">{meeting} — meeting notes</option>
-<option value="{transcript}">{transcript} — call transcript</option>
-</optgroup>
-<optgroup label="research">
-<option value="{research}">{research} — research</option>
-<option value="{analysis}">{analysis} — deep analysis</option>
-<option value="{overview}">{overview} — overview, survey</option>
-</optgroup>
-<optgroup label="business">
-<option value="{program}">{program} — program / curriculum</option>
-<option value="{crm}">{crm} — partner / candidate card</option>
-<option value="{brief}">{brief} — creative / project brief</option>
-<option value="{material}">{material} — workshop material</option>
-</optgroup>
-<optgroup label="rituals / workshop">
-<option value="{announce}">{announce} — channel / chat announce</option>
-<option value="{promo}">{promo} — promo content</option>
-<option value="{plan}">{plan} — plan, roadmap</option>
-<option value="{flow-map}">{flow-map} — flow / process map</option>
-<option value="{playbook}">{playbook} — playbook, runbook</option>
-</optgroup>
-<option value="other">other (type custom type)…</option>
-</select>
-</div>
-</div>
-<div class="builder-row">
-<div class="field" id="projectCustomWrap" style="display:none">
-<label>custom project code</label>
-<input type="text" id="projectCustom" placeholder="{my-code}" autocomplete="off">
-</div>
-<div class="field" id="typeCustomWrap" style="display:none">
-<label>custom type</label>
-<input type="text" id="typeCustom" placeholder="{my-type}" autocomplete="off">
-</div>
-</div>
-<div class="builder-row full">
-<div class="field">
-<label>description</label>
-<input type="text" id="descInput" placeholder="короткое описание задачи" autocomplete="off">
-</div>
-</div>
-<div class="builder-row">
-<div class="field">
-<label>date (yyyy-mm-dd)</label>
-<input type="text" id="dateInput" value="2026-05-06" autocomplete="off">
-</div>
-<div class="field" style="align-self:end">
-<label style="visibility:hidden">_</label>
-<div class="charcount" id="charCount" style="margin-left:0;padding:9px 0">— / 80</div>
-</div>
-</div>
-<div class="preview">
-<div class="plabel">generated filename</div>
-<div class="pfile" id="previewFile"><span class="dim">select project + type to begin…</span></div>
-<div class="actions">
-<button class="btn" id="copyBtn" type="button">[ copy ]</button>
-<button class="btn" id="resetBtn" type="button">[ reset ]</button>
-<span class="charcount" id="charMirror"></span>
-</div>
-</div>
-<div class="checks" id="checks">
-<div class="ck" data-key="len"><span class="mark">·</span><span>under 80 characters</span></div>
-<div class="ck" data-key="endash"><span class="mark">·</span><span>en dash &ndash; (not em dash &mdash;, not hyphen -)</span></div>
-<div class="ck" data-key="lower"><span class="mark">·</span><span>lowercase description (proper nouns ok)</span></div>
-<div class="ck" data-key="suffix"><span class="mark">·</span><span>no interface suffix (&ndash; claude code, &ndash; cursor, &ndash; chatgpt are deprecated since 2026-02-20)</span></div>
-<div class="ck" data-key="datepos"><span class="mark">·</span><span>date at the end, never in the middle</span></div>
-</div>
-</div>
-</section>
-<!-- ──────────────────────── FIG.2 EXAMPLES ──────────────── -->
-<section class="fig" id="fig2">
-<div class="label">
-<span class="num">fig.2</span>
-<span class="name">examples</span>
-<span class="tag">click to load</span>
-</div>
-<div class="examples" id="examplesList"></div>
-</section>
-<!-- ──────────────────────── FIG.3 PROJECT CODES ─────────── -->
-<section class="fig" id="fig3">
-<div class="label">
-<span class="num">fig.3</span>
-<span class="name">project codes</span>
-<span class="tag">9 canonical + open</span>
-</div>
-<div class="table" id="projTable"></div>
-</section>
-<!-- ──────────────────────── FIG.4 CONTENT TYPES ─────────── -->
-<section class="fig" id="fig4">
-<div class="label">
-<span class="num">fig.4</span>
-<span class="name">content types</span>
-<span class="tag">grouped by use</span>
-</div>
-<div class="table" id="typeTable"></div>
-</section>
-<!-- ──────────────────────── FIG.5 WHY IT MATTERS ────────── -->
-<section class="fig" id="fig5">
-<div class="label">
-<span class="num">fig.5</span>
-<span class="name">why it matters</span>
-<span class="tag">three reasons</span>
-</div>
-<div class="prose">
-<p>
-<span class="k">vault as operating system</span>
-имя файла — это индекс. в ai-native vault имя несёт project, type, описание и дату в машинно-читаемой форме. агент видит структуру до того, как читает контент. это превращает obsidian из заметочника в data layer персональной ос.
-</p>
-<p>
-<span class="k">sortable timeline</span>
-дата всегда в конце через en dash. <code>ls -1 | sort</code> сразу даёт хронологический порядок. <code>glob('*{research}*2026-05*')</code> возвращает все ресёрчи мая. ничего не нужно открывать.
-</p>
-<p>
-<span class="k">agent-readable</span>
-<code>{project}</code> и <code>{type}</code> в фигурных скобках парсятся одной регуляркой. описание остаётся для человека: коротко, lowercase, без техжаргона. имя — это api между тобой и твоими агентами.
-</p>
-</div>
-</section>
-<!-- ──────────────────────── FOOTER ──────────────────────── -->
-<footer class="bottom">
-<div>ainative-lab-2 · s3</div>
-<div style="text-align:center;color:var(--muted)">fig. 1–5 · naming convention · 2026-05-06</div>
-<div><a href="./index.html">[ hub ]</a></div>
-</footer>
-</div>
+
+<div class="toast" id="toast">скопировано</div>
+
 <script>
-const TODAY = '2026-05-06';
-const EXAMPLES = [
-{ project:'{AIM}',       type:'{research}', desc:'context engineering dragon redesign', date:'2026-05-06' },
-{ project:'{s3}',        type:'{template}', desc:'context seed',                        date:'2026-05-06' },
-{ project:'{AIM}',       type:'{announce}', desc:'s3 w1 workshop povaliaev',            date:'2026-05-06' },
-{ project:'{AIM}',       type:'{meeting}',  desc:'speaker sync buzko',                  date:'2026-05-04' },
-{ project:'{ai-native}', type:'{playbook}', desc:'personal os starter',                 date:'2026-05-06' },
+const examples = [
+  {f:"{AIM} {announce} S3 W1 Workshop Povaliaev – 2026-05-06.md", r:"анонс воркшопа в чат лабы"},
+  {f:"{s3} {template} context seed – 2026-05-06.md", r:"seed для одного workflow"},
+  {f:"{AIM} {meeting} Speaker Sync Buzko – 2026-05-04.md", r:"1-1 с гостем недели"},
+  {f:"{ai-native} {playbook} Personal OS Starter – 2026-05-06.md", r:"стартовый playbook участника"},
+  {f:"{AIM} {research} Context Engineering Dragon Redesign – 2026-05-06.md", r:"авторский ресерч под лекцию"},
+  {f:"{s3} {evidence} Workshop Replay W1 – 2026-05-06.md", r:"след воркшопа: что собрали"},
+  {f:"{AIM} {material} Smirnov Practical Block – 2026-04-21.md", r:"материал курсового модуля"},
+  {f:"{s3} {brief} Buzko AIN02 Lab Context – 2026-04-29.md", r:"бриф спикеру про лабу"},
 ];
-const PROJECTS = [
-['{AIM}',       'ai mindset team rituals, ops, processes'],
-['{space}',     'ai mindset space community sessions'],
-['{f25}',       'lab fall 2025 cohort'],
-['{x26}',       'spring lab x26 cohort'],
-['{s3}',        'ai-native sprint vol2 (current cohort)'],
-['{ai-native}', 'ai-native organizations program-wide'],
-['{pos}',       'personal operating system content'],
-['{circle}',    'circle product'],
-['{core}',      'strategic chat / north-star decisions'],
-];
-const TYPE_GROUPS = [
-['core / personal', [
-['{rule}',     'rule, standard'],
-['{prd}',      'product requirements doc'],
-['{skill}',    'claude code skill definition'],
-['{prompt}',   'reusable ai prompt'],
-['{tool}',     'tool, instrument, dashboard'],
-['{template}', 'reusable template'],
-['{context}',  'context document for agents'],
-]],
-['meetings', [
-['{meeting}',    'meeting notes, agenda'],
-['{transcript}', 'call / workshop transcript'],
-]],
-['research', [
-['{research}', 'investigation, exploration'],
-['{analysis}', 'deep analytical document'],
-['{overview}', 'overview, survey, landscape'],
-]],
-['business', [
-['{program}',  'program / curriculum'],
-['{crm}',      'partner or candidate card'],
-['{brief}',    'creative / project brief'],
-['{material}', 'workshop material'],
-]],
-['rituals / workshop', [
-['{announce}', 'channel / chat announce'],
-['{promo}',    'promo content (email, ad)'],
-['{plan}',     'plan, roadmap, sprint'],
-['{flow-map}', 'flow or process map'],
-['{playbook}', 'playbook, runbook'],
-]],
-];
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function getProject() {
-const v = $('projectSelect').value;
-if (v === 'other') return $('projectCustom').value.trim();
-return v;
+
+const grid = document.getElementById("examples");
+const toast = document.getElementById("toast");
+let toastTimer = null;
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
 }
-function getType() {
-const v = $('typeSelect').value;
-if (v === 'other') return $('typeCustom').value.trim();
-return v;
+
+function copy(text){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(
+      () => showToast("скопировано"),
+      () => showToast("не удалось")
+    );
+  } else {
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy");
+    document.body.removeChild(ta);
+    showToast("скопировано");
+  }
 }
-function buildFilename() {
-const project = getProject();
-const type    = getType();
-const desc    = $('descInput').value.trim();
-const date    = $('dateInput').value.trim() || TODAY;
-const parts = [];
-if (project) parts.push(project);
-if (type) parts.push(type);
-if (desc) parts.push(desc);
-let head = parts.join(' ');
-if (!head) return '';
-return `${head} – ${date}.md`;
-}
-function renderPreview() {
-const project = getProject();
-const type    = getType();
-const desc    = $('descInput').value.trim();
-const date    = $('dateInput').value.trim() || TODAY;
-const previewEl = $('previewFile');
-if (!project && !type && !desc) {
-previewEl.innerHTML = '<span class="dim">select project + type to begin…</span>';
-$('charCount').textContent = '— / 80';
-$('charCount').classList.remove('over');
-$('charMirror').textContent = '';
-runChecks('');
-return;
-}
-const html = [];
-if (project) html.push(esc(project));
-if (type)    html.push(esc(type));
-if (desc)    html.push(esc(desc));
-let head = html.join(' ');
-head += ` <span class="dim">–</span> ${esc(date)}<span class="dim">.md</span>`;
-previewEl.innerHTML = head;
-const flat = buildFilename();
-const len = flat.length;
-const cc = `${len} / 80`;
-$('charCount').textContent = cc;
-$('charMirror').textContent = cc;
-$('charCount').classList.toggle('over', len > 80);
-runChecks(flat);
-}
-function setCheck(key, pass) {
-const row = document.querySelector(`.ck[data-key="${key}"]`);
-if (!row) return;
-row.classList.remove('pass','fail');
-if (pass === true)  { row.classList.add('pass'); row.querySelector('.mark').textContent = '✓'; }
-else if (pass === false) { row.classList.add('fail'); row.querySelector('.mark').textContent = '✗'; }
-else { row.querySelector('.mark').textContent = '·'; }
-}
-function runChecks(flat) {
-if (!flat) {
-['len','endash','lower','suffix','datepos'].forEach(k => setCheck(k, null));
-return;
-}
-setCheck('len', flat.length <= 80);
-const hasEnDash = flat.includes('–');
-const hasEmDash = flat.includes('—');
-setCheck('endash', hasEnDash && !hasEmDash);
-const desc = $('descInput').value.trim();
-const stripped = desc.replace(/\{[^}]+\}/g,'').trim();
-const upperRatio = stripped ? (stripped.match(/[A-ZА-Я]/g) || []).length / stripped.length : 0;
-setCheck('lower', stripped === '' || upperRatio < 0.30);
-const bad = /–\s*(claude code|cursor|chatgpt|codex|windsurf)\b/i;
-setCheck('suffix', !bad.test(flat));
-const dateAtEnd = /–\s*\d{4}-\d{2}-\d{2}\.md$/.test(flat);
-setCheck('datepos', dateAtEnd);
-}
-function renderExamples() {
-const list = $('examplesList');
-list.innerHTML = EXAMPLES.map((ex, i) => {
-const flat = `${ex.project} ${ex.type} ${ex.desc} – ${ex.date}.md`;
-return `
-<div class="ex-row" data-i="${i}">
-<div class="ix">ex.${String(i+1).padStart(2,'0')}</div>
-<div class="name">${esc(ex.project)} ${esc(ex.type)} ${esc(ex.desc)} <span class="dim">–</span> ${esc(ex.date)}<span class="dim">.md</span></div>
-<div class="hint">[ load ]</div>
-</div>
-`;
-}).join('');
-list.querySelectorAll('.ex-row').forEach(row => {
-row.addEventListener('click', () => loadExample(parseInt(row.dataset.i, 10)));
+
+examples.forEach(ex => {
+  const card = document.createElement("div");
+  card.className = "ex";
+  const btn = document.createElement("button");
+  btn.className = "copy-btn"; btn.type = "button"; btn.textContent = "copy";
+  const fn = document.createElement("div");
+  fn.className = "filename"; fn.textContent = ex.f;
+  const role = document.createElement("div");
+  role.className = "role"; role.textContent = ex.r;
+  card.appendChild(btn); card.appendChild(fn); card.appendChild(role);
+  card.addEventListener("click", () => copy(ex.f));
+  grid.appendChild(card);
 });
-}
-function loadExample(i) {
-const ex = EXAMPLES[i];
-if (!ex) return;
-const ps = $('projectSelect');
-const ts = $('typeSelect');
-let found = false;
-for (const o of ps.options) { if (o.value === ex.project) { ps.value = ex.project; found = true; break; } }
-if (!found) { ps.value = 'other'; $('projectCustomWrap').style.display = ''; $('projectCustom').value = ex.project; }
-else { $('projectCustomWrap').style.display = 'none'; $('projectCustom').value = ''; }
-found = false;
-for (const o of ts.options) { if (o.value === ex.type) { ts.value = ex.type; found = true; break; } }
-if (!found) { ts.value = 'other'; $('typeCustomWrap').style.display = ''; $('typeCustom').value = ex.type; }
-else { $('typeCustomWrap').style.display = 'none'; $('typeCustom').value = ''; }
-$('descInput').value = ex.desc;
-$('dateInput').value = ex.date;
-renderPreview();
-document.getElementById('fig1').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-function renderProjects() {
-$('projTable').innerHTML = PROJECTS.map(([k,v]) => `
-<div class="row"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>
-`).join('');
-}
-function renderTypes() {
-$('typeTable').innerHTML = TYPE_GROUPS.map(([group, rows]) => {
-return `<div class="group">${esc(group)}</div>` + rows.map(([k,v]) =>
-`<div class="row"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`
-).join('');
-}).join('');
-}
-function copyFilename() {
-const text = buildFilename();
-if (!text) return;
-const btn = $('copyBtn');
-const fallback = () => {
-const ta = document.createElement('textarea');
-ta.value = text; document.body.appendChild(ta); ta.select();
-try { document.execCommand('copy'); } catch (e) {}
-document.body.removeChild(ta);
-};
-const after = () => {
-btn.textContent = '[ copied ✓ ]';
-btn.classList.add('copied');
-setTimeout(() => { btn.textContent = '[ copy ]'; btn.classList.remove('copied'); }, 1500);
-};
-if (navigator.clipboard && window.isSecureContext) {
-navigator.clipboard.writeText(text).then(after, () => { fallback(); after(); });
-} else { fallback(); after(); }
-}
-function resetBuilder() {
-$('projectSelect').value = '';
-$('typeSelect').value = '';
-$('projectCustomWrap').style.display = 'none';
-$('typeCustomWrap').style.display = 'none';
-$('projectCustom').value = '';
-$('typeCustom').value = '';
-$('descInput').value = '';
-$('dateInput').value = TODAY;
-renderPreview();
-}
-function onSelectChange() {
-$('projectCustomWrap').style.display = $('projectSelect').value === 'other' ? '' : 'none';
-$('typeCustomWrap').style.display    = $('typeSelect').value    === 'other' ? '' : 'none';
-renderPreview();
-}
-['projectSelect','typeSelect'].forEach(id => $(id).addEventListener('change', onSelectChange));
-['descInput','dateInput','projectCustom','typeCustom'].forEach(id => {
-$(id).addEventListener('input', renderPreview);
-$(id).addEventListener('change', renderPreview);
-});
-$('copyBtn').addEventListener('click', copyFilename);
-$('resetBtn').addEventListener('click', resetBuilder);
-renderExamples();
-renderProjects();
-renderTypes();
-renderPreview();
 </script>
 </body>
 </html>

@@ -3,506 +3,789 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ain ws01 · context playground</title>
+<title>ainative-lab-2 · prompt compiler · realtime context → prompt</title>
+<meta name="description" content="заполни поля справа — слева соберётся длинный prompt в тональности сегодняшней лекции. ai-native sprint vol2 · w1.">
+<meta property="og:title" content="ainative-lab-2 · prompt compiler">
+<meta property="og:description" content="плотный контекст → готовый промпт. ai-native sprint vol2 · w1.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: #fff; color: #000; }
-  body {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 1.5;
-    text-transform: lowercase;
-    padding: 16px;
-  }
-  h1, h2, h3, h4, p, ul, ol, li, label, span, div, button, textarea, input { font-family: inherit; }
-  h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.02em; }
-  h2 { font-size: 13px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: 0.04em; }
-  h3 { font-size: 12px; font-weight: 700; margin: 0 0 6px 0; }
-  p  { margin: 0; }
-  a  { color: #000; text-decoration: underline; text-underline-offset: 2px; }
-  a:hover { background: #000; color: #fff; text-decoration: none; }
+:root{
+  --bg:#07090d;
+  --ink:#f0f7f4;
+  --ink-soft:rgba(240,247,244,0.74);
+  --ink-dim:rgba(240,247,244,0.48);
+  --ink-faint:rgba(240,247,244,0.28);
+  --panel:rgba(12,17,23,0.78);
+  --panel-2:rgba(15,21,28,0.92);
+  --line:rgba(92,218,204,0.2);
+  --line-strong:rgba(92,218,204,0.48);
+  --teal:#5cdacc;
+  --green:#56e39f;
+  --amber:#e4b54b;
+  --red:#ff6d61;
+  --font-heading:"Space Grotesk", system-ui, sans-serif;
+  --font-body:"IBM Plex Mono", ui-monospace, monospace;
+  --font-code:"JetBrains Mono", ui-monospace, monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink)}
+body{
+  font-family:var(--font-body);
+  font-size:13px;
+  line-height:1.55;
+  letter-spacing:0.01em;
+  text-transform:lowercase;
+  min-height:100vh;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(92,218,204,0.05), transparent 60%),
+    radial-gradient(900px 500px at 0% 100%, rgba(86,227,159,0.03), transparent 60%),
+    var(--bg);
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(to right, rgba(92,218,204,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(92,218,204,0.05) 1px, transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse at center, #000 30%, transparent 90%);
+  -webkit-mask-image:radial-gradient(ellipse at center, #000 30%, transparent 90%);
+}
+a{color:var(--teal); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .12s ease, color .12s ease}
+a:hover{border-bottom-color:var(--teal)}
+::selection{background:var(--teal); color:#07090d}
+button{font-family:inherit;font-size:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
 
-  .frame { border: 1px solid #000; padding: 12px; }
-  .stack > * + * { margin-top: 16px; }
+/* layout */
+.wrap{position:relative; z-index:1; max-width:1480px; margin:0 auto; padding:18px 22px 60px}
 
-  /* HEADER */
-  .header { display: flex; flex-direction: column; gap: 4px; }
-  .header .sub { font-size: 11px; color: #000; }
+/* topnav */
+.topnav{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:18px; padding:10px 14px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  backdrop-filter: blur(6px);
+  margin-bottom:18px;
+}
+.topnav .brand{display:flex; align-items:center; gap:10px}
+.topnav .brand img{width:22px;height:22px; opacity:0.95; filter:invert(1) hue-rotate(140deg) saturate(0.8) brightness(1.15)}
+.topnav .brand .name{font-family:var(--font-heading); font-weight:500; font-size:13px; letter-spacing:0.04em; color:var(--ink)}
+.topnav .brand .tag{font-size:10px; letter-spacing:0.18em; color:var(--ink-dim); text-transform:uppercase}
+.topnav nav{display:flex; gap:14px; flex-wrap:wrap}
+.topnav nav a{
+  font-size:11px; letter-spacing:0.10em; color:var(--ink-soft);
+  padding:4px 8px; border:1px solid transparent;
+}
+.topnav nav a:hover{color:var(--teal); border-color:var(--line); border-bottom-color:var(--line)}
+.topnav nav a.active{color:var(--teal); border-color:var(--line-strong); border-bottom-color:var(--line-strong)}
 
-  /* SECTION TITLE */
-  .fig {
-    display: flex; align-items: baseline; gap: 8px;
-    border-bottom: 1px solid #000; padding-bottom: 4px; margin-bottom: 10px;
-    font-weight: 700; font-size: 13px;
-  }
-  .fig .lbl { font-size: 10px; letter-spacing: 0.08em; }
+/* header band */
+.headband{
+  position:relative;
+  border:1px solid var(--line-strong);
+  padding:22px 24px;
+  margin-bottom:22px;
+  background:linear-gradient(180deg, rgba(92,218,204,0.04) 0%, rgba(7,9,13,0.6) 100%);
+  box-shadow:0 0 0 1px rgba(92,218,204,0.06), 0 0 32px -10px rgba(92,218,204,0.18) inset;
+}
+.headband::before{
+  content:""; position:absolute; left:0; right:0; top:0; height:1px;
+  background:linear-gradient(90deg, transparent 0%, var(--teal) 30%, var(--teal) 70%, transparent 100%);
+  opacity:0.7;
+}
+.headband .eyebrow{font-size:10px; letter-spacing:0.2em; color:var(--teal); text-transform:uppercase; margin-bottom:10px}
+.headband h1{
+  font-family:var(--font-heading); font-weight:500;
+  font-size:32px; line-height:1.1; letter-spacing:-0.005em;
+  margin:0 0 10px 0; color:var(--ink);
+}
+.headband .sub{font-size:12px; color:var(--ink-soft); max-width:920px}
 
-  /* GRID — 1 col mobile, 2 col desktop */
-  .grid2 { display: grid; grid-template-columns: 1fr; gap: 10px; }
-  @media (min-width: 800px) {
-    .grid2 { grid-template-columns: 1fr 1fr; }
-    .grid2.full { grid-template-columns: 1fr; }
-  }
+/* fig labels */
+.fig{
+  display:flex; align-items:baseline; gap:12px;
+  margin-bottom:10px;
+  font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--teal);
+}
+.fig .num{border:1px solid var(--line-strong); padding:2px 8px; color:var(--teal)}
+.fig .name{color:var(--ink-soft); letter-spacing:0.14em}
+.fig .tag{margin-left:auto; color:var(--ink-dim); font-size:9px}
 
-  /* FIELDS */
-  .field { border: 1px solid #000; padding: 8px; display: flex; flex-direction: column; gap: 6px; background: #fff; }
-  .field label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; }
-  .field .hint { font-size: 10px; color: #bdbdbd; }
-  textarea {
-    width: 100%;
-    min-height: 60px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
-    padding: 6px;
-    font: inherit;
-    text-transform: lowercase;
-    resize: vertical;
-  }
-  textarea:focus { outline: 2px solid #000; outline-offset: -2px; }
-  textarea::placeholder { color: #bdbdbd; }
+/* TWO COLUMN */
+.split{
+  display:grid; grid-template-columns:1fr; gap:18px;
+}
+@media (min-width:1024px){
+  .split{grid-template-columns:minmax(0, 0.66fr) minmax(0, 1fr)}
+}
 
-  /* ARTIFACT CARDS */
-  .card { border: 1px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
-  .card .head { display: flex; align-items: baseline; gap: 6px; }
-  .card .num { font-size: 16px; font-weight: 700; }
-  .card .ttl { font-size: 12px; font-weight: 700; }
-  .card .sub { font-size: 10px; color: #000; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 0; }
+/* INPUT PANEL (LEFT) */
+.panel{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:18px;
+}
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field .row{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  margin-bottom:6px;
+}
+.field label{
+  font-family:var(--font-heading);
+  font-size:12px; font-weight:500; letter-spacing:0.04em;
+  color:var(--ink); text-transform:lowercase;
+}
+.field .hint{font-size:10px; color:var(--ink-dim); letter-spacing:0.06em}
+.field textarea{
+  width:100%; resize:vertical;
+  background:rgba(7,9,13,0.6);
+  color:var(--ink);
+  font-family:var(--font-code); font-size:12px;
+  line-height:1.55;
+  letter-spacing:0.005em;
+  border:1px solid var(--line);
+  padding:10px 12px;
+  outline:none;
+  border-radius:0;
+  -webkit-appearance:none;
+  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.field textarea::placeholder{color:var(--ink-faint); font-style:normal}
+.field textarea:focus{
+  border-color:var(--line-strong);
+  background:rgba(7,9,13,0.85);
+  box-shadow:0 0 0 1px rgba(92,218,204,0.18), 0 0 22px -6px rgba(92,218,204,0.32);
+}
+.field.compact textarea{min-height:54px}
+.field.medium textarea{min-height:96px}
+.field.tall textarea{min-height:130px}
 
-  /* CHECKLIST */
-  .checklist { display: grid; grid-template-columns: 1fr; gap: 4px; }
-  @media (min-width: 800px) { .checklist { grid-template-columns: 1fr 1fr; } }
-  .check {
-    display: flex; align-items: flex-start; gap: 8px;
-    border: 1px solid #000; padding: 6px 8px;
-    cursor: pointer;
-  }
-  .check input[type="checkbox"] {
-    appearance: none; -webkit-appearance: none;
-    width: 14px; height: 14px;
-    border: 1px solid #000; background: #fff;
-    margin: 2px 0 0 0; flex-shrink: 0;
-    cursor: pointer;
-    position: relative;
-  }
-  .check input[type="checkbox"]:checked { background: #000; }
-  .check input[type="checkbox"]:checked::after {
-    content: "x";
-    position: absolute; inset: 0;
-    color: #fff; font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-  }
-  .check .txt { font-size: 11px; }
-  .check .idx { font-size: 10px; font-weight: 700; min-width: 18px; }
+/* six fields micro grid */
+.six{
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  border:1px dashed var(--line); padding:12px; margin-top:6px;
+}
+.six .mini label{
+  display:block; font-size:10px; letter-spacing:0.12em; color:var(--ink-dim); margin-bottom:4px;
+}
+.six .mini textarea{
+  width:100%; min-height:42px; resize:vertical;
+  background:rgba(7,9,13,0.6); color:var(--ink);
+  font-family:var(--font-code); font-size:11px; line-height:1.45;
+  border:1px solid var(--line); padding:7px 9px; outline:none; border-radius:0;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.six .mini textarea:focus{
+  border-color:var(--line-strong);
+  box-shadow:0 0 0 1px rgba(92,218,204,0.18);
+}
 
-  /* SCORE */
-  .score-row {
-    display: flex; align-items: stretch; gap: 0;
-    border: 1px solid #000; margin-top: 10px;
-  }
-  .score-cell {
-    flex: 1; padding: 8px 10px; border-right: 1px solid #000;
-    font-size: 11px;
-  }
-  .score-cell:last-child { border-right: 0; }
-  .score-cell.value { font-weight: 700; flex: 0 0 auto; min-width: 100px; }
-  .bands { display: flex; flex-direction: column; gap: 0; border: 1px solid #000; border-top: 0; }
-  .band {
-    padding: 6px 10px; font-size: 11px; border-bottom: 1px solid #000;
-    display: flex; gap: 8px;
-  }
-  .band:last-child { border-bottom: 0; }
-  .band .range { font-weight: 700; min-width: 72px; }
-  .band.active { background: #000; color: #fff; }
-  .band.active a { color: #fff; }
+/* PROMPT PANEL (RIGHT) */
+.preview-panel{
+  border:1px solid var(--line);
+  background:var(--panel-2);
+  padding:0;
+  display:flex; flex-direction:column;
+  position:sticky; top:14px;
+  max-height:calc(100vh - 36px);
+}
+@media (max-width:1023px){
+  .preview-panel{position:static; max-height:none}
+}
+.preview-head{
+  display:flex; align-items:center; gap:10px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  flex-wrap:wrap;
+}
+.preview-head .status{
+  font-family:var(--font-heading);
+  font-size:12px; letter-spacing:0.04em; color:var(--teal);
+  display:flex; align-items:center; gap:8px;
+}
+.preview-head .status .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--amber);
+  box-shadow:0 0 12px rgba(228,181,75,0.6);
+  animation:pulse 1.6s ease-in-out infinite;
+}
+.preview-head .status.ready .dot{background:var(--green); box-shadow:0 0 14px rgba(86,227,159,0.6)}
+.preview-head .status.empty .dot{background:var(--ink-dim); box-shadow:none; animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.45}}
 
-  /* OUTBOUND */
-  .out-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-  @media (min-width: 800px) { .out-grid { grid-template-columns: 1fr 1fr; } }
-  .out-card { border: 1px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
-  .out-card .arrow { font-weight: 700; font-size: 12px; }
-  .out-card .url { font-size: 10px; color: #000; word-break: break-all; }
+.preview-head .meta{font-size:10px; color:var(--ink-dim); letter-spacing:0.10em}
+.preview-head .actions{margin-left:auto; display:flex; gap:6px; flex-wrap:wrap}
+.btn{
+  background:transparent;
+  color:var(--ink-soft);
+  border:1px solid var(--line);
+  padding:6px 12px;
+  font-family:var(--font-body);
+  font-size:11px;
+  letter-spacing:0.08em;
+  text-transform:lowercase;
+  transition:border-color .15s ease, color .15s ease, background .15s ease;
+}
+.btn:hover{border-color:var(--line-strong); color:var(--teal)}
+.btn.primary{border-color:var(--line-strong); color:var(--teal)}
+.btn.primary:hover{background:rgba(92,218,204,0.1)}
+.btn.danger:hover{border-color:rgba(255,109,97,0.5); color:var(--red)}
 
-  /* FOOTER */
-  .footer { display: flex; flex-direction: column; gap: 8px; }
-  .footer .meta { font-size: 11px; }
-  .footer .actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  button.btn {
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
-    padding: 6px 10px;
-    font: inherit;
-    text-transform: lowercase;
-    cursor: pointer;
-  }
-  button.btn:hover { background: #000; color: #fff; }
-  .saved { font-size: 10px; color: #bdbdbd; margin-left: 4px; }
+/* prompt pre */
+.preview-body{
+  position:relative; flex:1 1 auto; overflow:auto;
+  background:
+    repeating-linear-gradient(180deg, rgba(92,218,204,0.025) 0 2px, transparent 2px 4px),
+    rgba(7,9,13,0.55);
+}
+.preview-body::before{
+  content:""; position:absolute; left:0; right:0; height:60px;
+  background:linear-gradient(180deg, rgba(92,218,204,0.08), transparent);
+  pointer-events:none; opacity:0.5;
+  animation:scan 6s linear infinite;
+}
+@keyframes scan{
+  0%{transform:translateY(-60px)}
+  100%{transform:translateY(100vh)}
+}
+.preview-pre{
+  margin:0; padding:18px 20px;
+  font-family:var(--font-code); font-size:12px; line-height:1.65;
+  color:var(--ink); letter-spacing:0.005em;
+  white-space:pre-wrap; word-break:break-word;
+  text-transform:none;
+  position:relative; z-index:1;
+}
+.preview-pre .ph{color:var(--ink-faint); font-style:italic}
+.preview-pre .filled{color:var(--ink)}
+.preview-pre .h1, .preview-pre .h2{color:var(--teal); font-weight:500}
+.preview-pre .em{color:var(--amber)}
+.preview-pre.dim{opacity:0.5; transition:opacity .3s ease}
 
-  /* PRINT */
-  @media print {
-    @page { size: A4 portrait; margin: 14mm; }
-    body { padding: 0; font-size: 11pt; }
-    .grid2 { grid-template-columns: 1fr !important; }
-    .checklist { grid-template-columns: 1fr !important; }
-    .out-grid { grid-template-columns: 1fr !important; }
-    button.btn, .saved, .footer .actions { display: none !important; }
-    textarea { border: 1px solid #000; min-height: 40pt; }
-    .frame, .field, .card, .check, .out-card, .band, .score-row, .bands { page-break-inside: avoid; }
-  }
+/* toast */
+.toast{
+  position:fixed; left:50%; bottom:32px; transform:translateX(-50%) translateY(20px);
+  background:rgba(7,9,13,0.95);
+  color:var(--teal);
+  border:1px solid var(--line-strong);
+  padding:10px 18px;
+  font-family:var(--font-body); font-size:12px; letter-spacing:0.06em;
+  opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+  z-index:60;
+  box-shadow:0 0 22px -4px rgba(92,218,204,0.4);
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+/* fig.3 lecture context */
+.lecture{
+  margin-top:22px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:18px;
+}
+.lecture summary{
+  cursor:pointer; list-style:none;
+  font-family:var(--font-heading); font-size:13px; letter-spacing:0.02em; color:var(--ink);
+  display:flex; align-items:baseline; gap:10px;
+}
+.lecture summary::-webkit-details-marker{display:none}
+.lecture summary::before{content:"▸"; color:var(--teal); transition:transform .15s ease}
+.lecture[open] summary::before{transform:rotate(90deg); display:inline-block}
+.lecture .desc{margin-left:auto; font-size:10px; color:var(--ink-dim); letter-spacing:0.10em}
+.chips{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  gap:8px; margin-top:14px;
+}
+.chip{
+  border:1px solid var(--line);
+  padding:10px 12px;
+  background:rgba(7,9,13,0.4);
+}
+.chip .k{font-family:var(--font-heading); font-size:11px; color:var(--teal); letter-spacing:0.04em; margin-bottom:4px}
+.chip .v{font-size:11px; color:var(--ink-soft); letter-spacing:0.01em}
+
+/* footer */
+footer.bottom{
+  margin-top:30px;
+  border-top:1px solid var(--line);
+  padding-top:14px;
+  display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap;
+  font-size:10px; color:var(--ink-dim); letter-spacing:0.14em; text-transform:uppercase;
+}
+footer.bottom nav{display:flex; gap:14px; flex-wrap:wrap}
+footer.bottom nav a{color:var(--ink-soft); letter-spacing:0.10em}
+
+/* scrollbar */
+.preview-body::-webkit-scrollbar{width:8px; height:8px}
+.preview-body::-webkit-scrollbar-track{background:transparent}
+.preview-body::-webkit-scrollbar-thumb{background:rgba(92,218,204,0.18); border-radius:0}
+.preview-body::-webkit-scrollbar-thumb:hover{background:rgba(92,218,204,0.35)}
+
+@media print{
+  body::before{display:none}
+  .topnav, footer.bottom, .lecture{display:none}
+  .split{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<main class="stack">
-
-  <!-- HEADER -->
-  <section class="frame header">
-    <h1>ain ws01 · context playground</h1>
-    <p class="sub">harness / personal os · 2026-05-06 · povaliaev · ai-native sprint vol2</p>
-  </section>
-
-  <!-- FIG.1 LAYER BUILDER -->
-  <section>
-    <div class="fig"><span class="lbl">fig.1</span> layer builder</div>
-    <div class="grid2">
-      <div class="field">
-        <label>① source</label>
-        <textarea id="layer-source" placeholder="воркшопы, звонки, intro, market, pos, research"></textarea>
-      </div>
-      <div class="field">
-        <label>② signal</label>
-        <textarea id="layer-signal" placeholder="что изменилось, где болит, какая сила входит"></textarea>
-      </div>
-      <div class="field">
-        <label>③ ask</label>
-        <textarea id="layer-ask" placeholder="что deck/агент должен сделать дальше"></textarea>
-      </div>
-      <div class="field">
-        <label>④ output</label>
-        <textarea id="layer-output" placeholder="какой artifact возвращает агент"></textarea>
-      </div>
-      <div class="field">
-        <label>⑤ evidence</label>
-        <textarea id="layer-evidence" placeholder="какой след доказывает действие"></textarea>
-      </div>
+  <!-- TOPNAV -->
+  <div class="topnav">
+    <div class="brand">
+      <img src="./assets/aim-logo.png" alt="aim">
+      <span class="name">ai-native sprint vol2</span>
+      <span class="tag">s3 · w1</span>
     </div>
-  </section>
+    <nav>
+      <a href="./index.html">← hub</a>
+      <a href="./naming.html">→ naming</a>
+      <a href="./rules.html">→ rules</a>
+      <a href="./" class="active">→ playground</a>
+      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">→ deck</a>
+    </nav>
+  </div>
 
-  <!-- FIG.2 ARTIFACT CHAIN -->
-  <section>
-    <div class="fig"><span class="lbl">fig.2</span> artifact chain</div>
-    <div class="grid2">
-      <div class="card">
-        <div class="head"><span class="num">①</span><span class="ttl">workcase canvas</span></div>
-        <div class="sub">trigger · input · action · review · output · metric</div>
-        <textarea id="art-1" placeholder="свободные заметки..."></textarea>
+  <!-- HEADER BAND -->
+  <header class="headband">
+    <div class="eyebrow">prompt compiler · ai-native sprint vol2 · w1</div>
+    <h1>плотный контекст → готовый промпт</h1>
+    <p class="sub">заполни поля справа — слева соберётся длинный prompt в тональности сегодняшней лекции. скопируй и вставь в свой агент. без llm в петле — чистый локальный контур, ты сам режиссируешь силу.</p>
+  </header>
+
+  <!-- SPLIT: INPUTS LEFT (smaller) ↔ PROMPT RIGHT (larger) -->
+  <div class="split">
+
+    <!-- INPUT PANEL -->
+    <section class="panel" aria-labelledby="fig1">
+      <div class="fig" id="fig1">
+        <span class="num">fig.1</span>
+        <span class="name">personal context</span>
+        <span class="tag">free notes · autosave</span>
       </div>
-      <div class="card">
-        <div class="head"><span class="num">②</span><span class="ttl">context seed</span></div>
-        <div class="sub">source · signal · ask · output · evidence</div>
-        <textarea id="art-2" placeholder="свободные заметки..."></textarea>
+
+      <div class="field tall">
+        <div class="row">
+          <label for="f-role">роль и контекст</label>
+          <span class="hint">кто ты, чем занимается команда</span>
+        </div>
+        <textarea id="f-role" data-key="role" placeholder="я cto в saas-команде из 12 человек, делаем b2b аналитику для retail. сейчас фокус на agent-orchestration слое над данными."></textarea>
       </div>
-      <div class="card">
-        <div class="head"><span class="num">③</span><span class="ttl">agent passport</span></div>
-        <div class="sub">owner · scope · tools · expiry</div>
-        <textarea id="art-3" placeholder="свободные заметки..."></textarea>
+
+      <div class="field tall">
+        <div class="row">
+          <label for="f-workflow">один workflow</label>
+          <span class="hint">тот, что болит больше всего</span>
+        </div>
+        <textarea id="f-workflow" data-key="workflow" placeholder="обрабатываем заявки клиентов на интеграцию: 4-7 ручных шагов, теряем 30% в первой неделе. триггер — slack-сообщение, ответственный — solutions engineer."></textarea>
       </div>
-      <div class="card">
-        <div class="head"><span class="num">④</span><span class="ttl">guardrail checklist</span></div>
-        <div class="sub">blast radius · rollback · approval gate · audit trail</div>
-        <textarea id="art-4" placeholder="свободные заметки..."></textarea>
+
+      <div class="field">
+        <div class="row">
+          <label>шесть полей одного процесса</label>
+          <span class="hint">trigger · input · action · review · output · metric</span>
+        </div>
+        <div class="six">
+          <div class="mini"><label>trigger</label><textarea id="f-trigger" data-key="trigger" placeholder="slack #intake, новое сообщение с тегом @intake-bot"></textarea></div>
+          <div class="mini"><label>input</label><textarea id="f-input" data-key="input" placeholder="email клиента + json формы + история тикетов"></textarea></div>
+          <div class="mini"><label>action</label><textarea id="f-action" data-key="action" placeholder="агент классифицирует, пишет draft ответа, открывает черновик в notion"></textarea></div>
+          <div class="mini"><label>review</label><textarea id="f-review" data-key="review" placeholder="solutions engineer одобряет/правит за 10 мин"></textarea></div>
+          <div class="mini"><label>output</label><textarea id="f-output" data-key="output" placeholder="ответ клиенту + строка в crm + thread в slack"></textarea></div>
+          <div class="mini"><label>metric</label><textarea id="f-metric" data-key="metric" placeholder="time-to-first-response < 4h, conversion в week-2 ≥ 80%"></textarea></div>
+        </div>
       </div>
-      <div class="card">
-        <div class="head"><span class="num">⑤</span><span class="ttl">evidence note</span></div>
-        <div class="sub">decision · rationale · replay · review-date</div>
-        <textarea id="art-5" placeholder="свободные заметки..."></textarea>
+
+      <div class="field medium">
+        <div class="row">
+          <label for="f-force">внешняя сила <span style="color:var(--teal)">(dragon)</span></label>
+          <span class="hint">какие external capabilities ты используешь</span>
+        </div>
+        <textarea id="f-force" data-key="force" placeholder="claude code, claude api, openrouter mix-of-models, postgres, slack api"></textarea>
       </div>
+
+      <div class="field medium">
+        <div class="row">
+          <label for="f-boundary">граница</label>
+          <span class="hint">что НЕ автоматизируешь · human-only</span>
+        </div>
+        <textarea id="f-boundary" data-key="boundary" placeholder="решения о ценообразовании, escalation к c-suite, любой outbound в gov-сектор"></textarea>
+      </div>
+
+      <div class="field medium">
+        <div class="row">
+          <label for="f-passport">owner и passport</label>
+          <span class="hint">кто отвечает · scope · expiry</span>
+        </div>
+        <textarea id="f-passport" data-key="passport" placeholder="solutions team owner, scope = только клиентский success тикет, expiry 30 дней, токены rotation еженедельно"></textarea>
+      </div>
+
+      <div class="field medium">
+        <div class="row">
+          <label for="f-evidence">evidence</label>
+          <span class="hint">след, что workflow сработал</span>
+        </div>
+        <textarea id="f-evidence" data-key="evidence" placeholder="slack-thread с replay decision, postgres event journal, evidence note в obsidian с replay link"></textarea>
+      </div>
+
+      <div class="field medium">
+        <div class="row">
+          <label for="f-cadence">review cadence</label>
+          <span class="hint">когда возвращаешься к workflow</span>
+        </div>
+        <textarea id="f-cadence" data-key="cadence" placeholder="еженедельный 30-мин обзор по пятницам, kill-or-keep решение через 3 недели"></textarea>
+      </div>
+    </section>
+
+    <!-- PROMPT PANEL -->
+    <section class="preview-panel" aria-labelledby="fig2">
+      <div class="preview-head">
+        <div class="fig" id="fig2" style="margin:0">
+          <span class="num">fig.2</span>
+          <span class="name">prompt preview</span>
+        </div>
+        <div class="status empty" id="status-pill">
+          <span class="dot"></span>
+          <span id="status-text">пусто</span>
+        </div>
+        <div class="meta" id="meta-text">~0 символов · 0 строк</div>
+        <div class="actions">
+          <button class="btn primary" id="btn-copy">копировать</button>
+          <button class="btn" id="btn-download">скачать .md</button>
+          <button class="btn danger" id="btn-clear">очистить</button>
+        </div>
+      </div>
+      <div class="preview-body">
+        <pre class="preview-pre" id="preview"></pre>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- LECTURE CONTEXT -->
+  <details class="lecture">
+    <summary>fig.3 контекст лекции <span class="desc">тональность, в которой собирается prompt</span></summary>
+    <div class="chips">
+      <div class="chip"><div class="k">harness</div><div class="v">внешняя сила обуздана управляемым контуром, а не прямым доступом</div></div>
+      <div class="chip"><div class="k">context as riverbed</div><div class="v">контекст — русло, модель — течение. без русла нет направления</div></div>
+      <div class="chip"><div class="k">templates before dashboards</div><div class="v">сначала шаблон процесса, потом метрики поверх него</div></div>
+      <div class="chip"><div class="k">evidence > logs</div><div class="v">логи показывают что произошло. evidence — зачем</div></div>
+      <div class="chip"><div class="k">agent passport</div><div class="v">scope, owner, expiry, rotation — паспорт уже хочет себе скоуп</div></div>
+      <div class="chip"><div class="k">replay-ability</div><div class="v">любое решение должно проигрываться обратно по следу</div></div>
+      <div class="chip"><div class="k">human review как сигнал</div><div class="v">не bottleneck, а точка калибровки russlа. где правят — там слабое место контекста</div></div>
     </div>
-  </section>
-
-  <!-- FIG.3 READINESS CHECK -->
-  <section>
-    <div class="fig"><span class="lbl">fig.3</span> readiness check (12 пунктов · 0–12 score)</div>
-    <div class="checklist" id="checklist"></div>
-
-    <div class="score-row">
-      <div class="score-cell value">score: <span id="score">0</span>/12</div>
-      <div class="score-cell" id="score-readout">raw context — начни с одного source audit</div>
-    </div>
-
-    <div class="bands" id="bands">
-      <div class="band" data-min="0" data-max="3"><span class="range">0–3</span><span>raw context — начни с одного source audit</span></div>
-      <div class="band" data-min="4" data-max="7"><span class="range">4–7</span><span>harness forming — выбери workflow и seed</span></div>
-      <div class="band" data-min="8" data-max="10"><span class="range">8–10</span><span>closed loop — добавь evidence + review cadence</span></div>
-      <div class="band" data-min="11" data-max="12"><span class="range">11–12</span><span>mature — масштабируй на следующий workflow</span></div>
-    </div>
-  </section>
-
-  <!-- FIG.4 OUTBOUND -->
-  <section>
-    <div class="fig"><span class="lbl">fig.4</span> outbound</div>
-    <div class="out-grid">
-      <a class="out-card" href="https://learn.aimindset.org/s3" target="_blank" rel="noopener">
-        <span class="arrow">→ lms s3</span>
-        <span class="url">learn.aimindset.org/s3</span>
-      </a>
-      <a class="out-card" href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">
-        <span class="arrow">→ dragon deck</span>
-        <span class="url">ainative-lab-deck.netlify.app</span>
-      </a>
-      <a class="out-card" href="https://ai-mindset-org.github.io/ainative-lab/" target="_blank" rel="noopener">
-        <span class="arrow">→ ainative-lab s2 hub</span>
-        <span class="url">ai-mindset-org.github.io/ainative-lab</span>
-      </a>
-      <a class="out-card" href="obsidian://open?vault=notes&file=AI%20mindset%20%7Bshared%7D%2Fai-mindset-2026%2Finbox%2F%7BAIM%7D%20%7Bresearch%7D%20Context%20Engineering%20Dragon%20Redesign%20%E2%80%93%202026-05-06.md">
-        <span class="arrow">→ research note (vault)</span>
-        <span class="url">obsidian://notes / context engineering dragon redesign – 2026-05-06</span>
-      </a>
-    </div>
-  </section>
+  </details>
 
   <!-- FOOTER -->
-  <section class="frame footer">
-    <div class="meta">ain ws01 · context playground · v1 · 2026-05-06 · shaper style · b&amp;w · jetbrains mono</div>
-    <div class="actions">
-      <button class="btn" id="btn-save">[ save ]</button>
-      <button class="btn" id="btn-export">[ export .md ]</button>
-      <button class="btn" id="btn-print">[ print ]</button>
-      <button class="btn" id="btn-reset">[ reset ]</button>
-      <span class="saved" id="saved-indicator"></span>
-    </div>
-  </section>
+  <footer class="bottom">
+    <div>ainative-lab-2 · prompt compiler · v2 · 2026-05-06</div>
+    <nav>
+      <a href="./index.html">hub</a>
+      <a href="./naming.html">naming</a>
+      <a href="./rules.html">rules</a>
+      <a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noopener">deck</a>
+    </nav>
+  </footer>
 
-</main>
+</div>
+
+<div class="toast" id="toast">скопировано</div>
 
 <script>
 (function(){
   'use strict';
 
-  var STORE_KEY = 'ain-ws01-playground-v1';
+  var STORE_KEY = 'ain-ws01-prompt-compiler-v2';
 
-  var LAYER_IDS = ['layer-source','layer-signal','layer-ask','layer-output','layer-evidence'];
-  var ART_IDS   = ['art-1','art-2','art-3','art-4','art-5'];
-  var ART_TITLES = [
-    'workcase canvas',
-    'context seed',
-    'agent passport',
-    'guardrail checklist',
-    'evidence note'
-  ];
-  var LAYER_LABELS = ['source','signal','ask','output','evidence'];
-
-  var CHECK_ITEMS = [
-    'могу назвать один workflow, который болит',
-    'могу написать его trigger',
-    'могу описать форму input',
-    'знаю точку human review',
-    'знаю output artifact',
-    'есть baseline metric',
-    'могу написать context seed',
-    'знаю какой evidence собираю',
-    'знаю как отозвать scope агента',
-    'есть один rollback-шаг',
-    'поставлен review-date',
-    'знаю что не автоматизирую'
+  var FIELDS = [
+    'role','workflow',
+    'trigger','input','action','review','output','metric',
+    'force','boundary','passport','evidence','cadence'
   ];
 
-  // build checklist
-  var checklistEl = document.getElementById('checklist');
-  CHECK_ITEMS.forEach(function(text, i){
-    var n = i + 1;
-    var label = document.createElement('label');
-    label.className = 'check';
-    label.innerHTML =
-      '<input type="checkbox" id="chk-' + n + '" data-idx="' + n + '">' +
-      '<span class="idx">' + (n < 10 ? '0' + n : n) + '</span>' +
-      '<span class="txt">' + text + '</span>';
-    checklistEl.appendChild(label);
-  });
+  // placeholders shown inside the prompt when a field is empty
+  var PLACEHOLDERS = {
+    role: '{кто ты, какая команда, какой текущий фокус}',
+    workflow: '{один workflow, который болит — опиши свободно: триггер, шаги, узкое место}',
+    trigger: '{что запускает процесс}',
+    input: '{какие данные приходят на вход}',
+    action: '{что делает система или агент}',
+    review: '{где человек решает}',
+    output: '{что получается на выходе}',
+    metric: '{по какой метрике оцениваешь}',
+    force: '{claude code · claude api · openrouter · postgres · slack api · …}',
+    boundary: '{где человек решает сам, любая автоматика требует approval}',
+    passport: '{owner + scope + expiry + rotation}',
+    evidence: '{какой след доказывает, что workflow сработал}',
+    cadence: '{когда возвращаешься: еженедельно? kill-or-keep через сколько?}'
+  };
 
-  // load state
-  function loadState() {
+  // ---------- state ----------
+  var state = {};
+  FIELDS.forEach(function(k){ state[k] = ''; });
+
+  function load(){
     try {
       var raw = localStorage.getItem(STORE_KEY);
       if (!raw) return;
-      var s = JSON.parse(raw);
-      if (s.layers) LAYER_IDS.forEach(function(id, i){
-        var el = document.getElementById(id);
-        if (el && typeof s.layers[i] === 'string') el.value = s.layers[i];
+      var parsed = JSON.parse(raw);
+      FIELDS.forEach(function(k){
+        if (typeof parsed[k] === 'string') state[k] = parsed[k];
       });
-      if (s.artifacts) ART_IDS.forEach(function(id, i){
-        var el = document.getElementById(id);
-        if (el && typeof s.artifacts[i] === 'string') el.value = s.artifacts[i];
+    } catch(e){}
+  }
+
+  var saveTimer = null;
+  function scheduleSave(){
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e){}
+    }, 200);
+  }
+
+  // ---------- prompt assembly ----------
+  // Returns { plain: string, html: string }
+  function composePrompt(s){
+    function v(key){
+      var x = (s[key] || '').trim();
+      return { val: x, has: !!x, ph: PLACEHOLDERS[key] };
+    }
+
+    var role = v('role');
+    var workflow = v('workflow');
+    var trigger = v('trigger');
+    var input = v('input');
+    var action = v('action');
+    var review = v('review');
+    var output = v('output');
+    var metric = v('metric');
+    var force = v('force');
+    var boundary = v('boundary');
+    var passport = v('passport');
+    var evidence = v('evidence');
+    var cadence = v('cadence');
+
+    // build as array of segments {text, kind} where kind: 'plain'|'ph'|'h1'|'h2'|'em'
+    var segs = [];
+    function add(text, kind){ segs.push({ t: text, k: kind || 'plain' }); }
+    function field(f){
+      if (f.has) segs.push({ t: f.val, k: 'plain' });
+      else segs.push({ t: f.ph, k: 'ph' });
+    }
+    function nl(n){ segs.push({ t: '\n'.repeat(n||1), k: 'plain' }); }
+
+    add('# context для agentного workflow', 'h1');
+    nl(2);
+
+    add('## роль и сила', 'h2'); nl(1);
+    field(role); nl(2);
+    add('я работаю в режиме ', 'plain');
+    add('harness', 'em');
+    add(' вокруг внешней силы — capability приходит от: ', 'plain');
+    field(force); add('.', 'plain'); nl(1);
+    add('моя задача — собрать управляемый ', 'plain');
+    add('контур', 'em');
+    add(': контекст → граница → evidence → owner → review.', 'plain'); nl(2);
+
+    add('## workflow', 'h2'); nl(1);
+    field(workflow); nl(2);
+    add('шесть полей одного процесса:', 'plain'); nl(1);
+    add('- trigger: ', 'plain'); field(trigger); nl(1);
+    add('- input: ', 'plain'); field(input); nl(1);
+    add('- action: ', 'plain'); field(action); nl(1);
+    add('- review: ', 'plain'); field(review); nl(1);
+    add('- output: ', 'plain'); field(output); nl(1);
+    add('- metric: ', 'plain'); field(metric); nl(2);
+
+    add('## граница', 'h2'); nl(1);
+    field(boundary); nl(1);
+    add('здесь human-only — любое автоматическое действие требует approval. это не bottleneck, а точка калибровки русла: где правят, там слабое место контекста.', 'plain'); nl(2);
+
+    add('## passport агента', 'h2'); nl(1);
+    field(passport); nl(1);
+    add('scope не должен быть шире, чем у меня самого. истечение обязательно. ротация токенов — по расписанию, не по факту инцидента.', 'plain'); nl(2);
+
+    add('## evidence', 'h2'); nl(1);
+    field(evidence); nl(1);
+    add('logs показывают, что произошло. ', 'plain');
+    add('evidence', 'em');
+    add(' показывает, зачем — это память решений, а не байтов. каждое действие должно проигрываться обратно по следу.', 'plain'); nl(2);
+
+    add('## review cadence', 'h2'); nl(1);
+    field(cadence); nl(1);
+    add('возврат — обязательная часть контура. без review-date workflow не workflow, а одноразовый скрипт.', 'plain'); nl(2);
+
+    add('---', 'plain'); nl(2);
+
+    add('## что мне нужно от тебя', 'h2'); nl(2);
+
+    add('1. предложи ', 'plain'); add('seed', 'em'); add(' под этот workflow в формате: source · signal · ask · output · evidence — одной плотной таблицей.', 'plain'); nl(2);
+    add('2. покажи 2–3 точки compensation: где blast-radius выше — там guardrail должен быть толще. укажи конкретно, какой guardrail и почему.', 'plain'); nl(2);
+    add('3. пометь, какие из шести полей ', 'plain'); add('самые слабые', 'em'); add(' сейчас (нет владельца / метрики / явного review-date / непрозрачный input). дай по каждому — как починить за один шаг.', 'plain'); nl(2);
+    add('4. дай первый шаг на следующие 48 часов: ', 'plain'); add('один артефакт', 'em'); add(', который снимет неопределённость. не план — артефакт.', 'plain'); nl(2);
+    add('5. дай ', 'plain'); add('replay-чек', 'em'); add(': по каким трём вопросам через неделю я смогу проиграть назад это решение и понять, было оно правильным или нет.', 'plain'); nl(2);
+
+    add('---', 'plain'); nl(2);
+
+    add('## тональность ответа', 'h2'); nl(1);
+    add('— прямая, lowercase, без «помогу тебе» и «давайте».', 'plain'); nl(1);
+    add('— говори про harness, контур, силу, evidence, owner, scope, expiry, replay.', 'plain'); nl(1);
+    add('— en dash «–» для тире, не em dash.', 'plain'); nl(1);
+    add('— никаких обещаний «ai заменит» — речь о том, как ', 'plain'); add('я', 'em'); add(' держу контур.', 'plain'); nl(1);
+    add('— шаблон важнее дашборда: сначала русло, потом метрика поверх.', 'plain'); nl(1);
+    add('— evidence важнее логов: log = что, evidence = зачем.', 'plain'); nl(2);
+
+    add('respond with: { 1.seed-таблица, 2.compensation-точки, 3.слабые-поля, 4.артефакт-48ч, 5.replay-чек }', 'em');
+
+    // render two outputs
+    var plain = '';
+    var html = '';
+    for (var i = 0; i < segs.length; i++) {
+      var seg = segs[i];
+      plain += seg.t;
+      var t = escapeHtml(seg.t);
+      if (seg.k === 'ph') html += '<span class="ph">' + t + '</span>';
+      else if (seg.k === 'h1' || seg.k === 'h2') html += '<span class="h1">' + t + '</span>';
+      else if (seg.k === 'em') html += '<span class="em">' + t + '</span>';
+      else html += t;
+    }
+
+    return { plain: plain, html: html };
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;');
+  }
+
+  // ---------- DOM wiring ----------
+  var preview = document.getElementById('preview');
+  var statusPill = document.getElementById('status-pill');
+  var statusText = document.getElementById('status-text');
+  var metaText = document.getElementById('meta-text');
+
+  function countFilled(){
+    var n = 0;
+    FIELDS.forEach(function(k){ if ((state[k]||'').trim()) n++; });
+    return n;
+  }
+
+  var renderTimer = null;
+  function render(){
+    var compiled = composePrompt(state);
+    preview.classList.add('dim');
+    // small RAF tick so the dim transition shows
+    requestAnimationFrame(function(){
+      preview.innerHTML = compiled.html;
+      requestAnimationFrame(function(){ preview.classList.remove('dim'); });
+    });
+    // meta
+    var chars = compiled.plain.length;
+    var lines = compiled.plain.split('\n').length;
+    metaText.textContent = '~' + chars.toLocaleString('ru-RU') + ' символов · ' + lines + ' строк';
+
+    // status
+    var filled = countFilled();
+    statusPill.classList.remove('empty','ready');
+    if (filled === 0) {
+      statusPill.classList.add('empty');
+      statusText.textContent = 'пусто — заполни поля';
+    } else if (filled < FIELDS.length) {
+      statusText.textContent = 'сборка идёт... ' + filled + '/' + FIELDS.length;
+    } else {
+      statusPill.classList.add('ready');
+      statusText.textContent = 'готово';
+    }
+
+    // store last plain for copy/download
+    preview.dataset.plain = compiled.plain;
+  }
+
+  function bind(){
+    document.querySelectorAll('textarea[data-key]').forEach(function(ta){
+      var k = ta.getAttribute('data-key');
+      ta.value = state[k] || '';
+      ta.addEventListener('input', function(){
+        state[k] = ta.value;
+        scheduleSave();
+        scheduleRender();
       });
-      if (s.checks) {
-        for (var i = 0; i < 12; i++) {
-          var c = document.getElementById('chk-' + (i+1));
-          if (c) c.checked = !!s.checks[i];
-        }
-      }
-    } catch(e) { /* ignore */ }
+    });
   }
 
-  function getState() {
-    var layers = LAYER_IDS.map(function(id){
-      var el = document.getElementById(id); return el ? el.value : '';
-    });
-    var artifacts = ART_IDS.map(function(id){
-      var el = document.getElementById(id); return el ? el.value : '';
-    });
-    var checks = [];
-    for (var i = 0; i < 12; i++) {
-      var c = document.getElementById('chk-' + (i+1));
-      checks.push(c ? !!c.checked : false);
+  function scheduleRender(){
+    if (renderTimer) cancelAnimationFrame(renderTimer);
+    renderTimer = requestAnimationFrame(render);
+  }
+
+  // toast
+  var toast = document.getElementById('toast');
+  var toastTimer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1600);
+  }
+
+  // copy
+  document.getElementById('btn-copy').addEventListener('click', function(){
+    var text = preview.dataset.plain || '';
+    if (!navigator.clipboard) {
+      // fallback
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch(e){}
+      document.body.removeChild(ta);
+      showToast('скопировано');
+      return;
     }
-    return { layers: layers, artifacts: artifacts, checks: checks };
-  }
+    navigator.clipboard.writeText(text).then(function(){
+      showToast('скопировано — ' + text.length.toLocaleString('ru-RU') + ' символов');
+    }).catch(function(){
+      showToast('не удалось скопировать');
+    });
+  });
 
-  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
-
-  function showSaved() {
+  // download
+  document.getElementById('btn-download').addEventListener('click', function(){
+    var text = preview.dataset.plain || '';
     var d = new Date();
-    var ind = document.getElementById('saved-indicator');
-    if (ind) ind.textContent = 'saved at ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
-  }
-
-  function saveState() {
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(getState()));
-      showSaved();
-    } catch(e) { /* ignore quota */ }
-  }
-
-  function recomputeScore() {
-    var s = getState();
-    var score = s.checks.filter(function(x){ return x; }).length;
-    var scoreEl = document.getElementById('score');
-    if (scoreEl) scoreEl.textContent = score;
-
-    var bands = document.querySelectorAll('#bands .band');
-    var activeText = '';
-    bands.forEach(function(b){
-      var min = parseInt(b.getAttribute('data-min'), 10);
-      var max = parseInt(b.getAttribute('data-max'), 10);
-      if (score >= min && score <= max) {
-        b.classList.add('active');
-        activeText = b.textContent.trim();
-      } else {
-        b.classList.remove('active');
-      }
-    });
-    var ro = document.getElementById('score-readout');
-    if (ro && activeText) {
-      // strip leading range like "0–3"
-      ro.textContent = activeText.replace(/^\S+\s+/, '');
-    }
-  }
-
-  function todayStamp() {
-    var d = new Date();
-    return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
-  }
-
-  function buildMarkdown() {
-    var s = getState();
-    var score = s.checks.filter(function(x){ return x; }).length;
-    var lines = [];
-    lines.push('---');
-    lines.push('name: ain-ws01-context-playground');
-    lines.push('date: 2026-05-06');
-    lines.push('score: ' + score + '/12');
-    lines.push('---');
-    lines.push('');
-    lines.push('## layers');
-    LAYER_LABELS.forEach(function(lbl, i){
-      lines.push('');
-      lines.push('### ' + lbl);
-      lines.push('');
-      lines.push((s.layers[i] || '').trim() || '_пусто_');
-    });
-    lines.push('');
-    lines.push('## artifact chain');
-    ART_TITLES.forEach(function(ttl, i){
-      lines.push('');
-      lines.push('### ' + (i+1) + '. ' + ttl);
-      lines.push('');
-      lines.push((s.artifacts[i] || '').trim() || '_пусто_');
-    });
-    lines.push('');
-    lines.push('## readiness');
-    lines.push('');
-    CHECK_ITEMS.forEach(function(text, i){
-      var mark = s.checks[i] ? '[x]' : '[ ]';
-      lines.push('- ' + mark + ' ' + text);
-    });
-    lines.push('');
-    lines.push('score: ' + score + '/12');
-    lines.push('');
-    return lines.join('\n');
-  }
-
-  function downloadMd() {
-    var md = buildMarkdown();
-    var blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
-    var url  = URL.createObjectURL(blob);
+    var yyyy = d.getFullYear();
+    var mm = String(d.getMonth()+1).padStart(2,'0');
+    var dd = String(d.getDate()).padStart(2,'0');
+    var name = 'ain-ws01-prompt-' + yyyy + '-' + mm + '-' + dd + '.md';
+    var blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url;
-    a.download = 'ain-ws01-context-playground-' + todayStamp() + '.md';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function(){
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 100);
-  }
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+    showToast('сохранён · ' + name);
+  });
 
-  function bind() {
-    // textareas: blur autosave
-    LAYER_IDS.concat(ART_IDS).forEach(function(id){
-      var el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('blur', saveState);
-    });
-    // checkboxes: change autosave + score
-    for (var i = 0; i < 12; i++) {
-      var c = document.getElementById('chk-' + (i+1));
-      if (!c) continue;
-      c.addEventListener('change', function(){
-        recomputeScore();
-        saveState();
-      });
-    }
-    // buttons
-    var bSave = document.getElementById('btn-save');
-    if (bSave) bSave.addEventListener('click', function(){ saveState(); });
-
-    var bExp = document.getElementById('btn-export');
-    if (bExp) bExp.addEventListener('click', function(){ saveState(); downloadMd(); });
-
-    var bPr = document.getElementById('btn-print');
-    if (bPr) bPr.addEventListener('click', function(){ window.print(); });
-
-    var bRs = document.getElementById('btn-reset');
-    if (bRs) bRs.addEventListener('click', function(){
-      if (window.confirm('очистить всё?')) {
-        try { localStorage.removeItem(STORE_KEY); } catch(e) {}
-        window.location.reload();
-      }
-    });
-  }
+  // clear
+  document.getElementById('btn-clear').addEventListener('click', function(){
+    if (!confirm('очистить все 13 полей и стереть локальный сохранённый контекст?')) return;
+    FIELDS.forEach(function(k){ state[k] = ''; });
+    document.querySelectorAll('textarea[data-key]').forEach(function(ta){ ta.value = ''; });
+    try { localStorage.removeItem(STORE_KEY); } catch(e){}
+    render();
+    showToast('очищено');
+  });
 
   // init
-  loadState();
+  load();
   bind();
-  recomputeScore();
+  render();
 })();
 </script>
-
 </body>
 </html>

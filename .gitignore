@@ -1,6 +1,8 @@
 node_modules/
 .netlify/
 .DS_Store
+ports/
+_scripts/build_rules_public.py
 *.log
 .env
 .env.local

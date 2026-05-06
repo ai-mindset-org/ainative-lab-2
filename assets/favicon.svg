@@ -1,5 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#fff"/>
-  <rect x="0.5" y="0.5" width="31" height="31" fill="none" stroke="#000" stroke-width="1"/>
-  <text x="16" y="22" text-anchor="middle" font-family="ui-monospace, 'JetBrains Mono', monospace" font-size="14" font-weight="500" fill="#000">02</text>
+  <rect width="32" height="32" fill="#07090d"/>
+  <rect x="0.5" y="0.5" width="31" height="31" fill="none" stroke="#5cdacc" stroke-opacity="0.48" stroke-width="1"/>
+  <path d="M6 21 C11 8 21 8 26 21" fill="none" stroke="#5cdacc" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="16" cy="18" r="2.5" fill="#ff6d61"/>
+  <text x="16" y="29" text-anchor="middle" font-family="ui-monospace, 'JetBrains Mono', monospace" font-size="6" font-weight="500" fill="#5cdacc" opacity="0.6">02</text>
 </svg>
