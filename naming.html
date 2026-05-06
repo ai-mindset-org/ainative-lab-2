@@ -1,539 +1,337 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>naming · ainative-lab-2</title>
-<meta name="description" content="один формат для всего vault'a. большой шаблон файла + setup naming convention в одной странице.">
-<meta property="og:title" content="naming · ainative-lab-2">
-<meta property="og:description" content="имя — операционная ось. целый шаблон файла, copy-all + инструкции внутри той же страницы.">
-<meta property="og:type" content="website">
-<link rel="icon" href="./assets/favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>naming convention · ainative-lab-2</title>
+<meta name="description" content="naming convention для obsidian vault — формула, типы, project-коды, структура папок, yaml, теги, setup и чек-лист. дракон-эстетика, lowercase, en dash. ai-native sprint vol2 / s3." />
+<meta property="og:title" content="naming convention · ainative-lab-2" />
+<meta property="og:description" content="один паттерн для каждого файла. дата в конце, en dash перед датой, lowercase в описании. имя файла — операционная ось vault'a." />
+<meta property="og:type" content="website" />
+
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
 <style>
 :root{
-  --bg:#07090d;
-  --ink:#f0f7f4;
-  --ink-soft:rgba(240,247,244,0.74);
-  --ink-dim:rgba(240,247,244,0.48);
-  --ink-faint:rgba(240,247,244,0.28);
-  --panel:rgba(12,17,23,0.78);
-  --line:rgba(92,218,204,0.2);
-  --line-strong:rgba(92,218,204,0.48);
-  --teal:#5cdacc;
-  --green:#56e39f;
-  --amber:#e4b54b;
-  --red:#ff6d61;
-  --font-heading:"Space Grotesk", system-ui, sans-serif;
-  --font-body:"IBM Plex Mono", ui-monospace, monospace;
-  --font-code:"JetBrains Mono", ui-monospace, monospace;
+  --bg:#07090d; --ink:#f0f7f4; --ink-soft:rgba(240,247,244,0.74);
+  --ink-dim:rgba(240,247,244,0.48); --ink-faint:rgba(240,247,244,0.28);
+  --panel:rgba(12,17,23,0.78); --panel-2:rgba(12,17,23,0.55);
+  --line:rgba(92,218,204,0.20); --line-strong:rgba(92,218,204,0.48);
+  --teal:#5cdacc; --green:#56e39f; --amber:#e4b54b; --red:#ff6d61;
+  --font-heading:"Space Grotesk",system-ui,sans-serif;
+  --font-body:"IBM Plex Mono",ui-monospace,monospace;
+  --font-code:"JetBrains Mono",ui-monospace,monospace;
 }
-*{box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  margin:0;
-  background:#07090d;
-  color:var(--ink);
-  font-family:var(--font-body);
-  font-size:13px;
-  line-height:1.6;
-  text-transform:lowercase;
-  letter-spacing:.01em;
+  background:var(--bg); color:var(--ink);
+  font-family:var(--font-body); font-size:13px; line-height:1.6;
+  letter-spacing:0.02em; text-transform:lowercase;
+  min-height:100vh; overflow-x:hidden; position:relative;
   -webkit-font-smoothing:antialiased;
-  min-height:100vh;
-}
-body::before{
-  content:"";
-  position:fixed; inset:0;
-  background-image:
-    linear-gradient(rgba(92,218,204,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(92,218,204,0.05) 1px, transparent 1px);
-  background-size:58px 58px;
-  pointer-events:none;
-  z-index:0;
 }
 body::after{
-  content:"";
-  position:fixed; inset:0;
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    linear-gradient(180deg, rgba(7,9,13,0.54), rgba(7,9,13,0.96) 72%),
-    conic-gradient(from 220deg at 52% 46%, rgba(92,218,204,0.18), rgba(9,13,18,0.1), rgba(86,227,159,0.08), rgba(228,181,75,0.08), rgba(9,13,18,0.1), rgba(92,218,204,0.18));
-  pointer-events:none;
-  z-index:1;
+    radial-gradient(ellipse 60% 50% at 52% 36%,rgba(92,218,204,0.10),transparent 70%),
+    conic-gradient(from 220deg at 52% 36%,rgba(86,227,159,0.04),rgba(228,181,75,0.03),rgba(92,218,204,0.05),transparent 60%);
+  mix-blend-mode:screen;
 }
-.wrap{position:relative; z-index:10; max-width:1080px; margin:0 auto; padding:24px 22px 32px}
+.scan{position:fixed; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(92,218,204,0.32),transparent);
+  pointer-events:none; z-index:1; animation:scan 9s linear infinite; opacity:.6}
+@keyframes scan{0%{top:-2%}100%{top:102%}}
+a{color:var(--ink); text-decoration:none;
+  border-bottom:1px solid var(--line-strong);
+  transition:color .15s, border-color .15s, background .15s}
+a:hover{color:var(--teal); border-bottom-color:var(--teal)}
+::selection{background:var(--teal); color:var(--bg)}
 
-  /* === unified nav === */
-  .ai-nav {
-    position: fixed; inset: 0 0 auto 0; z-index: 90;
-    height: 52px; padding: 0 22px;
-    display: flex; align-items: center; gap: 18px;
-    background: rgba(7,9,13,0.86); backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--line);
-    font-family: var(--font-body);
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
-  .ai-nav-brand {
-    display: flex; align-items: center; gap: 9px;
-    text-decoration: none; color: var(--ink);
-    font-family: var(--font-heading);
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-  .ai-nav-brand img {
-    height: 22px; width: auto;
-    filter: invert(1) brightness(1.2);
-  }
-  .ai-nav-brand span { color: var(--ink); }
-  .ai-nav-brand .ai-nav-tag {
-    font-family: var(--font-body);
-    font-size: 10px;
-    color: var(--ink-dim);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    padding: 3px 7px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-  }
-  .ai-nav-links {
-    flex: 1; display: flex; gap: 4px; align-items: center;
-    margin-left: 12px;
-  }
-  .ai-nav-links a {
-    text-decoration: none; color: var(--ink-dim);
-    padding: 6px 11px; border: 1px solid transparent; border-radius: 6px;
-    transition: all 0.16s ease;
-    font-size: 12px;
-  }
-  .ai-nav-links a:hover {
-    color: var(--teal);
-    border-color: var(--line);
-    background: rgba(92,218,204,0.06);
-  }
-  .ai-nav-links a.ext::after { content: " ↗"; opacity: 0.5; }
-  body[data-route="hub"] .ai-nav-links a[data-route="hub"],
-  body[data-route="play"] .ai-nav-links a[data-route="play"],
-  body[data-route="rules"] .ai-nav-links a[data-route="rules"],
-  body[data-route="naming"] .ai-nav-links a[data-route="naming"],
-  body[data-route="graph"] .ai-nav-links a[data-route="graph"] {
-    color: var(--teal);
-    border-color: var(--line-strong);
-    background: rgba(92,218,204,0.08);
-  }
-  .ai-nav-burger {
-    display: none;
-    background: none; border: 1px solid var(--line);
-    color: var(--ink); font: 18px var(--font-body);
-    width: 34px; height: 34px; border-radius: 6px; cursor: pointer;
-  }
-  @media (max-width: 760px) {
-    .ai-nav { padding: 0 14px; }
-    .ai-nav-links {
-      position: absolute; top: 52px; left: 0; right: 0;
-      flex-direction: column; gap: 0; align-items: stretch;
-      background: rgba(7,9,13,0.96); backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--line);
-      padding: 8px;
-      display: none;
-    }
-    .ai-nav-links a { padding: 12px 14px; border-radius: 0; }
-    .ai-nav.open .ai-nav-links { display: flex; }
-    .ai-nav-burger { display: grid; place-items: center; }
-    .ai-nav-brand .ai-nav-tag { display: none; }
-  }
-  body { padding-top: 52px; }
-  @media print {
-    .ai-nav, .ai-foot { display: none; }
-    body { padding-top: 0; }
-  }
-  .ai-foot {
-    margin-top: 64px;
-    padding: 22px;
-    border-top: 1px solid var(--line);
-    display: grid; gap: 6px;
-    color: var(--ink-dim);
-    font-family: var(--font-body);
-    font-size: 11px;
-    line-height: 1.6;
-  }
-  .ai-foot-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; }
-  .ai-foot a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--line); }
-  .ai-foot a:hover { color: var(--teal); border-bottom-color: var(--line-strong); }
-  .ai-role {
-    display: inline-block;
-    padding: 4px 10px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    color: var(--teal);
-    font-family: var(--font-body);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-
-/* === hero === */
-.hero{
-  margin:24px 0 36px;
-}
-.hero h1{
-  font-family:var(--font-heading);
-  font-weight:600;
-  font-size:42px;
-  line-height:1.08;
-  margin:0 0 14px;
-  letter-spacing:-.01em;
-  text-transform:lowercase;
-}
-.hero h1 em{
-  font-style:normal;
-  color:var(--amber);
-}
-.hero p{
-  margin:0;
-  color:var(--ink-soft);
-  max-width:720px;
-  font-size:14px;
-}
-
-/* === fig labels === */
-.fig-label{
-  display:inline-block;
-  padding:3px 9px;
-  border:1px solid var(--line);
-  border-radius:4px;
-  color:var(--teal);
-  font-size:10px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  margin-bottom:14px;
-}
-
-/* === big template block (the centerpiece) === */
-.template-shell{
-  margin:36px 0 56px;
-  position:relative;
-}
-.template-bar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:10px 16px;
-  background:rgba(12,17,23,0.92);
-  border:1px solid var(--line-strong);
-  border-bottom:none;
-  border-radius:8px 8px 0 0;
-  position:sticky;
-  top:52px;
-  z-index:50;
-  backdrop-filter:blur(10px);
-  flex-wrap:wrap;
-}
-.template-bar .meta{
-  font-size:10px;
-  color:var(--ink-dim);
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-.template-bar .meta b{
-  color:var(--teal);
-  font-weight:500;
-}
-.template-bar .actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-button.btn{
-  background:transparent;
-  border:1px solid var(--line);
-  color:var(--ink);
-  font-family:var(--font-body);
-  font-size:11px;
-  padding:8px 14px;
-  border-radius:5px;
-  cursor:pointer;
-  letter-spacing:.04em;
-  text-transform:lowercase;
-  transition:all .16s ease;
-}
-button.btn:hover{
-  color:var(--bg);
-  background:var(--teal);
-  border-color:var(--teal);
-  box-shadow:0 0 18px rgba(92,218,204,0.35);
-}
-button.btn.primary{
-  border-color:var(--line-strong);
-  color:var(--teal);
-  background:rgba(92,218,204,0.06);
-}
-button.btn.primary:hover{
-  color:var(--bg);
-  background:var(--teal);
-}
-button.btn.ghost{
-  color:var(--ink-soft);
-}
-
-pre.template{
-  margin:0;
-  padding:28px 28px 32px;
-  background:rgba(8,12,16,0.86);
-  border:1px solid var(--line-strong);
-  border-top:none;
-  border-radius:0 0 8px 8px;
-  font-family:var(--font-code);
-  font-size:12.5px;
-  line-height:1.65;
-  color:var(--ink-soft);
-  overflow-x:auto;
-  white-space:pre;
-  text-transform:none;
-  letter-spacing:0;
-  box-shadow:0 0 0 1px rgba(92,218,204,0.04), 0 0 60px rgba(92,218,204,0.06) inset;
-  max-height:none;
-}
-pre.template::-webkit-scrollbar{height:8px}
-pre.template::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px}
-
-/* === setup steps grid === */
-.steps{
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:16px;
-  margin-bottom:48px;
-}
-.step{
-  padding:20px 22px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:8px;
-  position:relative;
-  transition:border-color .18s ease, transform .18s ease;
-}
-.step:hover{
-  border-color:var(--line-strong);
-}
-.step .num{
-  position:absolute;
-  top:14px; right:18px;
-  font-family:var(--font-heading);
-  font-size:38px;
-  font-weight:600;
-  color:rgba(92,218,204,0.18);
-  line-height:1;
-}
-.step h3{
-  font-family:var(--font-heading);
-  font-size:16px;
-  font-weight:500;
-  margin:0 0 8px;
-  color:var(--ink);
-  padding-right:34px;
-  letter-spacing:-.005em;
-}
-.step p{
-  margin:0;
-  color:var(--ink-soft);
-  font-size:12.5px;
-  line-height:1.55;
-}
-.step code{
-  font-family:var(--font-code);
-  background:rgba(92,218,204,0.08);
-  border:1px solid var(--line);
-  padding:1px 6px;
-  border-radius:3px;
-  color:var(--teal);
-  font-size:11.5px;
-  text-transform:none;
-}
-
-/* === formula breakdown === */
-.formula-card{
-  margin-bottom:48px;
-  padding:32px 28px 28px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:8px;
-}
-.formula-line{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  font-family:var(--font-code);
-  font-size:18px;
-  color:var(--ink);
-  text-transform:none;
-  letter-spacing:.02em;
-  flex-wrap:wrap;
-  margin-bottom:18px;
-  padding:18px 0;
-}
-.formula-line .tok{
-  padding:6px 12px;
-  border:1px solid var(--line);
-  border-radius:4px;
-  background:rgba(12,17,23,0.6);
-}
-.formula-line .tok.brace{ color:var(--teal); border-color:var(--line-strong) }
-.formula-line .tok.dash{ color:var(--amber); padding:6px 9px }
-.formula-line .tok.date{ color:var(--green); border-color:rgba(86,227,159,0.4) }
-.formula-line .tok.ext{ color:var(--ink-dim); font-size:14px }
-.formula-arrows{
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:12px;
-  font-size:11px;
-  color:var(--ink-soft);
-  text-align:center;
-  margin-top:10px;
-}
-.formula-arrows .col{
-  padding:0 6px;
-}
-.formula-arrows .arrow{
-  display:block;
-  color:var(--teal);
-  font-size:14px;
-  margin-bottom:6px;
-  text-shadow:0 0 10px rgba(92,218,204,0.5);
-}
-.formula-arrows .label{
-  display:block;
-  color:var(--ink-soft);
-  line-height:1.45;
-}
-
-/* === codes list === */
-.codes{
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:8px 24px;
-  margin-bottom:48px;
-}
-.codes .row{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-  padding:10px 0;
-  border-bottom:1px dotted var(--line);
-  font-size:13px;
-}
-.codes .row code{
-  font-family:var(--font-code);
-  color:var(--teal);
-  background:rgba(92,218,204,0.06);
-  padding:2px 8px;
-  border:1px solid var(--line);
-  border-radius:3px;
-  font-size:12px;
-  text-transform:none;
-  flex-shrink:0;
-  min-width:96px;
-  text-align:center;
-}
-.codes .row span{
-  color:var(--ink-soft);
-}
-
-/* === chips (types) === */
-.types-block{
-  margin-bottom:48px;
-}
-.types-group{
-  margin-bottom:18px;
-}
-.types-group .gname{
-  font-size:10px;
-  color:var(--ink-dim);
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-.chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-.chip{
-  display:inline-block;
-  padding:5px 11px;
-  border:1px solid var(--line);
-  border-radius:999px;
-  color:var(--ink-soft);
-  font-family:var(--font-code);
-  font-size:11.5px;
-  text-transform:none;
-  background:rgba(12,17,23,0.4);
-  transition:all .16s ease;
-}
-.chip:hover{
-  color:var(--teal);
-  border-color:var(--line-strong);
-  background:rgba(92,218,204,0.06);
-}
-
-h2.section-title{
-  font-family:var(--font-heading);
-  font-size:22px;
-  font-weight:500;
-  margin:0 0 18px;
-  letter-spacing:-.005em;
-  color:var(--ink);
-}
-h2.section-title .num{
-  color:var(--ink-faint);
-  font-family:var(--font-code);
-  font-size:14px;
-  margin-right:8px;
-}
-
-/* === toast === */
-.toast{
-  position:fixed;
-  bottom:32px;
-  left:50%;
-  transform:translateX(-50%) translateY(20px);
-  padding:11px 22px;
-  background:rgba(12,17,23,0.96);
-  border:1px solid var(--teal);
-  border-radius:6px;
-  color:var(--teal);
-  font-family:var(--font-body);
-  font-size:12px;
-  letter-spacing:.06em;
-  z-index:200;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .2s ease, transform .25s ease;
-  box-shadow:0 0 30px rgba(92,218,204,0.25);
-  text-transform:lowercase;
-}
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-
+/* === unified nav === */
+.ai-nav{position:fixed; inset:0 0 auto 0; z-index:90; height:52px; padding:0 22px;
+  display:flex; align-items:center; gap:18px;
+  background:rgba(7,9,13,0.86); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  font-family:var(--font-body); font-size:12px; color:var(--ink-soft)}
+.ai-nav-brand{display:flex; align-items:center; gap:9px;
+  text-decoration:none; color:var(--ink);
+  font-family:var(--font-heading); font-weight:600; letter-spacing:0.02em}
+.ai-nav-brand img{height:22px; width:auto; filter:invert(1) brightness(1.2)}
+.ai-nav-brand span{color:var(--ink)}
+.ai-nav-brand .ai-nav-tag{font-family:var(--font-body); font-size:10px;
+  color:var(--ink-dim); letter-spacing:0.16em; text-transform:uppercase;
+  padding:3px 7px; border:1px solid var(--line); border-radius:999px}
+.ai-nav-links{flex:1; display:flex; gap:4px; align-items:center; margin-left:12px}
+.ai-nav-links a{text-decoration:none; color:var(--ink-dim);
+  padding:6px 11px; border:1px solid transparent; border-radius:6px;
+  transition:all .16s ease; font-size:12px}
+.ai-nav-links a:hover{color:var(--teal); border-color:var(--line);
+  background:rgba(92,218,204,0.06)}
+.ai-nav-links a.ext::after{content:" ↗"; opacity:0.5}
+body[data-route="hub"]    .ai-nav-links a[data-route="hub"],
+body[data-route="play"]   .ai-nav-links a[data-route="play"],
+body[data-route="rules"]  .ai-nav-links a[data-route="rules"],
+body[data-route="naming"] .ai-nav-links a[data-route="naming"],
+body[data-route="graph"]  .ai-nav-links a[data-route="graph"]{
+  color:var(--teal); border-color:var(--line-strong);
+  background:rgba(92,218,204,0.08)}
+.ai-nav-burger{display:none; background:none;
+  border:1px solid var(--line); color:var(--ink); font:18px var(--font-body);
+  width:34px; height:34px; border-radius:6px; cursor:pointer}
 @media (max-width:760px){
-  .hero h1{font-size:32px}
-  .steps{grid-template-columns:1fr}
-  .codes{grid-template-columns:1fr}
-  .formula-arrows{grid-template-columns:repeat(2, 1fr); gap:18px}
-  pre.template{font-size:11px; padding:18px}
-  .template-bar{position:static; flex-direction:column; align-items:flex-start}
-  .formula-line{font-size:14px}
+  .ai-nav{padding:0 14px}
+  .ai-nav-links{position:absolute; top:52px; left:0; right:0;
+    flex-direction:column; gap:0; align-items:stretch;
+    background:rgba(7,9,13,0.96); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line); padding:8px; display:none}
+  .ai-nav-links a{padding:12px 14px; border-radius:0}
+  .ai-nav.open .ai-nav-links{display:flex}
+  .ai-nav-burger{display:grid; place-items:center}
+  .ai-nav-brand .ai-nav-tag{display:none}
+}
+body{padding-top:52px}
+@media print{.ai-nav,.ai-foot{display:none} body{padding-top:0}}
+.ai-foot{margin-top:64px; padding:22px;
+  border-top:1px solid var(--line); display:grid; gap:6px;
+  color:var(--ink-dim); font-family:var(--font-body); font-size:11px; line-height:1.6}
+.ai-foot-row{display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between}
+.ai-foot a{color:var(--ink-soft); text-decoration:none; border-bottom:1px dotted var(--line)}
+.ai-foot a:hover{color:var(--teal); border-bottom-color:var(--line-strong)}
+.ai-role{display:inline-block; padding:4px 10px;
+  border:1px solid var(--line); border-radius:999px;
+  color:var(--teal); font-family:var(--font-body); font-size:10px;
+  letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px}
+
+/* === page === */
+.wrapper{position:relative; z-index:2; max-width:1080px;
+  margin:0 auto; padding:24px 32px 80px}
+
+/* hero */
+header.title{position:relative; border:1px solid var(--line);
+  background:var(--panel); padding:32px 32px 28px; margin-bottom:30px}
+header.title::before{content:""; position:absolute; left:-1px; top:-1px;
+  width:42px; height:42px;
+  border-top:1px solid var(--teal); border-left:1px solid var(--teal);
+  box-shadow:0 -1px 8px rgba(92,218,204,0.18)}
+header.title::after{content:""; position:absolute; right:-1px; bottom:-1px;
+  width:42px; height:42px;
+  border-bottom:1px solid var(--teal); border-right:1px solid var(--teal);
+  box-shadow:0 1px 8px rgba(92,218,204,0.18)}
+header.title h1{font-family:var(--font-heading); font-weight:500;
+  font-size:34px; line-height:1.12; letter-spacing:0.005em;
+  margin-bottom:14px; text-transform:lowercase}
+header.title h1 .accent{color:var(--teal)}
+header.title .lede{color:var(--ink-soft); font-size:13px;
+  letter-spacing:0.03em; max-width:760px; line-height:1.7}
+header.title .lede em{color:var(--amber); font-style:normal}
+
+/* sticky toc */
+.toc{position:sticky; top:60px; z-index:80;
+  display:flex; gap:6px; align-items:center;
+  padding:10px 14px; margin-bottom:28px;
+  background:rgba(7,9,13,0.92); backdrop-filter:blur(10px);
+  border:1px solid var(--line);
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+  font-family:var(--font-code); font-size:10px; letter-spacing:0.14em;
+  text-transform:uppercase; white-space:nowrap}
+.toc::-webkit-scrollbar{height:4px}
+.toc::-webkit-scrollbar-thumb{background:var(--line)}
+.toc-label{color:var(--ink-dim); border-right:1px solid var(--line);
+  padding-right:10px; margin-right:4px; flex-shrink:0}
+.toc a{color:var(--ink-soft); border-bottom:none;
+  padding:5px 9px; border:1px solid transparent; flex-shrink:0}
+.toc a:hover{color:var(--teal); border-color:var(--line); background:rgba(92,218,204,0.06)}
+
+/* section */
+section.fig{margin-bottom:46px; position:relative}
+section.fig>.label{display:grid;
+  grid-template-columns:auto 1fr auto; gap:14px; align-items:baseline;
+  border-bottom:1px solid var(--line);
+  padding-bottom:8px; margin-bottom:20px; position:relative}
+section.fig>.label::after{content:""; position:absolute; left:0; bottom:-1px;
+  width:64px; height:1px; background:var(--teal);
+  box-shadow:0 0 6px rgba(92,218,204,0.5)}
+section.fig>.label .num{font-family:var(--font-code); font-weight:600;
+  font-size:11px; letter-spacing:0.18em; color:var(--teal); text-transform:uppercase}
+section.fig>.label .name{font-family:var(--font-heading); font-weight:500;
+  font-size:15px; letter-spacing:0.04em; color:var(--ink)}
+section.fig>.label .tag{font-family:var(--font-code); font-size:10px;
+  letter-spacing:0.16em; color:var(--ink-dim); text-transform:uppercase}
+
+/* contour text block */
+.contour{border:1px solid var(--line); background:var(--panel);
+  padding:22px 24px; position:relative}
+.contour::before{content:""; position:absolute; left:-1px; top:-1px;
+  width:22px; height:22px;
+  border-top:1px solid var(--teal); border-left:1px solid var(--teal)}
+.contour::after{content:""; position:absolute; right:-1px; bottom:-1px;
+  width:22px; height:22px;
+  border-bottom:1px solid var(--teal); border-right:1px solid var(--teal)}
+.contour p{font-family:var(--font-code); font-size:13px;
+  line-height:1.75; color:var(--ink-soft);
+  letter-spacing:0.02em; margin-bottom:12px}
+.contour p:last-child{margin-bottom:0}
+.contour .accent{color:var(--teal)}
+.contour .amber{color:var(--amber)}
+.contour .keyword{color:var(--ink); font-weight:500}
+.contour code, .step .body p code, .checks code{
+  font-family:var(--font-code); color:var(--teal);
+  background:rgba(92,218,204,0.07); padding:1px 5px;
+  border:1px solid var(--line); text-transform:none;
+  font-size:11px}
+
+/* code blocks */
+.code{position:relative; border:1px solid var(--line); background:var(--panel-2);
+  padding:18px 20px; margin:8px 0 14px; overflow-x:auto;
+  font-family:var(--font-code); font-size:13px; line-height:1.7;
+  color:var(--ink-soft); letter-spacing:0.02em;
+  text-transform:none; white-space:pre}
+.code.large{font-size:15px; padding:22px 24px; text-align:center}
+.code.large .formula-line{color:var(--teal); letter-spacing:0.05em}
+.code .copy{position:absolute; top:8px; right:8px;
+  background:rgba(7,9,13,0.65); border:1px solid var(--line);
+  color:var(--ink-dim); font-family:var(--font-code); font-size:9px;
+  letter-spacing:0.16em; text-transform:uppercase;
+  padding:4px 9px; cursor:pointer; transition:all .15s; opacity:0}
+.code:hover .copy{opacity:1}
+.code .copy:hover{color:var(--teal); border-color:var(--teal); background:rgba(92,218,204,0.08)}
+.code .copy.ok{color:var(--green); border-color:var(--green)}
+
+/* tables */
+.t-wrap{border:1px solid var(--line); background:var(--panel-2); overflow-x:auto}
+table{width:100%; border-collapse:collapse;
+  font-family:var(--font-code); font-size:12px; letter-spacing:0.02em}
+th{text-align:left; padding:10px 14px;
+  border-bottom:1px solid var(--line);
+  color:var(--ink-dim); font-weight:500;
+  font-size:10px; text-transform:uppercase; letter-spacing:0.16em;
+  background:rgba(7,9,13,0.45)}
+td{padding:10px 14px; border-bottom:1px solid rgba(92,218,204,0.08);
+  color:var(--ink-soft); vertical-align:top}
+tr:last-child td{border-bottom:none}
+td:first-child{color:var(--teal); font-weight:500; white-space:nowrap}
+td.muted{color:var(--ink-dim)}
+
+/* formula parts */
+.parts{display:flex; gap:6px; justify-content:center; margin-top:14px; flex-wrap:wrap}
+.part{padding:4px 10px; border:1px solid; font-family:var(--font-code);
+  font-size:11px; letter-spacing:0.06em; text-transform:none}
+.p-project{color:var(--teal); border-color:rgba(92,218,204,0.40);
+  background:rgba(92,218,204,0.06)}
+.p-type{color:var(--green); border-color:rgba(86,227,159,0.40);
+  background:rgba(86,227,159,0.06)}
+.p-desc{color:var(--ink-soft); border-color:var(--line);
+  background:rgba(240,247,244,0.04)}
+.p-date{color:var(--amber); border-color:rgba(228,181,75,0.40);
+  background:rgba(228,181,75,0.06)}
+
+/* sub-block stack — for grouped tables */
+.stack{display:grid; gap:18px}
+.stack h3{font-family:var(--font-heading); font-weight:500; font-size:14px;
+  letter-spacing:0.04em; color:var(--ink); margin-bottom:6px;
+  padding-bottom:4px; border-bottom:1px dashed rgba(92,218,204,0.15)}
+.stack h3 .ix{font-family:var(--font-code); font-size:10px;
+  letter-spacing:0.18em; color:var(--teal);
+  margin-right:10px; text-transform:uppercase}
+
+/* numbered list — setup steps */
+.steps{display:grid; gap:14px}
+.step{border:1px solid var(--line); background:var(--panel);
+  padding:16px 20px;
+  display:grid; grid-template-columns:46px 1fr; gap:18px;
+  align-items:baseline}
+.step .n{font-family:var(--font-code); font-weight:600;
+  font-size:18px; color:var(--teal); letter-spacing:0.05em}
+.step .body h4{font-family:var(--font-heading); font-weight:500;
+  font-size:14px; color:var(--ink); margin-bottom:6px;
+  letter-spacing:0.02em}
+.step .body p{font-family:var(--font-code); font-size:12px; line-height:1.7;
+  color:var(--ink-soft); letter-spacing:0.02em}
+
+/* example tile */
+.ex-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:680px){.ex-grid{grid-template-columns:1fr}}
+.ex{border:1px solid var(--line); background:var(--panel-2); padding:14px 16px}
+.ex .cat{font-family:var(--font-code); font-size:10px;
+  letter-spacing:0.18em; color:var(--amber); text-transform:uppercase;
+  margin-bottom:8px}
+.ex .fname{font-family:var(--font-code); font-size:12px;
+  color:var(--teal); letter-spacing:0.02em; margin-bottom:6px;
+  word-break:break-all}
+.ex .role{font-family:var(--font-code); font-size:11px;
+  color:var(--ink-dim); letter-spacing:0.02em; line-height:1.6}
+
+/* details (archive codes) */
+details.archive-block{border:1px dashed rgba(92,218,204,0.15);
+  background:rgba(7,9,13,0.5); padding:0; margin-top:14px}
+details.archive-block summary{cursor:pointer; padding:11px 16px;
+  font-family:var(--font-code); font-size:11px; letter-spacing:0.16em;
+  color:var(--ink-dim); text-transform:uppercase; user-select:none;
+  list-style:none; transition:color .15s}
+details.archive-block summary::-webkit-details-marker{display:none}
+details.archive-block summary::before{content:"›  "; color:var(--teal); transition:transform .2s}
+details.archive-block[open] summary::before{content:"⌄  "}
+details.archive-block summary:hover{color:var(--teal)}
+details.archive-block .inner{padding:0 16px 14px}
+
+/* checklist */
+.checks{border:1px solid var(--line); background:var(--panel);
+  padding:18px 22px; display:grid; gap:8px}
+.checks label{display:grid; grid-template-columns:22px 1fr; gap:10px;
+  align-items:start; font-family:var(--font-code); font-size:12px;
+  color:var(--ink-soft); letter-spacing:0.02em; cursor:pointer;
+  padding:6px 0; line-height:1.6;
+  border-bottom:1px dashed rgba(92,218,204,0.10)}
+.checks label:last-child{border-bottom:none}
+.checks input[type="checkbox"]{appearance:none;
+  width:16px; height:16px; border:1px solid var(--line-strong);
+  background:transparent; cursor:pointer; margin-top:2px;
+  position:relative; transition:all .15s}
+.checks input[type="checkbox"]:checked{background:var(--teal); border-color:var(--teal)}
+.checks input[type="checkbox"]:checked::after{content:"✓";
+  position:absolute; top:-2px; left:2px; font-size:13px;
+  color:var(--bg); font-family:var(--font-heading); font-weight:600}
+.checks label:hover{color:var(--ink)}
+
+/* cross-link footer */
+.crosslink{border:1px solid var(--line); background:var(--panel);
+  padding:18px 22px; display:flex; flex-wrap:wrap; gap:14px;
+  align-items:baseline; justify-content:space-between;
+  font-family:var(--font-code); font-size:12px;
+  color:var(--ink-soft); letter-spacing:0.04em}
+.crosslink a{color:var(--teal); border-bottom:1px solid var(--teal); font-family:var(--font-code)}
+.crosslink a:hover{background:rgba(92,218,204,0.08)}
+
+/* tip / warn */
+.tip,.warn{border-left:2px solid; padding:10px 14px; margin:12px 0;
+  font-family:var(--font-code); font-size:12px;
+  color:var(--ink-soft); letter-spacing:0.02em; line-height:1.65}
+.tip{border-color:var(--amber); background:rgba(228,181,75,0.04)}
+.warn{border-color:var(--red); background:rgba(255,109,97,0.04)}
+.tip strong{color:var(--amber); text-transform:uppercase; letter-spacing:0.14em; font-size:10px; margin-right:6px}
+.warn strong{color:var(--red); text-transform:uppercase; letter-spacing:0.14em; font-size:10px; margin-right:6px}
+.tip code,.warn code{font-family:var(--font-code); color:var(--teal);
+  background:rgba(92,218,204,0.07); padding:1px 4px;
+  border:1px solid var(--line); text-transform:none; font-size:11px}
+
+@media (max-width:680px){
+  .wrapper{padding:18px 18px 60px}
+  header.title{padding:24px 22px 22px}
+  header.title h1{font-size:26px}
+  .code.large{font-size:12px; padding:16px 14px; text-align:left}
+  .step{grid-template-columns:36px 1fr; gap:12px; padding:14px 16px}
 }
 </style>
 </head>
 <body data-route="naming">
 
+<div class="scan"></div>
+
+<!-- unified nav -->
 <header class="ai-nav" id="aiNav">
   <a class="ai-nav-brand" href="./index.html">
     <img src="./assets/aim-logo.png" alt="ai mindset" />
@@ -551,248 +349,470 @@ h2.section-title .num{
   <button class="ai-nav-burger" id="aiBurger" aria-label="menu">≡</button>
 </header>
 
-<div class="wrap">
+<main class="wrapper">
 
-  <!-- HERO -->
-  <section class="hero">
-    <span class="ai-role">follow · the format</span>
-    <h1>имя — <em>операционная ось</em></h1>
-    <p>один формат для всего vault'a. ниже — целый шаблон файла, копируй и редактируй под себя. формат внизу.</p>
-  </section>
+<header class="title">
+  <span class="ai-role">follow · the format</span>
+  <h1>naming <span class="accent">convention</span></h1>
+  <p class="lede">один паттерн для каждого файла. дата в конце, <em>en dash</em> перед датой, lowercase в описании. имя файла — операционная ось vault'a: на нём держится поиск, граф и любой агент. этот документ — единый источник правды для s3, ai-native sprint vol2.</p>
+</header>
 
-  <!-- FIG.1 — BIG TEMPLATE -->
-  <section class="template-shell">
-    <span class="fig-label">fig.1 · целый шаблон файла</span>
-    <div class="template-bar">
-      <div class="meta">
-        <b id="tplName">{s3} {template} personal os starter – 2026-05-06.md</b>
-        &nbsp;·&nbsp;<span id="tplBytes">— b</span>
-        &nbsp;·&nbsp;<span id="tplLines">— lines</span>
-      </div>
-      <div class="actions">
-        <button class="btn primary" id="copyAll">скопировать весь файл</button>
-        <button class="btn ghost" id="downloadMd">скачать .md</button>
-      </div>
+<!-- sticky toc -->
+<nav class="toc" id="toc">
+  <span class="toc-label">jump →</span>
+  <a href="#s01">01 формула</a>
+  <a href="#s02">02 типы</a>
+  <a href="#s03">03 коды</a>
+  <a href="#s04">04 vault</a>
+  <a href="#s05">05 yaml</a>
+  <a href="#s06">06 теги</a>
+  <a href="#s07">07 setup</a>
+  <a href="#s08">08 примеры</a>
+  <a href="#s09">09 track-коды</a>
+  <a href="#s10">10 исключения</a>
+  <a href="#s11">11 чек-лист</a>
+</nav>
+
+<!-- 01 формула -->
+<section class="fig" id="s01">
+  <div class="label">
+    <span class="num">section 01</span>
+    <span class="name">формула</span>
+    <span class="tag">single source of truth</span>
+  </div>
+
+  <div class="code large"><button class="copy" data-copy="{project} {type} description – yyyy-mm-dd.md">copy</button><span class="formula-line">{project} {type} description – yyyy-mm-dd.md</span>
+    <div class="parts" style="margin-top:18px;">
+      <span class="part p-project">{project}</span>
+      <span class="part p-type">{type}</span>
+      <span class="part p-desc">description</span>
+      <span class="part p-date">– date</span>
     </div>
-<pre class="template" id="tplBlock">---
-tags: [s3, ai-native, vol2, personal-os]
+  </div>
+
+  <div class="contour" style="margin-top:14px;">
+    <p>читай слева направо: <span class="keyword">project</span> отвечает на «к чему это», <span class="keyword">type</span> — «что это», <span class="keyword">description</span> — «о чём именно», <span class="keyword">date</span> — «когда зафиксировано». два первых блока в фигурных скобках, описание lowercase свободным текстом, дата всегда последней через en&nbsp;dash.</p>
+    <p><span class="amber">важно:</span> en dash (–, U+2013), не дефис (-) и не em dash (—). на mac — <code>option + -</code>. макс длина 80 символов.</p>
+  </div>
+
+  <div class="warn"><strong>не делай так:</strong> дата в середине ломает сортировку и поиск. <code>{s3} {2026-05-06} {workshop} ...</code> — нельзя. <code>{s3} {workshop} ... – 2026-05-06.md</code> — да.</div>
+</section>
+
+<!-- 02 типы -->
+<section class="fig" id="s02">
+  <div class="label">
+    <span class="num">section 02</span>
+    <span class="name">типы файлов</span>
+    <span class="tag">{type} vocabulary</span>
+  </div>
+
+  <div class="contour" style="margin-bottom:18px;">
+    <p>тип — это что внутри. начни с 5–7 базовых, добавляй по потребности. фигурные скобки обязательны.</p>
+  </div>
+
+  <div class="stack">
+
+    <div>
+      <h3><span class="ix">a</span>core / personal</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>type</th><th>описание</th></tr></thead>
+        <tbody>
+          <tr><td>{rule}</td><td>правило, стандарт, операционная инструкция</td></tr>
+          <tr><td>{guide}</td><td>подробный гайд, how-to</td></tr>
+          <tr><td>{plan}</td><td>план, roadmap, последовательность шагов</td></tr>
+          <tr><td>{template}</td><td>шаблон файла или процесса</td></tr>
+          <tr><td>{prompt}</td><td>промпт для llm-агента</td></tr>
+          <tr><td>{tool}</td><td>инструмент, ресурс, ссылка-агрегатор</td></tr>
+          <tr><td>{prd}</td><td>product requirements document</td></tr>
+          <tr><td>{process}</td><td>командный процесс, ритуал, процедура</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div>
+      <h3><span class="ix">b</span>meetings</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>type</th><th>описание</th></tr></thead>
+        <tbody>
+          <tr><td>{transcript}</td><td>полный транскрипт встречи или звонка</td></tr>
+          <tr><td>{summary}</td><td>саммари встречи, ключевые решения</td></tr>
+          <tr><td>{meeting}</td><td>общая запись встречи (любая)</td></tr>
+          <tr><td>{action-items}</td><td>список задач после встречи</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div>
+      <h3><span class="ix">c</span>research</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>type</th><th>описание</th></tr></thead>
+        <tbody>
+          <tr><td>{research}</td><td>deep research, market analysis, competitive scan</td></tr>
+          <tr><td>{analysis}</td><td>аналитика, разбор, council analysis</td></tr>
+          <tr><td>{overview}</td><td>обзор, system overview, architecture</td></tr>
+          <tr><td>{report}</td><td>отчёт по проекту или периоду</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div>
+      <h3><span class="ix">d</span>workshop / lab</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>type</th><th>описание</th></tr></thead>
+        <tbody>
+          <tr><td>{workshop}</td><td>конспект мастер-класса, лекции</td></tr>
+          <tr><td>{demo}</td><td>демо-сценарий, скрипт показа</td></tr>
+          <tr><td>{case}</td><td>практический кейс с разбором</td></tr>
+          <tr><td>{handout}</td><td>раздатка для участников</td></tr>
+          <tr><td>{checklist}</td><td>чек-лист, контрольный список</td></tr>
+          <tr><td>{retro}</td><td>ретроспектива воркшопа или спринта</td></tr>
+          <tr><td>{feedback}</td><td>фидбек участников</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div>
+      <h3><span class="ix">e</span>communication</h3>
+      <div class="t-wrap"><table>
+        <thead><tr><th>type</th><th>описание</th></tr></thead>
+        <tbody>
+          <tr><td>{message}</td><td>сообщение в канал, чат или dm</td></tr>
+          <tr><td>{post}</td><td>публикуемый пост</td></tr>
+          <tr><td>{article}</td><td>статья, лонгрид</td></tr>
+          <tr><td>{announce}</td><td>анонс события или продукта</td></tr>
+          <tr><td>{draft}</td><td>черновик, не финальная версия</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 03 проектные коды -->
+<section class="fig" id="s03">
+  <div class="label">
+    <span class="num">section 03</span>
+    <span class="name">проектные коды</span>
+    <span class="tag">{project} active for s3</span>
+  </div>
+
+  <div class="contour" style="margin-bottom:18px;">
+    <p>код проекта — первый блок имени. он отвечает на «к чему относится файл». для s3 (ai-native sprint vol2) актуальны 7 кодов ниже. остальные — архивные, см. свернутый блок.</p>
+  </div>
+
+  <div class="t-wrap"><table>
+    <thead><tr><th>code</th><th>проект</th><th>описание</th></tr></thead>
+    <tbody>
+      <tr><td>{AIM}</td><td>ai mindset (общий)</td><td>ритуальные файлы команды: daily-focus, weekly-sync, общие документы</td></tr>
+      <tr><td>{s3}</td><td>ai-native sprint vol2</td><td>текущая лаборатория (4 may – 1 jun 2026), главный код для участников</td></tr>
+      <tr><td>{ai-native}</td><td>ai-native (методология)</td><td>контент за пределами конкретной когорты — методология, фреймворки</td></tr>
+      <tr><td>{pos}</td><td>personal os sprint</td><td>образовательная программа personal operating system</td></tr>
+      <tr><td>{circle}</td><td>circle</td><td>круг поддержки, программа сопровождения</td></tr>
+      <tr><td>{core}</td><td>core / стратегия</td><td>стратегические документы команды, north-star bets</td></tr>
+      <tr><td>{x26}</td><td>spring lab x26</td><td>предыдущая лаборатория (jan–apr 2026), референсные материалы</td></tr>
+    </tbody>
+  </table></div>
+
+  <details class="archive-block">
+    <summary>архивные коды (для совместимости со старыми файлами)</summary>
+    <div class="inner">
+      <div class="t-wrap"><table>
+        <tbody>
+          <tr><td class="muted">{w26}</td><td class="muted">winter lab 2026 (архив)</td></tr>
+          <tr><td class="muted">{f25}</td><td class="muted">fall lab 2025 (архив)</td></tr>
+          <tr><td class="muted">{auto01}, {auto02}</td><td class="muted">automation labs (архив)</td></tr>
+          <tr><td class="muted">{aim5}, {aim6}, {aim7}</td><td class="muted">ai mindset cohorts 5–7 (архив)</td></tr>
+          <tr><td class="muted">{k2}, {k3}, {k4}</td><td class="muted">когорты k (архив)</td></tr>
+          <tr><td class="muted">{research01}</td><td class="muted">research+ai lab 01 (архив)</td></tr>
+          <tr><td class="muted">{space}</td><td class="muted">ai mindset space (отдельная экосистема, не основная для s3)</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-top:12px; font-family:var(--font-code); font-size:11px; color:var(--ink-dim); letter-spacing:0.02em;">архивные коды не переименовываются на старых файлах. для нового файла — выбери код из основной таблицы выше.</p>
+    </div>
+  </details>
+</section>
+
+<!-- 04 структура vault -->
+<section class="fig" id="s04">
+  <div class="label">
+    <span class="num">section 04</span>
+    <span class="name">структура vault</span>
+    <span class="tag">where the file lives</span>
+  </div>
+
+  <div class="contour" style="margin-bottom:18px;">
+    <p>имя описывает «что» — папка описывает «где». ниже — каноническая структура командного vault'a (<span class="accent">ai-mindset-2026/</span>). файл должен лежать в <span class="keyword">правильной папке</span> по своему типу и проекту, имя — лишь дополняет иерархию.</p>
+  </div>
+
+  <div class="code"><button class="copy" data-copy-from="vaultTree">copy</button><span id="vaultTree">ai-mindset-2026/
+├── AGENTS.md                       # индекс для ai-агентов (читать первым)
+│
+├── aim-rules/                      # {rule}, {prd}, {tool}, {prompt}, {skill}
+│   ├── rules_tech/                 # технические стандарты (naming, sync, ...)
+│   ├── rules_texts/                # стандарты коммуникации
+│   ├── rules_visuals/              # визуальные стандарты
+│   └── skills/                     # командные claude-code скиллы
+│
+├── inbox/                          # {research}, {analysis}, {overview}, черновики
+│   └── logs/                       # логи изменений и daily updates
+│
+├── meetings/                       # {meeting}, {transcript}, {summary}
+│
+├── Labs/                           # все лаборатории (s3, x26, f25, w26, auto*)
+│   ├── s3 – ai-native vol2/
+│   │   ├── s3-artifacts/
+│   │   ├── s3-participants/        # {s3} {profile} @user - Name.md
+│   │   ├── s3-results/             # {s3} {feedback}, {s3} {retro}
+│   │   └── s3-sources/             # {s3} {transcript}, {s3} {summary}
+│   └── _inner-labs/                # общая инфраструктура лаб
+│
+├── Org/                            # организация
+│   ├── HR/
+│   │   └── roles/                  # {role} Name.md
+│   ├── Infrastructure/
+│   ├── Marketing&Sales/
+│   ├── Partners/                   # партнёрские карточки
+│   └── Processes/                  # {process} название – дата.md
+│
+├── Products Ecosystem/
+│   ├── Space/                      # сообщество для фаундеров
+│   ├── Circle/                     # круг поддержки
+│   ├── B2B/                        # корпоративные клиенты
+│   └── Consulting/                 # консалтинг
+│
+├── aim context/                    # контексты для агентов
+├── aim-guides/                     # гайды
+└── _data/                          # медиа, аналитика</span></div>
+
+  <div class="tip"><strong>правило vault:</strong> <code>aim-rules/</code> — только для официальных правил, prd, шаблонов. для черновиков, ресерчей, обзоров — <code>inbox/</code>. не создавай новые папки в корне без обсуждения.</div>
+</section>
+
+<!-- 05 yaml -->
+<section class="fig" id="s05">
+  <div class="label">
+    <span class="num">section 05</span>
+    <span class="name">yaml frontmatter</span>
+    <span class="tag">metadata layer</span>
+  </div>
+
+  <div class="contour" style="margin-bottom:18px;">
+    <p>frontmatter — это метаслой имени. имя файла — для глаз, frontmatter — для dataview, поиска и агентов. минимум: <span class="keyword">tags</span>, <span class="keyword">type</span>, <span class="keyword">created</span>.</p>
+  </div>
+
+  <div class="code"><button class="copy" data-copy-from="yamlEx">copy</button><span id="yamlEx">---
+tags:
+  - lab/s3
+  - type/research
+  - status/draft
+type: research
 project: s3
-type: template
 created: 2026-05-06
-status: starter
----
+status: draft
+author:
+  - "[[{role} Alexander Povaliaev]]"
+linear: AIM-2925
+---</span></div>
 
-# {s3} {template} Personal OS Starter – 2026-05-06
+  <div class="t-wrap" style="margin-top:14px;"><table>
+    <thead><tr><th>key</th><th>назначение</th></tr></thead>
+    <tbody>
+      <tr><td>tags</td><td>массив тегов (см. section 06) для фильтрации в obsidian</td></tr>
+      <tr><td>type</td><td>дублирует {type} из имени без скобок — для dataview-запросов</td></tr>
+      <tr><td>created</td><td>дата создания, всегда yyyy-mm-dd</td></tr>
+      <tr><td>status</td><td>draft / review / final / archived — жизненный цикл</td></tr>
+    </tbody>
+  </table></div>
+</section>
 
-> минимальный шаблон твоего personal os. редактируй frontmatter и тело, сохрани с именем по naming convention снизу.
+<!-- 06 теги -->
+<section class="fig" id="s06">
+  <div class="label">
+    <span class="num">section 06</span>
+    <span class="name">теги</span>
+    <span class="tag">classification axis</span>
+  </div>
 
-## контекст
+  <div class="contour" style="margin-bottom:18px;">
+    <p>теги — вторая ось имени. через них собираются срезы, которые папкой не описать (например, все «active drafts» из разных лаб). держи 5 канонических семейств ниже, не плоди синонимов.</p>
+  </div>
 
-я работаю над:
-- роль:
-- команда:
-- одна болевая точка прямо сейчас:
+  <div class="t-wrap"><table>
+    <thead><tr><th>family</th><th>пример</th><th>назначение</th></tr></thead>
+    <tbody>
+      <tr><td>lab/{cohort}</td><td>lab/s3</td><td>привязка к лаборатории — главный фильтр участника</td></tr>
+      <tr><td>type/{type}</td><td>type/research</td><td>дублирует {type} имени для tag-based search</td></tr>
+      <tr><td>status/{state}</td><td>status/draft</td><td>active / draft / archive — жизненный цикл</td></tr>
+      <tr><td>format/{kind}</td><td>format/transcript</td><td>формат содержимого: transcript, summary, scan</td></tr>
+      <tr><td>project/{name}</td><td>project/mcrm</td><td>сквозной проект через несколько лаб</td></tr>
+    </tbody>
+  </table></div>
+</section>
 
-## сила
+<!-- 07 setup -->
+<section class="fig" id="s07">
+  <div class="label">
+    <span class="num">section 07</span>
+    <span class="name">setup в obsidian</span>
+    <span class="tag">first 5 minutes</span>
+  </div>
 
-какие external capabilities я уже использую (claude / cursor / openrouter / api / другое):
--
--
+  <div class="steps">
 
-## один workflow (выберу один)
-
-trigger:
-input:
-action:
-review:
-output:
-metric:
-
-## граница
-
-что я НЕ автоматизирую:
--
--
-
-## passport (если уже есть агент)
-
-owner:
-scope:
-tools:
-expiry:
-
-## evidence
-
-какой след я собираю:
-- thread где?
-- журнал где?
-- evidence note куда?
-
-## review
-
-cadence:
-review-date:
-
----
-
-## naming convention (для следующего файла)
-
-формула: `{project} {type} description – yyyy-mm-dd.md`
-
-| код | использовать когда |
-|-----|---------------------|
-| `{AIM}` | артефакты команды AI Mindset |
-| `{s3}` | этот sprint, моя личная заметка по нему |
-| `{ai-native}` | концепт-теги: AI-native, agentic, harness |
-| `{pos}` | personal os артефакты |
-
-типы: `rule`, `prd`, `skill`, `prompt`, `tool`, `template`, `research`, `analysis`, `overview`, `meeting`, `transcript`, `program`, `material`, `brief`, `playbook`, `evidence`, `announce`
-
-правила:
-- дата всегда в конце через en dash `–` (не em dash `—`, не дефис `-`)
-- lowercase в описании, proper nouns ok
-- 80 символов максимум
-- никаких суффиксов интерфейса (`– claude code`, `– cursor` deprecated с 2026-02-20)
-
----
-
-ainative-lab-2.netlify.app · s3 · ai-native sprint vol2
-</pre>
-  </section>
-
-  <!-- FIG.2 — SETUP STEPS -->
-  <section>
-    <span class="fig-label">fig.2 · setup naming convention</span>
-    <h2 class="section-title"><span class="num">02</span>как пользоваться</h2>
-    <div class="steps">
-      <div class="step">
-        <span class="num">1</span>
-        <h3>скопируй шаблон выше</h3>
-        <p>нажми кнопку <code>скопировать весь файл</code>, шаблон уйдёт в буфер целиком — frontmatter, тело и naming-rule footer.</p>
-      </div>
-      <div class="step">
-        <span class="num">2</span>
-        <h3>сохрани под именем по формуле</h3>
-        <p>формула: <code>{project} {type} description – yyyy-mm-dd.md</code>. дату пиши через en dash <code>–</code>, не em dash <code>—</code> и не дефис <code>-</code>.</p>
-      </div>
-      <div class="step">
-        <span class="num">3</span>
-        <h3>заполни блоки сверху вниз</h3>
-        <p>контекст → сила → workflow → граница → passport → evidence → review. блоки можно оставлять пустыми, но лучше пройти все — каждый ловит свой слой системы.</p>
-      </div>
-      <div class="step">
-        <span class="num">4</span>
-        <h3>повтори через неделю</h3>
-        <p>вернись к <code>review-date</code>, сравни с этим документом — что изменилось, какие блоки наполнились, какой workflow реально живёт.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- FIG.3 — FORMULA -->
-  <section>
-    <span class="fig-label">fig.3 · формула</span>
-    <h2 class="section-title"><span class="num">03</span>как читается имя</h2>
-    <div class="formula-card">
-      <div class="formula-line">
-        <span class="tok brace">{ project }</span>
-        <span class="tok brace">{ type }</span>
-        <span class="tok">description</span>
-        <span class="tok dash">–</span>
-        <span class="tok date">yyyy-mm-dd</span>
-        <span class="tok ext">.md</span>
-      </div>
-      <div class="formula-arrows">
-        <div class="col">
-          <span class="arrow">↓</span>
-          <span class="label">код лабы<br>или контекста</span>
-        </div>
-        <div class="col">
-          <span class="arrow">↓</span>
-          <span class="label">тип артефакта<br>(rule, prd, skill...)</span>
-        </div>
-        <div class="col">
-          <span class="arrow">↓</span>
-          <span class="label">суть задачи<br>в lowercase</span>
-        </div>
-        <div class="col">
-          <span class="arrow">↓</span>
-          <span class="label">дата всегда<br>в конце</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FIG.4 — PROJECT CODES -->
-  <section>
-    <span class="fig-label">fig.4 · коды проектов</span>
-    <h2 class="section-title"><span class="num">04</span>что в скобках</h2>
-    <div class="codes">
-      <div class="row"><code>{AIM}</code><span>артефакты команды</span></div>
-      <div class="row"><code>{s3}</code><span>этот sprint, мои заметки</span></div>
-      <div class="row"><code>{ai-native}</code><span>концепт-теги</span></div>
-      <div class="row"><code>{pos}</code><span>personal os</span></div>
-      <div class="row"><code>{circle}</code><span>core community</span></div>
-      <div class="row"><code>{core}</code><span>стратегические решения команды</span></div>
-      <div class="row"><code>{x26}</code><span>параллельная лаба</span></div>
-    </div>
-  </section>
-
-  <!-- FIG.5 — TYPES -->
-  <section class="types-block">
-    <span class="fig-label">fig.5 · типы артефактов</span>
-    <h2 class="section-title"><span class="num">05</span>что после кода</h2>
-
-    <div class="types-group">
-      <div class="gname">core / personal</div>
-      <div class="chips">
-        <span class="chip">rule</span>
-        <span class="chip">prd</span>
-        <span class="chip">skill</span>
-        <span class="chip">prompt</span>
-        <span class="chip">tool</span>
-        <span class="chip">template</span>
+    <div class="step">
+      <span class="n">00</span>
+      <div class="body">
+        <h4>поставь quickadd</h4>
+        <p>community plugin <span style="color:var(--teal);">quickadd</span> — для шаблонов имени по горячей клавише. settings → community plugins → browse → quickadd → install + enable. без него ты будешь набирать <code>{s3} {type} ... – 2026-05-06.md</code> руками каждый раз.</p>
       </div>
     </div>
 
-    <div class="types-group">
-      <div class="gname">research</div>
-      <div class="chips">
-        <span class="chip">research</span>
-        <span class="chip">analysis</span>
-        <span class="chip">overview</span>
+    <div class="step">
+      <span class="n">01</span>
+      <div class="body">
+        <h4>создай структуру папок</h4>
+        <p>скопируй дерево из section 04 в свой vault. для участника s3 минимум: <span style="color:var(--teal);">aim-rules/</span>, <span style="color:var(--teal);">inbox/</span>, <span style="color:var(--teal);">meetings/</span>, <span style="color:var(--teal);">Labs/s3/</span>. остальное — по мере появления контента.</p>
       </div>
     </div>
 
-    <div class="types-group">
-      <div class="gname">meetings</div>
-      <div class="chips">
-        <span class="chip">meeting</span>
-        <span class="chip">transcript</span>
+    <div class="step">
+      <span class="n">02</span>
+      <div class="body">
+        <h4>дефолт для новых заметок — inbox/</h4>
+        <p>settings → files & links → default location for new notes → <span style="color:var(--teal);">in folder specified below</span> → <span style="color:var(--teal);">inbox/</span>. всё новое падает в один буфер. оттуда — переименовываешь по конвенции и переносишь в нужную папку.</p>
       </div>
     </div>
 
-    <div class="types-group">
-      <div class="gname">workshop</div>
-      <div class="chips">
-        <span class="chip">program</span>
-        <span class="chip">material</span>
-        <span class="chip">brief</span>
-        <span class="chip">playbook</span>
-        <span class="chip">evidence</span>
+    <div class="step">
+      <span class="n">03</span>
+      <div class="body">
+        <h4>dataview для фильтрации по frontmatter</h4>
+        <p>community plugin <span style="color:var(--teal);">dataview</span> → install + enable. теперь можно собирать дашборды по yaml-полям: <code>FROM #lab/s3 WHERE status = "draft"</code> — все черновики по s3.</p>
       </div>
     </div>
 
-    <div class="types-group">
-      <div class="gname">communication</div>
-      <div class="chips">
-        <span class="chip">announce</span>
-        <span class="chip">promo</span>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
+<!-- 08 примеры -->
+<section class="fig" id="s08">
+  <div class="label">
+    <span class="num">section 08</span>
+    <span class="name">примеры под s3</span>
+    <span class="tag">copy-paste reference</span>
+  </div>
+
+  <div class="ex-grid">
+
+    <div class="ex">
+      <div class="cat">workshop</div>
+      <div class="fname">{s3} {workshop} ws01 system canvas – 2026-05-06.md</div>
+      <div class="role">конспект первого воркшопа s3, в Labs/s3 – ai-native vol2/</div>
+    </div>
+
+    <div class="ex">
+      <div class="cat">research</div>
+      <div class="fname">{AIM} {research} mcrm agent-native crm – 2026-05-05.md</div>
+      <div class="role">deep research для команды, в inbox/ командного vault'a</div>
+    </div>
+
+    <div class="ex">
+      <div class="cat">meeting</div>
+      <div class="fname">{s3} {transcript} kickoff – 2026-05-04.md</div>
+      <div class="role">транскрипт kick-off встречи, в Labs/s3/s3-sources/</div>
+    </div>
+
+    <div class="ex">
+      <div class="cat">template</div>
+      <div class="fname">{s3} {template} personal os starter – 2026-05-06.md</div>
+      <div class="role">скачивается с этого сайта, заполняется участником</div>
+    </div>
+
+    <div class="ex">
+      <div class="cat">partner</div>
+      <div class="fname">{AIM} {partner} solowise.ru – 2026-04-28.md</div>
+      <div class="role">партнёрская карточка, в Org/Partners/02_negotiation/</div>
+    </div>
+
+    <div class="ex">
+      <div class="cat">announce</div>
+      <div class="fname">{s3} {announce} ws02 reminder – 2026-05-08.md</div>
+      <div class="role">анонс в чат лаборатории за день до воркшопа</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 09 track-коды -->
+<section class="fig" id="s09">
+  <div class="label">
+    <span class="num">section 09</span>
+    <span class="name">track-коды (когорт)</span>
+    <span class="tag">cohort sub-streams</span>
+  </div>
+
+  <div class="contour" style="margin-bottom:18px;">
+    <p>track — тематический поток внутри лаборатории. используется только если в когорте явное разделение на параллельные потоки. формат: <code>{cohort} {track} {type} название – дата.md</code></p>
+  </div>
+
+  <div class="t-wrap"><table>
+    <thead><tr><th>track</th><th>описание</th></tr></thead>
+    <tbody>
+      <tr><td>{main}</td><td>основной поток лаборатории</td></tr>
+      <tr><td>{art}</td><td>ai + творчество, креативные практики</td></tr>
+      <tr><td>{vibecoding}</td><td>vibe coding, разработка с llm</td></tr>
+      <tr><td>{coaching}</td><td>коучинговый поток</td></tr>
+      <tr><td>{ethics}</td><td>этика ai, философия</td></tr>
+      <tr><td>{automation}</td><td>автоматизация, n8n, agent flows</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="tip"><strong>не злоупотребляй:</strong> в s3 один основной поток, треки не нужны. их добавляют только когда лаборатория явно разделена (например f25 имела 7 параллельных треков).</div>
+</section>
+
+<!-- 10 исключения -->
+<section class="fig" id="s10">
+  <div class="label">
+    <span class="num">section 10</span>
+    <span class="name">исключения</span>
+    <span class="tag">no curly braces</span>
+  </div>
+
+  <div class="contour">
+    <p>три файла существуют без фигурных скобок и без даты в имени — для совместимости с инструментами и github.</p>
+    <p><span class="accent">AGENTS.md</span> — индекс директории для ai-агентов. читается первым при заходе агента в папку.</p>
+    <p><span class="accent">README.md</span> — для github-совместимости. внутри — ссылка на agents.md.</p>
+    <p><span class="accent">CHANGELOG.md</span> — история изменений (опционально, для проектов с релизами).</p>
+    <p style="color:var(--ink-dim);">также без скобок: файлы инструкций для отдельных агентов — <span class="amber">CLAUDE.md</span>, <span class="amber">OPENAI.md</span>, <span class="amber">CURSOR.md</span>.</p>
+  </div>
+</section>
+
+<!-- 11 чек-лист -->
+<section class="fig" id="s11">
+  <div class="label">
+    <span class="num">section 11</span>
+    <span class="name">чек-лист перед сохранением</span>
+    <span class="tag">six checks</span>
+  </div>
+
+  <div class="checks">
+    <label><input type="checkbox" /><span>формат: <code>{project} {type} description – yyyy-mm-dd.md</code></span></label>
+    <label><input type="checkbox" /><span>project code из section 03 (для s3 — обычно <code>{s3}</code> или <code>{AIM}</code>)</span></label>
+    <label><input type="checkbox" /><span>type из section 02 (если не уверен — <code>{draft}</code>)</span></label>
+    <label><input type="checkbox" /><span>en dash (–) перед датой, не дефис (-) и не em dash (—)</span></label>
+    <label><input type="checkbox" /><span>описание lowercase, без спецсимволов кроме скобок и тире, до 80 символов</span></label>
+    <label><input type="checkbox" /><span>файл сохранён в правильной папке per section 04</span></label>
+  </div>
+</section>
+
+<!-- crosslink to template -->
+<div class="crosslink">
+  <span style="color:var(--ink-dim);">готовый шаблон под эту конвенцию →</span>
+  <a href="./templates/personal-os-starter.html">скачай personal os starter</a>
 </div>
 
+</main>
+
+<!-- unified footer -->
 <footer class="ai-foot">
   <div class="ai-foot-row">
     <span>ainative-lab-2 · ai-native sprint vol2 · s3 · 2026-05-06</span>
@@ -804,86 +824,42 @@ ainative-lab-2.netlify.app · s3 · ai-native sprint vol2
   </div>
   <div class="ai-foot-row">
     <span style="opacity:0.55">dragon-dna · space grotesk + ibm plex mono + jetbrains mono · single-file</span>
-    <span style="opacity:0.55">v0.3 · 2026-05-06</span>
+    <span style="opacity:0.55">v0.4 · 2026-05-06 · naming reference</span>
   </div>
 </footer>
 
-<div class="toast" id="toast">скопировано</div>
-
 <script>
 (function(){
-  // burger
+  // burger menu
   var nav = document.getElementById('aiNav');
   var b = document.getElementById('aiBurger');
   if (b && nav) b.addEventListener('click', function(){ nav.classList.toggle('open'); });
 
-  // template state
-  var pre = document.getElementById('tplBlock');
-  var fullMd = pre.textContent;
-  var fileName = '{s3} {template} personal os starter – 2026-05-06.md';
-
-  // meta render
-  var bytesEl = document.getElementById('tplBytes');
-  var linesEl = document.getElementById('tplLines');
-  var bytes = new Blob([fullMd]).size;
-  var lines = fullMd.split('\n').length;
-  bytesEl.textContent = bytes + ' b';
-  linesEl.textContent = lines + ' lines';
-
-  // toast
-  var toast = document.getElementById('toast');
-  var toastTimer;
-  function showToast(msg){
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1600);
-  }
-
-  // copy all
-  document.getElementById('copyAll').addEventListener('click', function(){
-    if (navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(fullMd).then(function(){
-        showToast('скопировано · ' + fullMd.length + ' символов');
-      }).catch(function(){
-        fallbackCopy(fullMd);
+  // copy buttons
+  document.querySelectorAll('.code .copy').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var txt = btn.getAttribute('data-copy');
+      if (!txt){
+        var fromId = btn.getAttribute('data-copy-from');
+        if (fromId){
+          var el = document.getElementById(fromId);
+          if (el) txt = el.textContent;
+        }
+      }
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(function(){
+        var orig = btn.textContent;
+        btn.textContent = 'copied';
+        btn.classList.add('ok');
+        setTimeout(function(){
+          btn.textContent = orig;
+          btn.classList.remove('ok');
+        }, 1500);
       });
-    } else {
-      fallbackCopy(fullMd);
-    }
-  });
-
-  function fallbackCopy(text){
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      showToast('скопировано · ' + text.length + ' символов');
-    } catch(e){
-      showToast('не удалось скопировать');
-    }
-    document.body.removeChild(ta);
-  }
-
-  // download md
-  document.getElementById('downloadMd').addEventListener('click', function(){
-    var blob = new Blob([fullMd], {type:'text/markdown;charset=utf-8'});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 0);
-    showToast('скачивается ' + fileName);
+    });
   });
 })();
 </script>
-
 </body>
 </html>
