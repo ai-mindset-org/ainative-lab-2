@@ -3,970 +3,444 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ainative-lab-2 · rules &amp; skills · diagram</title>
-<meta name="description" content="12 rules grouped into 6 zones around the personal os harness. ai-native sprint vol2 (s3).">
+<title>ainative-lab-2 · rules &amp; skills · zones of harness</title>
+<meta name="description" content="13 правил personal os, сгруппированных в 6 зон harness вокруг агентного процесса. ai-native sprint vol2 (s3).">
 <meta property="og:title" content="ainative-lab-2 · rules &amp; skills">
-<meta property="og:description" content="минимальный harness для personal os — 12 правил по 6 зонам.">
+<meta property="og:description" content="минимальный harness для personal os — 13 правил, 6 зон контура.">
 <meta property="og:type" content="website">
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#07090d;
-  --ink:#f0f7f4;
-  --ink-soft:rgba(240,247,244,0.74);
-  --ink-dim:rgba(240,247,244,0.48);
-  --panel:rgba(12,17,23,0.78);
-  --line:rgba(92,218,204,0.2);
-  --line-strong:rgba(92,218,204,0.48);
-  --teal:#5cdacc;
-  --green:#56e39f;
-  --amber:#e4b54b;
-  --red:#ff6d61;
-  --blue:#6db2ff;
-  --violet:#9c86ff;
-  --font-heading:"Space Grotesk", system-ui, sans-serif;
-  --font-body:"IBM Plex Mono", ui-monospace, monospace;
-  --font-code:"JetBrains Mono", ui-monospace, monospace;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font-family:var(--font-body);
-  font-size:13px;
-  line-height:1.55;
-  letter-spacing:0.02em;
-  text-transform:lowercase;
-  min-height:100vh;
-  overflow-x:hidden;
-  position:relative;
-  -webkit-font-smoothing:antialiased;
-}
-body::before{
-  content:"";
-  position:fixed;inset:0;
-  background:
-    repeating-linear-gradient(0deg, transparent 0 2px, rgba(92,218,204,0.012) 2px 3px),
-    repeating-linear-gradient(90deg, transparent 0 2px, rgba(92,218,204,0.012) 2px 3px);
-  pointer-events:none;
-  z-index:0;
-}
-body::after{
-  content:"";
-  position:fixed;inset:0;
-  background:
-    radial-gradient(ellipse 60% 50% at 52% 46%, rgba(92,218,204,0.10), transparent 70%),
-    conic-gradient(from 220deg at 52% 46%, rgba(86,227,159,0.04), rgba(228,181,75,0.03), rgba(92,218,204,0.05), transparent 60%);
-  pointer-events:none;
-  z-index:0;
-  mix-blend-mode:screen;
-}
-.scan{
-  position:fixed;left:0;right:0;height:1px;
-  background:linear-gradient(90deg, transparent, rgba(92,218,204,0.32), transparent);
-  pointer-events:none;
-  z-index:1;
-  animation:scan 9s linear infinite;
-  opacity:0.6;
-}
-@keyframes scan{
-  0%{top:-2%}
-  100%{top:102%}
-}
-a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-strong);transition:color .15s, border-color .15s, background .15s}
-a:hover{color:var(--teal);border-bottom-color:var(--teal)}
-::selection{background:var(--teal);color:var(--bg)}
-.wrapper{
-  position:relative;
-  z-index:2;
-  max-width:1180px;
-  margin:0 auto;
-  padding:24px 32px 80px;
-}
-/* TOP NAV */
-nav.top{
-  display:grid;
-  grid-template-columns:auto 1fr;
-  gap:18px;
-  align-items:center;
-  border-bottom:1px solid var(--line);
-  padding:10px 14px;
-  margin-bottom:32px;
-  background:var(--panel);
-  backdrop-filter:blur(8px);
-}
-nav.top .brand{
-  display:flex;align-items:center;gap:10px;
-  font-family:var(--font-heading);
-  font-weight:600;
-  letter-spacing:0.16em;
-  font-size:13px;
-  text-transform:uppercase;
-}
-nav.top .brand img{width:24px;height:24px;border-radius:50%;background:var(--ink);padding:2px}
-nav.top .links{
-  display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;
-  font-size:11px;
-  letter-spacing:0.12em;
-}
-nav.top .links a{
-  border:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  padding:5px 10px;
-  text-transform:uppercase;
-  color:var(--ink-soft);
-}
-nav.top .links a:hover{
-  border-color:var(--teal);
-  background:rgba(92,218,204,0.08);
-  color:var(--teal);
-}
-/* HEADER */
-header.title{
-  border:1px solid var(--line);
-  background:var(--panel);
-  padding:30px 28px 24px;
-  margin-bottom:36px;
-  position:relative;
-}
-header.title::before{
-  content:"";
-  position:absolute;left:-1px;top:-1px;width:40px;height:40px;
-  border-top:1px solid var(--teal);
-  border-left:1px solid var(--teal);
-}
-header.title::after{
-  content:"";
-  position:absolute;right:-1px;bottom:-1px;width:40px;height:40px;
-  border-bottom:1px solid var(--teal);
-  border-right:1px solid var(--teal);
-}
-header.title .eyebrow{
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.18em;
-  color:var(--teal);
-  text-transform:uppercase;
-  margin-bottom:14px;
-}
-header.title h1{
-  font-family:var(--font-heading);
-  font-weight:500;
-  font-size:34px;
-  line-height:1.12;
-  letter-spacing:0.005em;
-  margin-bottom:14px;
-  text-transform:lowercase;
-}
-header.title h1 .accent{color:var(--teal)}
-header.title .lede{
-  color:var(--ink-soft);
-  font-size:13px;
-  letter-spacing:0.03em;
-  max-width:720px;
-}
-/* FIG LABEL */
-section.fig{margin-bottom:46px}
-section.fig>.label{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:14px;
-  align-items:baseline;
-  border-bottom:1px solid var(--line);
-  padding-bottom:8px;
-  margin-bottom:20px;
-}
-section.fig>.label .num{
-  font-family:var(--font-code);
-  font-weight:600;
-  font-size:11px;
-  letter-spacing:0.18em;
-  color:var(--teal);
-  text-transform:uppercase;
-}
-section.fig>.label .name{
-  font-family:var(--font-heading);
-  font-weight:500;
-  font-size:15px;
-  letter-spacing:0.04em;
-  color:var(--ink);
-}
-section.fig>.label .tag{
-  font-family:var(--font-code);
-  font-size:10px;
-  letter-spacing:0.16em;
-  color:var(--ink-dim);
-  text-transform:uppercase;
-}
-/* FIG.1 — DIAGRAM */
-.diagram{
-  position:relative;
-  min-height:520px;
-  border:1px solid var(--line);
-  background:
-    radial-gradient(ellipse 50% 45% at 50% 50%, rgba(92,218,204,0.05), transparent 70%),
-    var(--panel);
-  padding:32px;
-}
-.diagram svg.lines{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-}
-.diagram .grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  grid-template-rows:auto auto auto;
-  gap:32px 60px;
-  position:relative;
-  z-index:2;
-  align-items:center;
-  justify-items:center;
-  min-height:460px;
-}
-.zone{
-  position:relative;
-  cursor:pointer;
-  border:1px solid var(--line-strong);
-  background:rgba(7,9,13,0.85);
-  padding:14px 18px;
-  width:160px;
-  text-align:center;
-  transition:border-color .2s, background .2s, transform .2s;
-  font-family:var(--font-heading);
-  font-size:14px;
-  font-weight:500;
-  letter-spacing:0.04em;
-  color:var(--ink);
-  text-transform:lowercase;
-}
-.zone .ix{
-  display:block;
-  font-family:var(--font-code);
-  font-size:9px;
-  letter-spacing:0.22em;
-  color:var(--teal);
-  text-transform:uppercase;
-  margin-bottom:4px;
-}
-.zone .ct{
-  display:block;
-  font-family:var(--font-code);
-  font-size:10px;
-  letter-spacing:0.14em;
-  color:var(--ink-dim);
-  margin-top:6px;
-  text-transform:uppercase;
-}
-.zone:hover{
-  border-color:var(--teal);
-  background:rgba(92,218,204,0.06);
-  transform:translateY(-1px);
-}
-.zone.active{
-  border-color:var(--teal);
-  background:rgba(92,218,204,0.10);
-  box-shadow:
-    0 0 0 1px var(--teal) inset,
-    0 0 24px rgba(92,218,204,0.18);
-  text-shadow:0 0 12px rgba(92,218,204,0.5);
-}
-.zone.active .ix{color:var(--teal)}
-.zone.center{
-  width:180px;
-  padding:18px 18px;
-  border-color:var(--teal);
-  background:
-    radial-gradient(circle at 50% 50%, rgba(92,218,204,0.16), rgba(92,218,204,0.04));
-  cursor:default;
-  font-size:15px;
-  letter-spacing:0.10em;
-  text-transform:uppercase;
-  font-weight:600;
-}
-.zone.center::before{
-  content:"";
-  position:absolute;
-  inset:-6px;
-  border:1px solid var(--line);
-  pointer-events:none;
-}
-.zone.center .ix{color:var(--teal)}
-.zone.center .ct{color:var(--teal);opacity:0.7}
-/* layout positions in 3x3 grid */
-.zone[data-pos="1"]{grid-column:2;grid-row:1}    /* context — top */
-.zone[data-pos="2"]{grid-column:1;grid-row:2}    /* memory — left */
-.zone[data-pos="0"]{grid-column:2;grid-row:2}    /* harness — center */
-.zone[data-pos="3"]{grid-column:3;grid-row:2}    /* guardrail — right */
-.zone[data-pos="4"]{grid-column:2;grid-row:3}    /* review — bottom */
-.zone[data-pos="5"]{grid-column:1;grid-row:3}    /* naming — bottom-left */
-.zone[data-pos="6"]{grid-column:3;grid-row:3}    /* communication — bottom-right */
-@media (max-width:760px){
-  .diagram{padding:18px;min-height:auto}
-  .diagram .grid{
-    grid-template-columns:1fr;
-    grid-template-rows:repeat(7,auto);
-    gap:14px;
-    min-height:auto;
-  }
-  .zone[data-pos]{grid-column:1!important}
-  .zone[data-pos="1"]{grid-row:1}
-  .zone[data-pos="2"]{grid-row:2}
-  .zone[data-pos="0"]{grid-row:3}
-  .zone[data-pos="3"]{grid-row:4}
-  .zone[data-pos="4"]{grid-row:5}
-  .zone[data-pos="5"]{grid-row:6}
-  .zone[data-pos="6"]{grid-row:7}
-  .zone,.zone.center{width:100%;max-width:340px}
-  .diagram svg.lines{display:none}
-}
-/* DIAGRAM CAPTION */
-.diagram-caption{
-  display:flex;
-  gap:18px;
-  flex-wrap:wrap;
-  margin-top:18px;
-  padding-top:14px;
-  border-top:1px dashed var(--line);
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.06em;
-  color:var(--ink-dim);
-}
-.diagram-caption b{color:var(--teal);font-weight:500}
-/* FIG.2 — RULES PANEL */
-.zone-header{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:14px;
-  align-items:baseline;
-  border:1px solid var(--line-strong);
-  background:rgba(92,218,204,0.04);
-  padding:14px 18px;
-  margin-bottom:14px;
-}
-.zone-header .marker{
-  font-family:var(--font-code);
-  font-size:10px;
-  letter-spacing:0.18em;
-  color:var(--teal);
-  text-transform:uppercase;
-}
-.zone-header h3{
-  font-family:var(--font-heading);
-  font-weight:500;
-  font-size:18px;
-  letter-spacing:0.02em;
-}
-.zone-header h3 .pin{color:var(--teal)}
-.zone-header .count{
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.14em;
-  color:var(--ink-dim);
-  text-transform:uppercase;
-}
-.rules-list{
-  display:grid;
-  gap:12px;
-}
-.rule{
-  border:1px solid var(--line);
-  background:var(--panel);
-  padding:0;
-  transition:border-color .2s;
-}
-.rule:hover{border-color:var(--line-strong)}
-.rule.expanded{border-color:var(--teal)}
-.rule .head{
-  display:grid;
-  grid-template-columns:36px 1fr auto;
-  align-items:baseline;
-  gap:14px;
-  padding:14px 18px;
-  cursor:pointer;
-  user-select:none;
-}
-.rule .head .ix{
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.16em;
-  color:var(--teal);
-  text-transform:uppercase;
-}
-.rule .head .title{
-  font-family:var(--font-heading);
-  font-size:15px;
-  font-weight:500;
-  letter-spacing:0.02em;
-  color:var(--ink);
-}
-.rule .head .toggle{
-  font-family:var(--font-code);
-  font-size:10px;
-  letter-spacing:0.18em;
-  color:var(--ink-dim);
-  text-transform:uppercase;
-  border:1px solid var(--line);
-  padding:3px 8px;
-  transition:all .2s;
-}
-.rule.expanded .head .toggle{
-  background:var(--teal);
-  color:var(--bg);
-  border-color:var(--teal);
-}
-.rule .head:hover .toggle{
-  border-color:var(--teal);
-  color:var(--teal);
-}
-.rule.expanded .head:hover .toggle{
-  color:var(--bg);
-}
-.rule .problem{
-  padding:0 18px 12px 68px;
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.04em;
-  color:var(--ink-dim);
-}
-.rule .problem::before{
-  content:"problem · ";
-  color:var(--teal);
-  letter-spacing:0.14em;
-  text-transform:uppercase;
-  font-size:10px;
-}
-.rule .body{
-  display:none;
-  padding:14px 18px 16px 68px;
-  border-top:1px solid var(--line);
-  font-family:var(--font-code);
-  font-size:12px;
-  line-height:1.7;
-  letter-spacing:0.02em;
-  color:var(--ink-soft);
-}
-.rule.expanded .body{display:block}
-.rule .body p{margin-bottom:8px}
-.rule .body p:last-child{margin-bottom:0}
-.rule .body .open{
-  display:inline-block;
-  margin-top:10px;
-  font-family:var(--font-code);
-  font-size:10px;
-  letter-spacing:0.18em;
-  text-transform:uppercase;
-  color:var(--teal);
-  border:1px solid var(--teal);
-  padding:5px 10px;
-  background:rgba(92,218,204,0.06);
-}
-.rule .body .open:hover{
-  background:var(--teal);
-  color:var(--bg);
-  border-bottom-color:var(--teal);
-}
-/* FIG.3 — READING PATH */
-.path{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:10px;
-  border:1px solid var(--line);
-  background:var(--panel);
-  padding:18px;
-}
-.path .step{
-  display:grid;
-  grid-template-rows:auto auto;
-  gap:6px;
-  padding:12px 10px;
-  border:1px solid var(--line);
-  position:relative;
-}
-.path .step .n{
-  font-family:var(--font-code);
-  font-size:18px;
-  font-weight:500;
-  color:var(--teal);
-  letter-spacing:0.04em;
-}
-.path .step .t{
-  font-family:var(--font-heading);
-  font-size:12px;
-  letter-spacing:0.04em;
-  color:var(--ink);
-}
-.path .step::after{
-  content:"→";
-  position:absolute;
-  right:-10px;
-  top:50%;
-  transform:translateY(-50%);
-  color:var(--teal);
-  font-family:var(--font-code);
-  font-size:12px;
-  z-index:2;
-}
-.path .step:last-child::after{display:none}
-@media (max-width:760px){
-  .path{grid-template-columns:1fr 1fr}
-  .path .step::after{display:none}
-}
-.path-note{
-  margin-top:12px;
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.04em;
-  color:var(--ink-dim);
-}
-/* FIG.4 — SOURCES */
-.sources{
-  border:1px solid var(--line);
-  background:var(--panel);
-}
-.sources .src{
-  display:grid;
-  grid-template-columns:32px 1fr 1.4fr;
-  gap:14px;
-  padding:11px 16px;
-  border-bottom:1px solid var(--line);
-  align-items:baseline;
-}
-.sources .src:last-child{border-bottom:none}
-.sources .src:hover{background:rgba(92,218,204,0.04)}
-.sources .src .ix{
-  font-family:var(--font-code);
-  font-size:10px;
-  letter-spacing:0.16em;
-  color:var(--ink-dim);
-  text-transform:uppercase;
-}
-.sources .src .pth{
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.02em;
-  color:var(--teal);
-  word-break:break-all;
-}
-.sources .src .pth a{
-  color:var(--teal);
-  border-bottom-color:transparent;
-}
-.sources .src .pth a:hover{
-  border-bottom-color:var(--teal);
-}
-.sources .src .desc{
-  font-family:var(--font-code);
-  font-size:11px;
-  color:var(--ink-soft);
-  letter-spacing:0.02em;
-}
-@media (max-width:760px){
-  .sources .src{grid-template-columns:1fr;gap:4px}
-  .sources .src .ix{color:var(--teal)}
-}
-/* FOOTER */
-footer.bottom{
-  margin-top:48px;
-  padding:14px 18px;
-  border-top:1px solid var(--line);
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:24px;
-  align-items:center;
-  font-family:var(--font-code);
-  font-size:11px;
-  letter-spacing:0.12em;
-  color:var(--ink-dim);
-  text-transform:uppercase;
-}
-footer.bottom .nav-links{
-  display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;
-}
-footer.bottom .nav-links a{
-  color:var(--ink-soft);
-  border-bottom-color:var(--line);
-  padding:3px 8px;
-  border:1px solid var(--line);
-}
-footer.bottom .nav-links a:hover{
-  border-color:var(--teal);
-  color:var(--teal);
-}
-@media (max-width:760px){
-  footer.bottom{grid-template-columns:1fr;gap:8px;text-align:left}
-  footer.bottom .nav-links{justify-content:flex-start}
-}
-@media print{
-  body::before,body::after,.scan{display:none}
-  body{background:#fff;color:#000}
-  .zone,.rule,.path,.sources,.diagram{border-color:#000;background:#fff}
-}
-</style>
+<style>:root{--bg:#07090d;--ink:#f0f7f4;--ink-soft:rgba(240,247,244,0.74);--ink-dim:rgba(240,247,244,0.48);--panel:rgba(12,17,23,0.78);--line:rgba(92,218,204,0.2);--line-strong:rgba(92,218,204,0.48);--teal:#5cdacc;--green:#56e39f;--amber:#e4b54b;--red:#ff6d61;--blue:#6db2ff;--violet:#9c86ff;--font-heading:"Space Grotesk",system-ui,sans-serif;--font-body:"IBM Plex Mono",ui-monospace,monospace;--font-code:"JetBrains Mono",ui-monospace,monospace}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:13px;line-height:1.55;letter-spacing:0.02em;text-transform:lowercase;min-height:100vh;overflow-x:hidden;position:relative;-webkit-font-smoothing:antialiased}body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 52% 46%,rgba(92,218,204,0.10),transparent 70%),conic-gradient(from 220deg at 52% 46%,rgba(86,227,159,0.04),rgba(228,181,75,0.03),rgba(92,218,204,0.05),transparent 60%);pointer-events:none;z-index:0;mix-blend-mode:screen}.scan{position:fixed;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(92,218,204,0.32),transparent);pointer-events:none;z-index:1;animation:scan 9s linear infinite;opacity:0.6}@keyframes scan{0%{top:-2%}100%{top:102%}}a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-strong);transition:color .15s,border-color .15s,background .15s}a:hover{color:var(--teal);border-bottom-color:var(--teal)}::selection{background:var(--teal);color:var(--bg)}.ai-nav{position:fixed;inset:0 0 auto 0;z-index:90;height:52px;padding:0 22px;display:flex;align-items:center;gap:18px;background:rgba(7,9,13,0.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);font-family:var(--font-body);font-size:12px;color:var(--ink-soft)}.ai-nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-family:var(--font-heading);font-weight:600;letter-spacing:0.02em}.ai-nav-brand img{height:22px;width:auto;filter:invert(1) brightness(1.2)}.ai-nav-brand span{color:var(--ink)}.ai-nav-brand .ai-nav-tag{font-family:var(--font-body);font-size:10px;color:var(--ink-dim);letter-spacing:0.16em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--line);border-radius:999px}.ai-nav-links{flex:1;display:flex;gap:4px;align-items:center;margin-left:12px}.ai-nav-links a{text-decoration:none;color:var(--ink-dim);padding:6px 11px;border:1px solid transparent;border-radius:6px;transition:all .16s ease;font-size:12px}.ai-nav-links a:hover{color:var(--teal);border-color:var(--line);background:rgba(92,218,204,0.06)}.ai-nav-links a.ext::after{content:" ↗";opacity:0.5}body[data-route="hub"] .ai-nav-links a[data-route="hub"],body[data-route="play"] .ai-nav-links a[data-route="play"],body[data-route="rules"] .ai-nav-links a[data-route="rules"],body[data-route="naming"] .ai-nav-links a[data-route="naming"],body[data-route="graph"] .ai-nav-links a[data-route="graph"]{color:var(--teal);border-color:var(--line-strong);background:rgba(92,218,204,0.08)}.ai-nav-burger{display:none;background:none;border:1px solid var(--line);color:var(--ink);font:18px var(--font-body);width:34px;height:34px;border-radius:6px;cursor:pointer}@media (max-width:760px){.ai-nav{padding:0 14px}.ai-nav-links{position:absolute;top:52px;left:0;right:0;flex-direction:column;gap:0;align-items:stretch;background:rgba(7,9,13,0.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:8px;display:none}.ai-nav-links a{padding:12px 14px;border-radius:0}.ai-nav.open .ai-nav-links{display:flex}.ai-nav-burger{display:grid;place-items:center}.ai-nav-brand .ai-nav-tag{display:none}}body{padding-top:52px}@media print{.ai-nav,.ai-foot{display:none}body{padding-top:0}}.ai-foot{margin-top:64px;padding:22px;border-top:1px solid var(--line);display:grid;gap:6px;color:var(--ink-dim);font-family:var(--font-body);font-size:11px;line-height:1.6}.ai-foot-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}.ai-foot a{color:var(--ink-soft);text-decoration:none;border-bottom:1px dotted var(--line)}.ai-foot a:hover{color:var(--teal);border-bottom-color:var(--line-strong)}.ai-role{display:inline-block;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--teal);font-family:var(--font-body);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px}.wrapper{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:24px 32px 80px}header.title{border:1px solid var(--line);background:var(--panel);padding:30px 28px 24px;margin-bottom:36px;position:relative}header.title::before{content:"";position:absolute;left:-1px;top:-1px;width:40px;height:40px;border-top:1px solid var(--teal);border-left:1px solid var(--teal)}header.title::after{content:"";position:absolute;right:-1px;bottom:-1px;width:40px;height:40px;border-bottom:1px solid var(--teal);border-right:1px solid var(--teal)}header.title h1{font-family:var(--font-heading);font-weight:500;font-size:34px;line-height:1.12;letter-spacing:0.005em;margin-bottom:14px;text-transform:lowercase}header.title h1 .accent{color:var(--teal)}header.title .lede{color:var(--ink-soft);font-size:13px;letter-spacing:0.03em;max-width:760px}section.fig{margin-bottom:46px;position:relative}section.fig>.label{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:20px;position:relative}section.fig>.label::after{content:"";position:absolute;left:0;bottom:-1px;width:64px;height:1px;background:var(--teal);box-shadow:0 0 6px rgba(92,218,204,0.5)}section.fig>.label .num{font-family:var(--font-code);font-weight:600;font-size:11px;letter-spacing:0.18em;color:var(--teal);text-transform:uppercase}section.fig>.label .name{font-family:var(--font-heading);font-weight:500;font-size:15px;letter-spacing:0.04em;color:var(--ink)}section.fig>.label .tag{font-family:var(--font-code);font-size:10px;letter-spacing:0.16em;color:var(--ink-dim);text-transform:uppercase}.zone-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}.zone-card{position:relative;display:grid;grid-template-rows:auto auto auto 1fr;gap:10px;border:1px solid var(--line);background:var(--panel);padding:18px 16px 18px;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;text-align:left;font-family:var(--font-body);color:var(--ink);text-transform:lowercase;min-height:180px;opacity:1}.zone-card:hover{transform:translateY(-1px);border-color:var(--line-strong);background:rgba(92,218,204,0.04);box-shadow:0 0 22px rgba(92,218,204,0.08)}.zone-card .eyebrow{font-family:var(--font-code);font-size:10px;letter-spacing:0.22em;color:var(--teal);text-transform:uppercase}.zone-card .name{font-family:var(--font-heading);font-weight:500;font-size:20px;letter-spacing:0.02em;color:var(--ink);line-height:1.05}.zone-card .count{display:inline-block;align-self:flex-start;font-family:var(--font-code);font-size:10px;letter-spacing:0.14em;color:var(--amber);text-transform:uppercase;border:1px solid rgba(228,181,75,0.4);padding:3px 8px;background:rgba(228,181,75,0.06);width:fit-content;transition:color .18s,background .18s,border-color .18s}.zone-card .purpose{font-family:var(--font-code);font-size:11px;line-height:1.55;letter-spacing:0.02em;color:var(--ink-dim)}.zone-card.active{border-color:var(--teal);background:rgba(92,218,204,0.10);box-shadow:0 0 0 1px var(--teal) inset,0 0 28px rgba(92,218,204,0.22)}.zone-card.active .eyebrow{color:var(--bg);background:var(--teal);padding:3px 6px;width:fit-content}.zone-card.active .count{color:var(--teal);border-color:var(--teal);background:rgba(92,218,204,0.10)}.zone-card.dim{opacity:0.42}.zone-card.dim:hover{opacity:1}@media (max-width:980px){.zone-row{grid-auto-flow:column;grid-auto-columns:minmax(220px,1fr);grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;-webkit-overflow-scrolling:touch}.zone-card{scroll-snap-align:start;min-width:220px}}.contour{border:1px solid var(--line);background:var(--panel);padding:26px 26px;position:relative}.contour::before{content:"";position:absolute;left:-1px;top:-1px;width:24px;height:24px;border-top:1px solid var(--teal);border-left:1px solid var(--teal)}.contour::after{content:"";position:absolute;right:-1px;bottom:-1px;width:24px;height:24px;border-bottom:1px solid var(--teal);border-right:1px solid var(--teal)}.contour p{font-family:var(--font-code);font-size:13px;line-height:1.75;color:var(--ink-soft);letter-spacing:0.02em;margin-bottom:14px}.contour p:last-child{margin-bottom:0}.contour .accent{color:var(--teal)}.contour .amber{color:var(--amber)}.contour .keyword{color:var(--ink);font-weight:500}.filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px;padding:12px 14px;border:1px solid var(--line);background:var(--panel)}.filter-bar .fb-label{font-family:var(--font-code);font-size:10px;letter-spacing:0.18em;color:var(--ink-dim);text-transform:uppercase;margin-right:6px}.filter-bar button{font-family:var(--font-code);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:5px 10px;cursor:pointer;transition:all .15s}.filter-bar button:hover{border-color:var(--teal);color:var(--teal);background:rgba(92,218,204,0.05)}.filter-bar button.active{background:var(--teal);border-color:var(--teal);color:var(--bg)}.filter-bar .count-pill{margin-left:auto;font-family:var(--font-code);font-size:10px;letter-spacing:0.16em;color:var(--ink-dim);text-transform:uppercase}.rules-list{display:grid;gap:12px}.rule{border:1px solid var(--line);background:var(--panel);padding:0;transition:border-color .2s,opacity .18s}.rule.hidden{display:none}.rule:hover{border-color:var(--line-strong)}.rule.expanded{border-color:var(--teal)}.rule .head{display:grid;grid-template-columns:42px 1fr auto auto;align-items:baseline;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}.rule .head .ix{font-family:var(--font-code);font-size:11px;letter-spacing:0.16em;color:var(--teal);text-transform:uppercase}.rule .head .title{font-family:var(--font-heading);font-size:15px;font-weight:500;letter-spacing:0.02em;color:var(--ink)}.rule .head .zone-chip{font-family:var(--font-code);font-size:9px;letter-spacing:0.18em;color:var(--teal);text-transform:uppercase;border:1px solid var(--line-strong);padding:3px 8px;background:rgba(92,218,204,0.04)}.rule .head .toggle{font-family:var(--font-code);font-size:10px;letter-spacing:0.18em;color:var(--ink-dim);text-transform:uppercase;border:1px solid var(--line);padding:3px 8px;transition:all .2s}.rule.expanded .head .toggle{background:var(--teal);color:var(--bg);border-color:var(--teal)}.rule .head:hover .toggle{border-color:var(--teal);color:var(--teal)}.rule.expanded .head:hover .toggle{color:var(--bg)}.rule .problem{padding:0 18px 12px 74px;font-family:var(--font-code);font-size:11px;letter-spacing:0.04em;color:var(--ink-dim)}.rule .problem::before{content:"problem · ";color:var(--amber);letter-spacing:0.14em;text-transform:uppercase;font-size:10px}.rule .body{display:none;padding:14px 18px 16px 74px;border-top:1px solid var(--line);font-family:var(--font-code);font-size:12px;line-height:1.7;letter-spacing:0.02em;color:var(--ink-soft)}.rule.expanded .body{display:block}.rule .body p{margin-bottom:8px}.rule .body p:last-child{margin-bottom:0}.rule .body .open{display:inline-block;margin-top:10px;font-family:var(--font-code);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);border:1px solid var(--teal);padding:5px 10px;background:rgba(92,218,204,0.06);border-bottom-color:var(--teal)}.rule .body .open:hover{background:var(--teal);color:var(--bg)}@media (max-width:720px){.rule .head{grid-template-columns:36px 1fr auto;gap:10px}.rule .head .zone-chip{display:none}.rule .problem,.rule .body{padding-left:18px}}.reading-order{border:1px solid var(--line);background:var(--panel);padding:18px 20px;display:grid;gap:6px;counter-reset:ro}.reading-order ol{list-style:none;display:grid;gap:8px}.reading-order li{counter-increment:ro;display:grid;grid-template-columns:42px 1fr auto;gap:14px;align-items:baseline;padding:9px 6px;border-bottom:1px dashed rgba(92,218,204,0.12);font-family:var(--font-code);font-size:12px;color:var(--ink-soft);letter-spacing:0.02em}.reading-order li:last-child{border-bottom:none}.reading-order li::before{content:counter(ro,decimal-leading-zero);font-family:var(--font-code);font-weight:500;color:var(--teal);font-size:13px;letter-spacing:0.06em}.reading-order li a{color:var(--ink);border-bottom:1px solid var(--line)}.reading-order li a:hover{color:var(--teal);border-bottom-color:var(--teal)}.reading-order li .zone-tag{font-family:var(--font-code);font-size:9px;letter-spacing:0.18em;color:var(--ink-dim);text-transform:uppercase}.reading-order .legend{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-family:var(--font-code);font-size:11px;color:var(--ink-dim);letter-spacing:0.04em;line-height:1.6}.pointer{border:1px solid var(--line);background:var(--panel);padding:18px 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;justify-content:space-between;font-family:var(--font-code);font-size:12px;color:var(--ink-soft);letter-spacing:0.04em}.pointer a{color:var(--teal);border-bottom:1px solid var(--teal);font-family:var(--font-code);font-size:12px}.pointer a:hover{background:rgba(92,218,204,0.08)}</style>
 </head>
-<body>
+<body data-route="rules">
 <div class="scan"></div>
+<!-- UNIFIED NAV -->
+<header class="ai-nav" id="aiNav">
+<a class="ai-nav-brand" href="./index.html">
+<img src="./assets/aim-logo.png" alt="ai mindset" />
+<span>ainative-lab-2</span>
+<span class="ai-nav-tag">s3</span>
+</a>
+<nav class="ai-nav-links">
+<a href="./index.html" data-route="hub">hub</a>
+<a href="./playground.html" data-route="play">playground</a>
+<a href="./rules.html" data-route="rules">rules</a>
+<a href="./naming.html" data-route="naming">naming</a>
+<a href="./knowledge-graph.html" data-route="graph">graph</a>
+<a href="https://ainative-lab-deck.netlify.app/" class="ext" target="_blank" rel="noreferrer">deck</a>
+</nav>
+<button class="ai-nav-burger" id="aiBurger" aria-label="menu">≡</button>
+</header>
 <div class="wrapper">
-
-  <!-- TOP NAV -->
-  <nav class="top">
-    <div class="brand"><img src="./assets/aim-logo.png" alt="aim" onerror="this.style.display='none'">ainative-lab-2</div>
-    <div class="links">
-      <a href="./index.html">← hub</a>
-      <a href="./naming.html">→ naming</a>
-      <a href="./knowledge-graph.html">→ knowledge graph</a>
-      <a href="./playground.html">→ playground</a>
-      <a href="https://ainative-lab-deck.netlify.app/">→ deck</a>
-    </div>
-  </nav>
-
-  <!-- HEADER -->
-  <header class="title">
-    <div class="eyebrow">rules &amp; skills · ai-native sprint vol2</div>
-    <h1>минимальный <span class="accent">harness</span> для personal os</h1>
-    <div class="lede">12 правил, сгруппированных по зонам контура. каждое — переносимый паттерн, который применяется в одиночку или в команде. кликни зону на диаграмме — увидишь правила. кликни правило — раскроется тело и ссылка на полную страницу.</div>
-  </header>
-
-  <!-- FIG.1 — DIAGRAM -->
-  <section class="fig" id="fig-1">
-    <div class="label">
-      <span class="num">fig.1</span>
-      <span class="name">диаграмма зон</span>
-      <span class="tag">6 zones · click to explore</span>
-    </div>
-    <div class="diagram" id="diagram">
-      <svg class="lines" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="ln" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#5cdacc" stop-opacity="0.0"/>
-            <stop offset="0.5" stop-color="#5cdacc" stop-opacity="0.55"/>
-            <stop offset="1" stop-color="#5cdacc" stop-opacity="0.0"/>
-          </linearGradient>
-        </defs>
-        <line x1="500" y1="300" x2="500" y2="100"  stroke="url(#ln)" stroke-width="1"/>
-        <line x1="500" y1="300" x2="180" y2="300"  stroke="url(#ln)" stroke-width="1"/>
-        <line x1="500" y1="300" x2="820" y2="300"  stroke="url(#ln)" stroke-width="1"/>
-        <line x1="500" y1="300" x2="500" y2="500"  stroke="url(#ln)" stroke-width="1"/>
-        <line x1="500" y1="300" x2="180" y2="500"  stroke="url(#ln)" stroke-width="1"/>
-        <line x1="500" y1="300" x2="820" y2="500"  stroke="url(#ln)" stroke-width="1"/>
-        <circle cx="500" cy="100" r="3" fill="#5cdacc"/>
-        <circle cx="180" cy="300" r="3" fill="#5cdacc"/>
-        <circle cx="820" cy="300" r="3" fill="#5cdacc"/>
-        <circle cx="500" cy="500" r="3" fill="#5cdacc"/>
-        <circle cx="180" cy="500" r="3" fill="#5cdacc"/>
-        <circle cx="820" cy="500" r="3" fill="#5cdacc"/>
-        <circle cx="500" cy="300" r="6" fill="none" stroke="#5cdacc" stroke-width="1" opacity="0.6"/>
-      </svg>
-      <div class="grid">
-        <button class="zone" data-pos="1" data-zone="context"><span class="ix">z1</span>context<span class="ct">4 rules</span></button>
-        <button class="zone" data-pos="2" data-zone="memory"><span class="ix">z2</span>memory<span class="ct">2 rules</span></button>
-        <div class="zone center" data-pos="0"><span class="ix">core</span>harness<span class="ct">personal os</span></div>
-        <button class="zone" data-pos="3" data-zone="guardrail"><span class="ix">z3</span>guardrail<span class="ct">2 rules</span></button>
-        <button class="zone" data-pos="5" data-zone="naming"><span class="ix">z5</span>naming<span class="ct">1 rule</span></button>
-        <button class="zone" data-pos="4" data-zone="review"><span class="ix">z4</span>review<span class="ct">3 rules</span></button>
-        <button class="zone" data-pos="6" data-zone="communication"><span class="ix">z6</span>communication<span class="ct">1 rule</span></button>
-      </div>
-    </div>
-    <div class="diagram-caption">
-      <span><b>—</b> teal lines = контур контекста</span>
-      <span><b>·</b> click zone to expand rules below</span>
-      <span><b>·</b> harness = personal os core, не-кликабелен</span>
-    </div>
-  </section>
-
-  <!-- FIG.2 — RULES PANEL -->
-  <section class="fig" id="fig-2">
-    <div class="label">
-      <span class="num">fig.2</span>
-      <span class="name">правила по зонам</span>
-      <span class="tag" id="zoneTag">zone: context</span>
-    </div>
-    <div class="zone-header" id="zoneHeader">
-      <span class="marker" id="zoneMarker">z1 · context</span>
-      <h3 id="zoneName"><span class="pin">/</span> context</h3>
-      <span class="count" id="zoneCount">4 rules</span>
-    </div>
-    <div class="rules-list" id="rulesList"></div>
-  </section>
-
-  <!-- FIG.3 — READING PATH -->
-  <section class="fig" id="fig-3">
-    <div class="label">
-      <span class="num">fig.3</span>
-      <span class="name">reading path</span>
-      <span class="tag">first-time order</span>
-    </div>
-    <div class="path">
-      <div class="step"><span class="n">01</span><span class="t">context</span></div>
-      <div class="step"><span class="n">02</span><span class="t">memory</span></div>
-      <div class="step"><span class="n">03</span><span class="t">guardrail</span></div>
-      <div class="step"><span class="n">04</span><span class="t">review</span></div>
-      <div class="step"><span class="n">05</span><span class="t">naming</span></div>
-      <div class="step"><span class="n">06</span><span class="t">communication</span></div>
-    </div>
-    <div class="path-note">если новый — проходи в этом порядке. context задаёт раму, memory держит решения, guardrail ограничивает blast radius, review проверяет, naming делает воспроизводимым, communication выгружает наружу.</div>
-  </section>
-
-  <!-- FIG.4 — SOURCES -->
-  <section class="fig" id="fig-4">
-    <div class="label">
-      <span class="num">fig.4</span>
-      <span class="name">sources · public rule pages</span>
-      <span class="tag">13 entries</span>
-    </div>
-    <div class="sources" id="sourcesList"></div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="bottom">
-    <div>ainative-lab-2 · rules &amp; skills · v2 · 2026-05-06</div>
-    <div></div>
-    <div class="nav-links">
-      <a href="./index.html">hub</a>
-      <a href="./naming.html">naming</a>
-      <a href="./playground.html">playground</a>
-    </div>
-  </footer>
-
+<!-- HEADER -->
+<header class="title">
+<span class="ai-role">learn · zones of harness</span>
+<h1>минимальный <span class="accent">harness</span> для personal os</h1>
+<div class="lede">13 правил, шесть зон контура. harness — это не инструмент и не фреймворк, это рамка вокруг агентного процесса, в которой ты остаёшься оператором, а не пассажиром. кликни зону — отфильтруешь правила. кликни правило — раскроется тело и ссылка на полную страницу.</div>
+</header>
+<!-- FIG.1 — TYPOGRAPHIC ZONE ROW -->
+<section class="fig" id="fig-1">
+<div class="label">
+<span class="num">fig.1</span>
+<span class="name">шесть зон контура</span>
+<span class="tag">click to filter rules</span>
 </div>
-<script>
-const ZONES = {
-  context: {
-    marker: 'z1 · context',
-    name: 'context',
-    rules: [
-      {
-        id: 'one-workflow-first',
-        title: 'one workflow перед архитектурой',
-        problem: 'не знаешь, с чего начать, поэтому строишь всё сразу',
-        body: 'выбери одну рабочую задачу, которая повторяется. одна. без подзадач. собери harness под неё — context, шаблоны, инструменты, границы. остальные задачи появятся сами через паттерны. это лучше, чем строить «универсальную систему».',
-      },
-      {
-        id: 'context-seed',
-        title: 'context seed: source · signal · ask · output · evidence',
-        problem: 'агент получает «сделай задачу» без рамы и галлюцинирует',
-        body: 'каждый запуск задачи начинается с пяти полей. source — откуда данные. signal — что ты заметил. ask — что хочешь получить. output — формат ответа. evidence — что считать доказательством. без этого harness разваливается на первых трёх запросах.',
-      },
-      {
-        id: 'template-before-dashboard',
-        title: 'template before dashboard',
-        problem: 'тратишь день на дашборд, который никто не использует',
-        body: 'сначала шаблон в .md. потом — если шаблон выживает три недели — дашборд. дашборды дороги в обслуживании, шаблоны почти бесплатны. это правило обратной последовательности: артефакт сначала текстом, потом интерфейс.',
-      },
-      {
-        id: 'context-management-protocol',
-        title: 'claude context management protocol — окно как ресурс',
-        problem: 'контекст переполнен на середине задачи, агент теряет нить',
-        body: 'смотри на остаток токенов в status line, не на проценты. ok > 400k, warn 150–400k, crit < 150k. в crit — только handoff, не новые задачи. на каждом ответе footer с режимом и подсказкой что делать дальше.',
-      },
-    ],
-  },
-  memory: {
-    marker: 'z2 · memory',
-    name: 'memory',
-    rules: [
-      {
-        id: 'evidence-over-logs',
-        title: 'evidence > logs (decision memory)',
-        problem: 'через неделю не помнишь, почему принял решение',
-        body: 'memory — это не лог что произошло, а доказательство почему. сохраняй цитаты, скриншоты, transcripts, ссылки на источники. лог можно потерять — evidence держит решение в воспроизводимом виде.',
-      },
-      {
-        id: 'memory-scopes',
-        title: 'memory scopes: user · task · project · operational',
-        problem: 'всё валится в одну заметку, агент не находит нужное',
-        body: 'четыре уровня. user — кто я, мои принципы, контакты. task — что делаю прямо сейчас. project — постоянный контекст продукта или лаборатории. operational — как я работаю, привычки, инструменты. каждое правило, заметка, шаблон знает, в каком scope живёт.',
-      },
-    ],
-  },
-  guardrail: {
-    marker: 'z3 · guardrail',
-    name: 'guardrail',
-    rules: [
-      {
-        id: 'agent-passport',
-        title: 'agent passport (owner · scope · tools · expiry)',
-        problem: 'агенты копятся, никто не знает, что они умеют и кем созданы',
-        body: 'у каждого агента есть карточка-паспорт. owner — кто отвечает. scope — что разрешено делать. tools — какие инструменты подключены. expiry — когда переаудит. без паспорта агент дрейфует и накапливает риски.',
-      },
-      {
-        id: 'guardrails-blast-radius',
-        title: 'guardrails как blast radius',
-        problem: 'агент написал в продакшн, удалил файлы, отправил сообщения не туда',
-        body: 'guardrail = радиус взрыва, который ты готов разрешить. read-only по умолчанию. write только в sandbox. деструктивные действия — через явное подтверждение или отдельный канал. до запуска агента отвечай на вопрос: что максимум он может сломать?',
-      },
-    ],
-  },
-  review: {
-    marker: 'z4 · review',
-    name: 'review',
-    rules: [
-      {
-        id: 'human-review-as-signal',
-        title: 'human review как сигнал, не одобрение',
-        problem: 'review превращается в формальность, ничего не меняется',
-        body: 'review это не «одобрить или нет». это сигнал, который ты возвращаешь системе. что было неточно? какая часть промпта не сработала? review копится в evidence и формирует следующую итерацию rule. без обратной связи система не учится.',
-      },
-      {
-        id: 'replay-ability',
-        title: 'replay-ability — каждое действие воспроизводимо',
-        problem: 'агент сделал что-то крутое один раз, повторить не получается',
-        body: 'каждое действие = input + prompt + version + output. сохраняй четыре. через месяц ты должен уметь запустить тот же prompt на тех же inputs и получить близкий output. это не про детерминизм — это про доверие к системе.',
-      },
-      {
-        id: 'auto-eval-trc',
-        title: 'auto-eval (T/R/C) на каждый ответ',
-        problem: 'не понимаешь, где система теряет качество',
-        body: 'на каждом значимом ответе три бинарных оценки. T (text) — структура и ясность. R (rules) — соблюдение naming, форматов, конвенций. C (code) — работает ли. ✓ pass, ✗ fail, ○ n/a. через месяц паттерны fail подсказывают, какое правило добавить.',
-      },
-    ],
-  },
-  naming: {
-    marker: 'z5 · naming',
-    name: 'naming',
-    rules: [
-      {
-        id: 'naming-axis',
-        title: 'naming как операционная ось',
-        problem: 'агент не находит файлы, vault превращается в свалку',
-        body: 'имя файла — api между тобой и агентами. {project} {type} description – yyyy-mm-dd.md. project и type в скобках парсятся одной регуляркой. описание для человека — коротко, lowercase. дата в конце, чтобы ls сортировался хронологически. без naming convention vault слепнет.',
-        link: './naming.html',
-        linkLabel: '→ открыть интерактивный builder',
-      },
-    ],
-  },
-  communication: {
-    marker: 'z6 · communication',
-    name: 'communication',
-    rules: [
-      {
-        id: 'communication-frame',
-        title: 'communication: рамка проектная, без эмоджи, en dash',
-        problem: 'сообщения команде звучат как корпоративный спам',
-        body: 'строчная буква в начале блоков. без эмоджи (если только пользователь явно не просит). главная мысль в первых 2–3 строках. конкретно — кто, что, когда, ссылка. en dash (–), не em dash (—). без «в рамках», «в контексте», «извините за беспокойство». проектная рамка, не корпоративная.',
-        link: '/rules-public/communication-frame.html',
-      },
-    ],
-  },
-};
-
-const ORDER = ['context','memory','guardrail','review','naming','communication'];
-const STORAGE_ZONE = 'ainative-lab-2-rules-zone';
-const STORAGE_EXP  = 'ainative-lab-2-rules-expanded';
-
+<div class="zone-row" id="zoneRow">
+<button class="zone-card" data-zone="context">
+<span class="eyebrow">zone 01</span>
+<span class="name">context</span>
+<span class="count">4 rules</span>
+<span class="purpose">что система знает прежде чем действовать</span>
+</button>
+<button class="zone-card" data-zone="memory">
+<span class="eyebrow">zone 02</span>
+<span class="name">memory</span>
+<span class="count">2 rules</span>
+<span class="purpose">что система помнит и не помнит</span>
+</button>
+<button class="zone-card" data-zone="guardrail">
+<span class="eyebrow">zone 03</span>
+<span class="name">guardrail</span>
+<span class="count">2 rules</span>
+<span class="purpose">что система не может сделать</span>
+</button>
+<button class="zone-card" data-zone="review">
+<span class="eyebrow">zone 04</span>
+<span class="name">review</span>
+<span class="count">3 rules</span>
+<span class="purpose">где человек добавляет сигнал</span>
+</button>
+<button class="zone-card" data-zone="naming">
+<span class="eyebrow">zone 05</span>
+<span class="name">naming</span>
+<span class="count">1 rule</span>
+<span class="purpose">как находим артефакты</span>
+</button>
+<button class="zone-card" data-zone="communication">
+<span class="eyebrow">zone 06</span>
+<span class="name">communication</span>
+<span class="count">1 rule</span>
+<span class="purpose">как звучим наружу</span>
+</button>
+</div>
+</section>
+<!-- FIG.2 — VERBAL EXPLAINER OF THE CONTOUR -->
+<section class="fig" id="fig-2">
+<div class="label">
+<span class="num">fig.2</span>
+<span class="name">что значит «harness вокруг внешней силы»</span>
+<span class="tag">verbal frame</span>
+</div>
+<div class="contour">
+<p><span class="keyword">harness</span> — это контур из шести зон вокруг агентного процесса. <span class="accent">контекст</span> направляет, <span class="accent">память</span> помнит, <span class="accent">guardrail</span> ограничивает, <span class="accent">review</span> корректирует, <span class="accent">naming</span> делает находимым, <span class="accent">communication</span> передаёт. без одной из них — рваный harness, утечка ответственности.</p>
+<p>агент — это внешняя сила. он делает то, что ты задал, плюс то, что не заметил. harness — шесть стенок коробки, в которой эта сила работает на тебя, а не разносит вокруг. каждое правило закрывает одну щель.</p>
+<p><span class="amber">проверь себя:</span> какая зона слабее всего? нет evidence — не помнишь почему. нет blast radius — агент пишет в продакшн. нет naming — ничего не находится. рваный harness ломается там, где тоньше.</p>
+</div>
+</section>
+<!-- FIG.3 — RULES GRID -->
+<section class="fig" id="fig-3">
+<div class="label">
+<span class="num">fig.3</span>
+<span class="name">правила (фильтруются по зоне)</span>
+<span class="tag" id="visibleCountTag">13 of 13 visible</span>
+</div>
+<div class="filter-bar" id="filterBar">
+<span class="fb-label">filter ·</span>
+<button data-filter="all" class="active">all 13</button>
+<button data-filter="context">context · 4</button>
+<button data-filter="memory">memory · 2</button>
+<button data-filter="guardrail">guardrail · 2</button>
+<button data-filter="review">review · 3</button>
+<button data-filter="naming">naming · 1</button>
+<button data-filter="communication">communication · 1</button>
+<span class="count-pill" id="countPill">all zones</span>
+</div>
+<div class="rules-list" id="rulesList">
+<!-- CONTEXT -->
+<article class="rule" data-zone="context" data-id="context-seed">
+<header class="head">
+<span class="ix">r.01</span>
+<span class="title">context seed: source · signal · ask · output · evidence</span>
+<span class="zone-chip">context</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">агент получает «сделай задачу» без рамы и галлюцинирует</div>
+<div class="body">
+<p>каждый запуск задачи начинается с пяти полей. source — откуда данные. signal — что ты заметил. ask — что хочешь получить. output — формат ответа. evidence — что считать доказательством. без этого harness разваливается на первых трёх запросах. пока пять полей не заполнены — не запускай.</p>
+<a class="open" href="/rules-public/context-seed.html">→ открыть полную страницу</a>
+</div>
+</article>
+<article class="rule" data-zone="context" data-id="one-workflow-first">
+<header class="head">
+<span class="ix">r.02</span>
+<span class="title">one workflow перед архитектурой</span>
+<span class="zone-chip">context</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">не знаешь, с чего начать, поэтому строишь всё сразу</div>
+<div class="body">
+<p>выбери одну рабочую задачу, которая повторяется. одна. без подзадач. собери harness под неё — context, шаблоны, инструменты, границы. остальные задачи появятся сами через паттерны. лучше, чем строить «универсальную систему».</p>
+<a class="open" href="/rules-public/one-workflow-first.html">→ открыть полную страницу</a>
+</div>
+</article>
+<article class="rule" data-zone="context" data-id="template-before-dashboard">
+<header class="head">
+<span class="ix">r.03</span>
+<span class="title">template before dashboard</span>
+<span class="zone-chip">context</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">тратишь день на дашборд, который никто не использует</div>
+<div class="body">
+<p>сначала шаблон в .md. потом — если шаблон выживает три недели — дашборд. дашборды дороги в обслуживании, шаблоны почти бесплатны. артефакт сначала текстом, потом интерфейс.</p>
+<a class="open" href="/rules-public/template-before-dashboard.html">→ открыть полную страницу</a>
+</div>
+</article>
+<article class="rule" data-zone="context" data-id="claude-context-window">
+<header class="head">
+<span class="ix">r.04</span>
+<span class="title">claude context window — окно как ресурс</span>
+<span class="zone-chip">context</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">контекст переполнен на середине задачи, агент теряет нить</div>
+<div class="body">
+<p>смотри на остаток токенов в status line, не на проценты. ok &gt; 400k, warn 150–400k, crit &lt; 150k. в crit — только handoff, не новые задачи. контекст — ресурс, а не бесконечность; на каждом ответе footer с режимом.</p>
+<a class="open" href="/rules-public/claude-context-window.html">→ открыть полную страницу</a>
+</div>
+</article>
+<!-- MEMORY -->
+<article class="rule" data-zone="memory" data-id="evidence-over-logs">
+<header class="head">
+<span class="ix">r.05</span>
+<span class="title">evidence &gt; logs (decision memory)</span>
+<span class="zone-chip">memory</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">через неделю не помнишь, почему принял решение</div>
+<div class="body">
+<p>memory — это не лог что произошло, а доказательство почему. сохраняй цитаты, скриншоты, transcripts, ссылки на источники. лог теряется — evidence держит решение воспроизводимым. через месяц ты пересматриваешь, не вспоминаешь.</p>
+<a class="open" href="/rules-public/evidence-over-logs.html">→ открыть полную страницу</a>
+</div>
+</article>
+<article class="rule" data-zone="memory" data-id="memory-scopes">
+<header class="head">
+<span class="ix">r.06</span>
+<span class="title">memory scopes: user · task · project · operational</span>
+<span class="zone-chip">memory</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">всё валится в одну заметку, агент не находит нужное</div>
+<div class="body">
+<p>четыре уровня. user — кто я, мои принципы, контакты. task — что делаю прямо сейчас. project — постоянный контекст продукта или лаборатории. operational — как я работаю, привычки, инструменты. без scope memory становится свалкой, агент мешает личное и проектное.</p>
+<a class="open" href="/rules-public/memory-scopes.html">→ открыть полную страницу</a>
+</div>
+</article>
+<!-- GUARDRAIL -->
+<article class="rule" data-zone="guardrail" data-id="agent-passport">
+<header class="head">
+<span class="ix">r.07</span>
+<span class="title">agent passport (owner · scope · tools · expiry)</span>
+<span class="zone-chip">guardrail</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">агенты копятся, никто не знает, что они умеют и кем созданы</div>
+<div class="body">
+<p>у каждого агента есть карточка-паспорт. owner — кто отвечает. scope — что разрешено делать. tools — какие инструменты подключены. expiry — когда переаудит. без паспорта агент дрейфует — через полгода двадцать скиллов и ты не помнишь, который пишет в продакшн.</p>
+<a class="open" href="/rules-public/agent-passport.html">→ открыть полную страницу</a>
+</div>
+</article>
+<article class="rule" data-zone="guardrail" data-id="guardrails-blast-radius">
+<header class="head">
+<span class="ix">r.08</span>
+<span class="title">guardrails как blast radius</span>
+<span class="zone-chip">guardrail</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">агент написал в продакшн, удалил файлы, отправил сообщения не туда</div>
+<div class="body">
+<p>guardrail = радиус взрыва, который ты готов разрешить. read-only по умолчанию. write только в sandbox. деструктивные действия — через явное подтверждение или отдельный канал. до запуска отвечай: что максимум он сломает? нет ответа — не запускай. это граница между «эксперимент» и «инцидент».</p>
+<a class="open" href="/rules-public/guardrails-blast-radius.html">→ открыть полную страницу</a>
+</div>
+</article>
+<!-- REVIEW -->
+<article class="rule" data-zone="review" data-id="human-review-signal">
+<header class="head">
+<span class="ix">r.09</span>
+<span class="title">human review как сигнал, не одобрение</span>
+<span class="zone-chip">review</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">review превращается в формальность, ничего не меняется</div>
+<div class="body">
+<p>review это не «одобрить или нет». это сигнал, который ты возвращаешь системе. что было неточно? какая часть промпта не сработала? review копится в evidence и формирует следующую итерацию rule. без обратной связи система не учится.</p>
+<a class="open" href="/rules-public/human-review-signal.html">→ открыть полную страницу</a>
+</div>
+</article>
+<article class="rule" data-zone="review" data-id="replay-ability">
+<header class="head">
+<span class="ix">r.10</span>
+<span class="title">replay-ability — каждое действие воспроизводимо</span>
+<span class="zone-chip">review</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">агент сделал что-то крутое один раз, повторить не получается</div>
+<div class="body">
+<p>каждое действие = input + prompt + version + output. сохраняй четыре. через месяц ты должен уметь запустить тот же prompt на тех же inputs и получить близкий output. это не детерминизм — это доверие. систему, которую нельзя проиграть заново, не отличить от удачи.</p>
+<a class="open" href="/rules-public/replay-ability.html">→ открыть полную страницу</a>
+</div>
+</article>
+<article class="rule" data-zone="review" data-id="auto-eval">
+<header class="head">
+<span class="ix">r.11</span>
+<span class="title">auto-eval (T/R/C) на каждый ответ</span>
+<span class="zone-chip">review</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">не понимаешь, где система теряет качество</div>
+<div class="body">
+<p>на каждом значимом ответе три бинарных оценки. T (text) — структура и ясность. R (rules) — соблюдение naming, форматов, конвенций. C (code) — работает ли. ✓ pass, ✗ fail, ○ n/a. через месяц паттерны fail подсказывают, какое правило добавить. binary, не шкала: «3 из 5» ничего не значит, fail — значит.</p>
+<a class="open" href="/rules-public/auto-eval.html">→ открыть полную страницу</a>
+</div>
+</article>
+<!-- NAMING -->
+<article class="rule" data-zone="naming" data-id="naming-axis">
+<header class="head">
+<span class="ix">r.12</span>
+<span class="title">naming как операционная ось</span>
+<span class="zone-chip">naming</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">агент не находит файлы, vault превращается в свалку</div>
+<div class="body">
+<p>имя файла — api между тобой и агентами. {project} {type} description – yyyy-mm-dd.md. project и type в скобках парсятся одной регуляркой. описание lowercase, дата в конце — ls сортируется хронологически. без convention vault слепнет.</p>
+<a class="open" href="./naming.html">→ открыть интерактивный builder</a>
+</div>
+</article>
+<!-- COMMUNICATION -->
+<article class="rule" data-zone="communication" data-id="communication-frame">
+<header class="head">
+<span class="ix">r.13</span>
+<span class="title">communication: рамка проектная, без эмоджи, en dash</span>
+<span class="zone-chip">communication</span>
+<span class="toggle">[ expand ]</span>
+</header>
+<div class="problem">сообщения команде звучат как корпоративный спам</div>
+<div class="body">
+<p>строчная буква в начале блоков. без эмоджи (если только пользователь явно не просит). главная мысль в первых 2–3 строках. конкретно — кто, что, когда, ссылка. en dash (–), не em dash (—). без «в рамках», «в контексте», «извините за беспокойство». проектная рамка, не корпоративная.</p>
+<a class="open" href="/rules-public/communication-frame.html">→ открыть полную страницу</a>
+</div>
+</article>
+</div>
+</section>
+<!-- FIG.4 — READING ORDER -->
+<section class="fig" id="fig-4">
+<div class="label">
+<span class="num">fig.4</span>
+<span class="name">reading order — если читаешь впервые</span>
+<span class="tag">13 steps · learn-order</span>
+</div>
+<div class="reading-order">
+<ol>
+<li><a href="/rules-public/context-seed.html">context seed</a><span class="zone-tag">z01 · context</span></li>
+<li><a href="/rules-public/one-workflow-first.html">one workflow first</a><span class="zone-tag">z01 · context</span></li>
+<li><a href="/rules-public/template-before-dashboard.html">template before dashboard</a><span class="zone-tag">z01 · context</span></li>
+<li><a href="/rules-public/claude-context-window.html">claude context window</a><span class="zone-tag">z01 · context</span></li>
+<li><a href="/rules-public/evidence-over-logs.html">evidence over logs</a><span class="zone-tag">z02 · memory</span></li>
+<li><a href="/rules-public/memory-scopes.html">memory scopes</a><span class="zone-tag">z02 · memory</span></li>
+<li><a href="/rules-public/agent-passport.html">agent passport</a><span class="zone-tag">z03 · guardrail</span></li>
+<li><a href="/rules-public/guardrails-blast-radius.html">guardrails blast radius</a><span class="zone-tag">z03 · guardrail</span></li>
+<li><a href="/rules-public/human-review-signal.html">human review signal</a><span class="zone-tag">z04 · review</span></li>
+<li><a href="/rules-public/replay-ability.html">replay-ability</a><span class="zone-tag">z04 · review</span></li>
+<li><a href="/rules-public/auto-eval.html">auto-eval</a><span class="zone-tag">z04 · review</span></li>
+<li><a href="./naming.html">naming axis</a><span class="zone-tag">z05 · naming</span></li>
+<li><a href="/rules-public/communication-frame.html">communication frame</a><span class="zone-tag">z06 · communication</span></li>
+</ol>
+<div class="legend">этот порядок — не догма, а тропинка. context задаёт раму, memory держит решения, guardrail ограничивает blast radius, review проверяет, naming делает воспроизводимым, communication выгружает наружу. если один из шагов уже усвоен — пропускай и не возвращайся.</div>
+</div>
+</section>
+<!-- FIG.5 — POINTER -->
+<section class="fig" id="fig-5">
+<div class="label">
+<span class="num">fig.5</span>
+<span class="name">public reading version</span>
+<span class="tag">12 standalone pages</span>
+</div>
+<div class="pointer">
+<span>каждое правило живёт как отдельная читаемая страница для шеринга и review</span>
+<a href="/rules-public/">/rules-public/ →</a>
+</div>
+</section>
+</div>
+<!-- UNIFIED FOOTER -->
+<footer class="ai-foot">
+<div class="ai-foot-row">
+<span>ainative-lab-2 · ai-native sprint vol2 · s3 · 2026-05-06</span>
+<span>
+<a href="https://github.com/ai-mindset-org/ainative-lab-2" target="_blank" rel="noreferrer">github</a> ·
+<a href="https://aimindset.org" target="_blank" rel="noreferrer">ai mindset</a> ·
+<a href="https://ainative-lab-deck.netlify.app/" target="_blank" rel="noreferrer">deck</a>
+</span>
+</div>
+<div class="ai-foot-row">
+<span style="opacity:0.55">dragon-dna · space grotesk + ibm plex mono + jetbrains mono · single-file</span>
+<span style="opacity:0.55">v0.3 · 2026-05-06</span>
+</div>
+</footer>
+<script>(function(){
+var nav = document.getElementById('aiNav');
+var b = document.getElementById('aiBurger');
+if (b && nav) b.addEventListener('click', function(){ nav.classList.toggle('open'); });
+})();
+</script>
+<script>(function(){
+var STORAGE_ZONE = 'ainative-lab-2-rules-zone';
+var STORAGE_EXP  = 'ainative-lab-2-rules-expanded';
 function readZone(){
-  try{ return localStorage.getItem(STORAGE_ZONE) || 'context'; }
-  catch(e){ return 'context'; }
+try{ return localStorage.getItem(STORAGE_ZONE) || 'all'; }
+catch(e){ return 'all'; }
 }
 function writeZone(z){
-  try{ localStorage.setItem(STORAGE_ZONE, z); }catch(e){}
+try{ localStorage.setItem(STORAGE_ZONE, z); }catch(e){}
 }
 function readExpanded(){
-  try{
-    const raw = localStorage.getItem(STORAGE_EXP);
-    return raw ? JSON.parse(raw) : [];
-  }catch(e){ return []; }
+try{
+var raw = localStorage.getItem(STORAGE_EXP);
+return raw ? JSON.parse(raw) : [];
+}catch(e){ return []; }
 }
 function writeExpanded(arr){
-  try{ localStorage.setItem(STORAGE_EXP, JSON.stringify(arr)); }catch(e){}
+try{ localStorage.setItem(STORAGE_EXP, JSON.stringify(arr)); }catch(e){}
 }
-function esc(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-let activeZone = readZone();
-if(!ZONES[activeZone]) activeZone = 'context';
-let expanded = new Set(readExpanded());
-
-function publicHref(id){ return `/rules-public/${id}.html`; }
-
-function renderRules(){
-  const z = ZONES[activeZone];
-  const list = document.getElementById('rulesList');
-  document.getElementById('zoneMarker').textContent = z.marker;
-  document.getElementById('zoneName').innerHTML = `<span class="pin">/</span> ${esc(z.name)}`;
-  document.getElementById('zoneCount').textContent = `${z.rules.length} ${z.rules.length===1?'rule':'rules'}`;
-  document.getElementById('zoneTag').textContent  = `zone: ${z.name}`;
-  list.innerHTML = z.rules.map((r, i) => {
-    const isExp = expanded.has(r.id);
-    const idx = String(i+1).padStart(2,'0');
-    const link = r.link || publicHref(r.id);
-    const label = r.linkLabel || '→ открыть страницу правила';
-    return `
-      <article class="rule${isExp?' expanded':''}" data-id="${esc(r.id)}">
-        <header class="head">
-          <span class="ix">r.${idx}</span>
-          <span class="title">${esc(r.title)}</span>
-          <span class="toggle">${isExp?'[ collapse ]':'[ expand ]'}</span>
-        </header>
-        <div class="problem">${esc(r.problem)}</div>
-        <div class="body">
-          <p>${esc(r.body)}</p>
-          <a class="open" href="${esc(link)}">${esc(label)}</a>
-        </div>
-      </article>
-    `;
-  }).join('');
-  list.querySelectorAll('.rule').forEach(el => {
-    el.querySelector('.head').addEventListener('click', () => {
-      const id = el.dataset.id;
-      if(expanded.has(id)) expanded.delete(id);
-      else expanded.add(id);
-      writeExpanded([...expanded]);
-      renderRules();
-    });
-  });
-}
-
-function setZone(z, scroll){
-  if(!ZONES[z]) return;
-  activeZone = z;
-  writeZone(z);
-  document.querySelectorAll('.zone[data-zone]').forEach(el => {
-    el.classList.toggle('active', el.dataset.zone === z);
-  });
-  renderRules();
-  if(scroll){
-    const fig2 = document.getElementById('fig-2');
-    if(fig2) fig2.scrollIntoView({behavior:'smooth', block:'start'});
-  }
-}
-
-document.querySelectorAll('.zone[data-zone]').forEach(el => {
-  el.addEventListener('click', () => setZone(el.dataset.zone, true));
+var ZONES = ['context','memory','guardrail','review','naming','communication'];
+var rules = Array.prototype.slice.call(document.querySelectorAll('.rule'));
+var zoneCards = Array.prototype.slice.call(document.querySelectorAll('.zone-card'));
+var filterButtons = Array.prototype.slice.call(document.querySelectorAll('.filter-bar button'));
+var visibleCountTag = document.getElementById('visibleCountTag');
+var countPill = document.getElementById('countPill');
+var activeZone = readZone();
+if(activeZone !== 'all' && ZONES.indexOf(activeZone) === -1) activeZone = 'all';
+var expanded = {};
+readExpanded().forEach(function(id){ expanded[id] = true; });
+function applyFilter(){
+var visible = 0;
+rules.forEach(function(r){
+var match = (activeZone === 'all') || (r.dataset.zone === activeZone);
+r.classList.toggle('hidden', !match);
+if(match) visible++;
 });
-
-// Sources list
-const sources = [];
-ORDER.forEach(zKey => {
-  ZONES[zKey].rules.forEach(r => {
-    sources.push({
-      slug: r.link || publicHref(r.id),
-      title: r.title,
-      zone: zKey,
-    });
-  });
+visibleCountTag.textContent = visible + ' of ' + rules.length + ' visible';
+countPill.textContent = activeZone === 'all' ? 'all zones' : 'zone: ' + activeZone;
+zoneCards.forEach(function(c){
+var z = c.dataset.zone;
+c.classList.toggle('active', z === activeZone);
+c.classList.toggle('dim', activeZone !== 'all' && z !== activeZone);
 });
-const srcEl = document.getElementById('sourcesList');
-srcEl.innerHTML = sources.map((s, i) => {
-  const idx = String(i+1).padStart(2,'0');
-  return `
-    <div class="src">
-      <span class="ix">${idx}</span>
-      <span class="pth"><a href="${esc(s.slug)}">${esc(s.slug)}</a></span>
-      <span class="desc">${esc(s.title)} · z·${esc(s.zone)}</span>
-    </div>
-  `;
-}).join('');
-
-// Initial render
-setZone(activeZone, false);
+filterButtons.forEach(function(b){
+b.classList.toggle('active', b.dataset.filter === activeZone);
+});
+}
+function setZone(z){
+if(z === activeZone) z = 'all'; // toggle off
+activeZone = z;
+writeZone(z);
+applyFilter();
+}
+zoneCards.forEach(function(c){
+c.addEventListener('click', function(){ setZone(c.dataset.zone); });
+});
+filterButtons.forEach(function(b){
+b.addEventListener('click', function(){
+var f = b.dataset.filter;
+activeZone = f;
+writeZone(f);
+applyFilter();
+});
+});
+rules.forEach(function(r){
+if(expanded[r.dataset.id]){
+r.classList.add('expanded');
+r.querySelector('.toggle').textContent = '[ collapse ]';
+}
+});
+rules.forEach(function(r){
+var head = r.querySelector('.head');
+head.addEventListener('click', function(){
+var id = r.dataset.id;
+if(expanded[id]){
+delete expanded[id];
+r.classList.remove('expanded');
+r.querySelector('.toggle').textContent = '[ expand ]';
+} else {
+expanded[id] = true;
+r.classList.add('expanded');
+r.querySelector('.toggle').textContent = '[ collapse ]';
+}
+writeExpanded(Object.keys(expanded));
+});
+});
+applyFilter();
+})();
 </script>
 </body>
 </html>
