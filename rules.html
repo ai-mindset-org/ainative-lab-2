@@ -472,29 +472,25 @@ if (b && nav) b.addEventListener('click', function(){ nav.classList.toggle('open
     });
     updateStateLine();
 
-    // Event delegation: any click anywhere inside .rule .head triggers toggle
-    document.addEventListener('click', function(e){
-      var target = e.target;
-      if (!target || !target.closest) return;
-      var head = target.closest('.rule .head');
-      if (head) {
-        var rule = head.closest('.rule');
-        if (rule) toggleExpand(rule);
-        return;
-      }
-    });
-
-    // Keyboard a11y: Enter / Space on focused .head
-    document.addEventListener('keydown', function(e){
-      var target = e.target;
-      if (!target || !target.closest) return;
-      var head = target.closest('.rule .head');
-      if (!head) return;
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-        e.preventDefault();
-        var rule = head.closest('.rule');
-        if (rule) toggleExpand(rule);
-      }
+    // Direct per-rule click handler — click anywhere on the rule card toggles
+    // (proven approach, was working in v0.3 before delegation refactor introduced regression)
+    rules.forEach(function(r){
+      r.addEventListener('click', function(e){
+        // don't toggle if user clicked an actual link inside .body
+        if (e.target.closest('a.open')) return;
+        toggleExpand(r);
+      });
+      // make whole card behave clickable
+      r.style.cursor = 'pointer';
+      // keyboard a11y per rule
+      r.setAttribute('tabindex', '0');
+      r.setAttribute('role', 'button');
+      r.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          toggleExpand(r);
+        }
+      });
     });
 
     // Zone card filters
