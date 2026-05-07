@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTRL Dashboard Builder · AIM</title>
+<meta property="og:title" content="CTRL Dashboard Builder · AI Mindset">
+<meta property="og:description" content="Build your own personal CTRL dashboard with VOX + SHEP assistants and a buddy companion. 8 questions → packaged skill.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root {
+    --bg:#0d1117; --card:#161b22; --border:#30363d;
+    --text:#c9d1d9; --text-dim:#8b949e; --text-bright:#e6edf3;
+    --accent:#55aa88; --amber:#d4a843; --teal:#4dc9d4;
+    --mono:'JetBrains Mono',monospace; --grotesk:'Space Grotesk',sans-serif;
+  }
+  body { background:var(--bg); color:var(--text); font-family:var(--mono); font-size:13px; line-height:1.6; min-height:100vh; }
+  .frame { max-width:780px; margin:0 auto; padding:48px 24px; }
+  header { text-align:center; margin-bottom:32px; }
+  header .brand { font-size:11px; color:var(--accent); letter-spacing:3px; text-transform:uppercase; opacity:0.7; }
+  header h1 { font-family:var(--grotesk); font-size:32px; font-weight:700; margin:8px 0 6px; letter-spacing:-0.5px; }
+  header h1 span { color:var(--accent); }
+  header .subtitle { color:var(--text-dim); font-size:13px; max-width:540px; margin:0 auto; }
+  .progress { display:flex; gap:6px; justify-content:center; margin:24px 0 32px; }
+  .progress .dot { width:24px; height:3px; background:var(--border); border-radius:2px; transition:all 0.2s; }
+  .progress .dot.done { background:var(--accent); }
+  .progress .dot.active { background:var(--amber); width:48px; }
+  .step { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:32px; margin-bottom:16px; display:none; }
+  .step.active { display:block; animation: fadeIn 0.2s ease-out; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:none } }
+  .step-num { font-size:11px; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase; }
+  .step h2 { font-family:var(--grotesk); font-size:22px; margin:8px 0 4px; color:var(--text-bright); font-weight:600; }
+  .step .hint { color:var(--text-dim); font-size:12px; margin-bottom:16px; }
+  .step input, .step textarea, .step select { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:10px 14px; border-radius:6px; font-family:var(--mono); font-size:13px; outline:none; transition:border 0.15s; }
+  .step input:focus, .step textarea:focus, .step select:focus { border-color:var(--accent); }
+  .step textarea { min-height:80px; resize:vertical; }
+  .options { display:grid; gap:8px; }
+  .option { background:var(--bg); border:1px solid var(--border); padding:14px 16px; border-radius:6px; cursor:pointer; transition:all 0.15s; display:flex; gap:12px; align-items:start; }
+  .option:hover { border-color:var(--text-dim); }
+  .option.selected { border-color:var(--accent); background:rgba(85,170,136,0.08); }
+  .option .opt-key { font-weight:600; color:var(--accent); min-width:24px; }
+  .option .opt-body { flex:1; }
+  .option .opt-title { font-weight:600; color:var(--text-bright); }
+  .option .opt-desc { font-size:11px; color:var(--text-dim); margin-top:2px; }
+  .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:24px; }
+  button { background:transparent; border:1px solid var(--border); color:var(--text); padding:10px 18px; border-radius:6px; font-family:var(--mono); font-size:12px; cursor:pointer; transition:all 0.15s; letter-spacing:0.3px; }
+  button:hover { border-color:var(--text-dim); }
+  button.primary { background:var(--accent); border-color:var(--accent); color:var(--bg); font-weight:600; }
+  button.primary:hover { background:#66bb99; border-color:#66bb99; }
+  button.skip { color:var(--text-dim); border-style:dashed; }
+  .summary { background:var(--card); border:1px solid var(--accent); border-radius:10px; padding:32px; }
+  .summary h2 { font-family:var(--grotesk); font-size:20px; color:var(--accent); margin-bottom:16px; }
+  .summary .row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(48,54,61,0.5); }
+  .summary .row:last-child { border-bottom:none; }
+  .summary .label { color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:0.5px; }
+  .summary .val { color:var(--text); }
+  .summary .val.empty { color:var(--text-dim); font-style:italic; }
+  .download-zone { margin-top:24px; padding:20px; background:rgba(85,170,136,0.06); border:1px dashed var(--accent); border-radius:8px; text-align:center; }
+  .download-zone .download-btn { display:inline-block; padding:14px 36px; background:var(--accent); color:var(--bg); border-radius:6px; font-weight:700; font-family:var(--grotesk); font-size:15px; cursor:pointer; border:none; }
+  .download-zone .hint-after { font-size:11px; color:var(--text-dim); margin-top:12px; line-height:1.6; }
+  footer { text-align:center; margin-top:32px; padding:20px; font-size:11px; color:var(--text-dim); }
+  footer a { color:var(--accent); text-decoration:none; }
+  footer a:hover { text-decoration:underline; }
+  .preview-card { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:16px; margin-top:12px; font-size:11px; line-height:1.5; }
+  .preview-card .pc-name { font-weight:700; color:var(--text-bright); }
+  .preview-card .pc-meta { color:var(--text-dim); margin-bottom:6px; font-size:10px; }
+  .ascii { font-family:var(--mono); font-size:9px; line-height:1.1; white-space:pre; color:var(--accent); margin:6px 0; }
+</style>
+</head>
+<body>
+<div class="frame">
+<header>
+  <div class="brand">AI Mindset · CTRL Dashboard Builder</div>
+  <h1><span>/</span>build · your own ctrl</h1>
+  <p class="subtitle">8 questions → packaged Claude Code skill + ready-to-deploy dashboard with VOX + SHEP assistants and a buddy companion.</p>
+</header>
+
+<div class="progress" id="progress"></div>
+
+<form id="wizard">
+  <div class="step active" data-step="1">
+    <div class="step-num">step 1 / 8</div>
+    <h2>Your name?</h2>
+    <p class="hint">Shown in the dashboard header. e.g. "Ivan P."</p>
+    <input type="text" name="name" placeholder="Ivan P." autofocus>
+    <div class="actions"><button type="button" onclick="next()" class="primary">next →</button></div>
+  </div>
+
+  <div class="step" data-step="2">
+    <div class="step-num">step 2 / 8</div>
+    <h2>Folder slug?</h2>
+    <p class="hint">Used as folder name + Netlify subdomain. lowercase, hyphens. e.g. <code>ivan-petrov</code></p>
+    <input type="text" name="slug" placeholder="your-name">
+    <div class="actions"><button type="button" onclick="prev()">← back</button><button type="button" onclick="next()" class="primary">next →</button></div>
+  </div>
+
+  <div class="step" data-step="3">
+    <div class="step-num">step 3 / 8</div>
+    <h2>Delivery mode?</h2>
+    <p class="hint">How do you want to run your dashboard.</p>
+    <div class="options" data-name="mode">
+      <div class="option selected" data-value="static"><span class="opt-key">A</span><div class="opt-body"><div class="opt-title">static HTML</div><div class="opt-desc">drag into Chrome, no install. recommended.</div></div></div>
+      <div class="option" data-value="server"><span class="opt-key">B</span><div class="opt-body"><div class="opt-title">FastAPI + index.html</div><div class="opt-desc"><code>python server.py</code> for live calendar / Linear / vault.</div></div></div>
+      <div class="option" data-value="netlify"><span class="opt-key">C</span><div class="opt-body"><div class="opt-title">Netlify-hosted</div><div class="opt-desc">public subdomain ctrl-&lt;slug&gt;.netlify.app</div></div></div>
+    </div>
+    <div class="actions"><button type="button" onclick="prev()">← back</button><button type="button" onclick="next()" class="primary">next →</button></div>
+  </div>
+
+  <div class="step" data-step="4">
+    <div class="step-num">step 4 / 8</div>
+    <h2>Obsidian vault path?</h2>
+    <p class="hint">Absolute path. Powers Skills + Documents + vault search. Skip if no Obsidian.</p>
+    <input type="text" name="vault" placeholder="/Users/you/notes">
+    <div class="actions"><button type="button" onclick="prev()">← back</button><button type="button" onclick="skipStep()" class="skip">skip</button><button type="button" onclick="next()" class="primary">next →</button></div>
+  </div>
+
+  <div class="step" data-step="5">
+    <div class="step-num">step 5 / 8</div>
+    <h2>Linear API key?</h2>
+    <p class="hint">For Tasks panel live sync. Skip → localStorage kanban only.</p>
+    <input type="password" name="linear" placeholder="lin_api_xxx">
+    <div class="actions"><button type="button" onclick="prev()">← back</button><button type="button" onclick="skipStep()" class="skip">skip</button><button type="button" onclick="next()" class="primary">next →</button></div>
+  </div>
+
+  <div class="step" data-step="6">
+    <div class="step-num">step 6 / 8</div>
+    <h2>Telegram setup?</h2>
+    <p class="hint">Path to YOUR Telethon session file. Skip if don't want Telegram block.</p>
+    <input type="text" name="tg_session" placeholder="~/.config/telegram-mcp/my-session">
+    <div class="actions"><button type="button" onclick="prev()">← back</button><button type="button" onclick="skipStep()" class="skip">skip</button><button type="button" onclick="next()" class="primary">next →</button></div>
+  </div>
+
+  <div class="step" data-step="7">
+    <div class="step-num">step 7 / 8</div>
+    <h2>GitHub repo for "My Artifact"?</h2>
+    <p class="hint">For My Artifact block embed. Optional.</p>
+    <input type="text" name="github" placeholder="https://github.com/you/my-project">
+    <div class="actions"><button type="button" onclick="prev()">← back</button><button type="button" onclick="skipStep()" class="skip">skip</button><button type="button" onclick="next()" class="primary">next →</button></div>
+  </div>
+
+  <div class="step" data-step="8">
+    <div class="step-num">step 8 / 8</div>
+    <h2>Pick your Buddy</h2>
+    <p class="hint">Your sidebar companion. ASCII pet that reacts to dashboard state — barks when overdue, sleeps when focused.</p>
+    <div class="options" data-name="buddy">
+      <div class="option selected" data-value="pebble"><span class="opt-key">🐌</span><div class="opt-body"><div class="opt-title">Pebble · Snail</div><div class="opt-desc">methodical · slow · spots off-by-ones</div></div></div>
+      <div class="option" data-value="mottle"><span class="opt-key">🐱</span><div class="opt-body"><div class="opt-title">Mottle · Cat</div><div class="opt-desc">chaotic strike · knocks ducks off desk</div></div></div>
+      <div class="option" data-value="griftax"><span class="opt-key">🐲</span><div class="opt-body"><div class="opt-title">Griftax · Dragon</div><div class="opt-desc">flames you for "we'll refactor later"</div></div></div>
+      <div class="option" data-value="jamble"><span class="opt-key">🦆</span><div class="opt-body"><div class="opt-title">Jamble · Duck</div><div class="opt-desc">methodical · murmurs "soup" at nested loops</div></div></div>
+    </div>
+    <div class="actions"><button type="button" onclick="prev()">← back</button><button type="button" onclick="finish()" class="primary">build my dashboard ✓</button></div>
+  </div>
+
+  <div class="step summary" id="summary" style="display:none;">
+    <h2>✓ Ready to download</h2>
+    <p style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">Your CTRL dashboard config is ready. Download below — you'll get a folder with index.html, server.py, vox.js, vox-ui.js, buddy.js, README, .env.example, plus the SKILL.md for Claude Code.</p>
+    <div id="summaryRows"></div>
+    <div class="download-zone">
+      <button type="button" class="download-btn" onclick="downloadBundle()">⬇ download ctrl-dashboard.zip</button>
+      <div class="hint-after">unzip · drag <code>index.html</code> into Chrome · or run <code>python server.py</code> for live mode<br>SKILL.md goes to <code>~/.claude/skills/&lt;slug&gt;-ctrl/</code> — invoke via <code>/&lt;slug&gt;-ctrl</code> in Claude Code</div>
+    </div>
+    <div class="actions"><button type="button" onclick="prev()">← back to edit</button></div>
+  </div>
+</form>
+
+<footer>
+  <div>built with Claude Code · AI Mindset · 2026</div>
+  <div style="margin-top:6px;"><a href="https://aimindset.org">aimindset.org</a> · <a href="https://t.me/aimindsetclub">{space} community</a></div>
+</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const CONFIG = { name:'', slug:'', mode:'static', vault:'', linear:'', tg_session:'', github:'', buddy:'pebble' };
+let currentStep = 1;
+const TOTAL_STEPS = 8;
+
+// progress dots
+function renderProgress() {
+  const el = document.getElementById('progress');
+  el.innerHTML = '';
+  for (let i=1; i<=TOTAL_STEPS; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i<currentStep?' done':'') + (i===currentStep?' active':'');
+    el.appendChild(d);
+  }
+}
+renderProgress();
+
+document.querySelectorAll('.option').forEach(opt => {
+  opt.onclick = () => {
+    const group = opt.closest('.options');
+    const name = group.dataset.name;
+    group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    CONFIG[name] = opt.dataset.value;
+  };
+});
+
+function gather() {
+  document.querySelectorAll('input[name]').forEach(i => { CONFIG[i.name] = i.value.trim(); });
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const next = document.querySelector(`[data-step="${n}"]`);
+  if (next) next.classList.add('active');
+  currentStep = n;
+  renderProgress();
+}
+
+function next() { gather(); if (currentStep < TOTAL_STEPS) showStep(currentStep + 1); }
+function prev() { gather(); if (currentStep > 1) showStep(currentStep - 1); }
+function skipStep() { gather(); next(); }
+
+function finish() {
+  gather();
+  if (!CONFIG.slug) CONFIG.slug = (CONFIG.name || 'user').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'user';
+  buildSummary();
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('summary').classList.add('active');
+  document.getElementById('summary').style.display = 'block';
+  currentStep = 9;
+  renderProgress();
+}
+
+function buildSummary() {
+  const rows = [
+    ['name', CONFIG.name],
+    ['slug', CONFIG.slug],
+    ['mode', CONFIG.mode],
+    ['vault', CONFIG.vault],
+    ['linear', CONFIG.linear ? '✓ provided' : ''],
+    ['telegram', CONFIG.tg_session],
+    ['github', CONFIG.github],
+    ['buddy', CONFIG.buddy],
+  ];
+  const html = rows.map(([k,v]) => `<div class="row"><span class="label">${k}</span><span class="val${v?'':' empty'}">${v || '(skipped)'}</span></div>`).join('');
+  document.getElementById('summaryRows').innerHTML = html;
+}
+
+// ─── BUNDLE GENERATION ───
+async function downloadBundle() {
+  const zip = new JSZip();
+  const slug = CONFIG.slug;
+  const folder = zip.folder('ctrl-dashboard-' + slug);
+
+  // 1. config.json
+  folder.file('config.json', JSON.stringify({
+    slug: CONFIG.slug,
+    name: CONFIG.name,
+    mode: CONFIG.mode,
+    buddy: CONFIG.buddy,
+    base_version: 'ctrl-2026-05-07',
+    integrations: {
+      vault: !!CONFIG.vault,
+      linear: !!CONFIG.linear,
+      telegram: !!CONFIG.tg_session,
+      github: !!CONFIG.github,
+    }
+  }, null, 2));
+
+  // 2. config.js — browser-loadable
+  folder.file('config.js', `// Generated by CTRL Dashboard Builder, 2026-05-07
+window.CTRL_CONFIG = ${JSON.stringify({
+    slug: CONFIG.slug, name: CONFIG.name, buddy: CONFIG.buddy,
+    githubRepo: CONFIG.github, hasLinear: !!CONFIG.linear,
+    hasTelegram: !!CONFIG.tg_session, hasVault: !!CONFIG.vault,
+  }, null, 2)};
+`);
+
+  // 3. .env.example
+  folder.file('.env.example', `# CTRL Dashboard env config — fill in your own values, never commit real values
+CTRL_VAULT_PATH=${CONFIG.vault || ''}
+CTRL_LINEAR_KEY=${CONFIG.linear ? 'lin_api_REDACTED' : ''}
+CTRL_TG_SESSION=${CONFIG.tg_session || ''}
+CTRL_GITHUB_REPO=${CONFIG.github || ''}
+CTRL_TG_API_ID=YOUR_OWN_TG_API_ID
+CTRL_TG_API_HASH=YOUR_OWN_TG_API_HASH
+OPENROUTER_API_KEY=
+`);
+
+  // 4. README.md
+  folder.file('README.md', generateReadme());
+
+  // 5. SKILL.md — for Claude Code
+  folder.file(slug + '-ctrl-skill/SKILL.md', generateSkill());
+
+  // 6. PLACEHOLDER index.html (real version generated by /ctrl-dashboard-build skill)
+  folder.file('index.html', generatePlaceholderHTML());
+
+  // 7. PLACEHOLDER server.py
+  folder.file('server.py', generatePlaceholderServer());
+
+  // 8. INSTALL.md
+  folder.file('INSTALL.md', `# Install your CTRL Dashboard
+
+1. **Static mode** (drag-and-drop):
+   - Open \`index.html\` in Chrome — done.
+
+2. **Live mode** (with calendar/Linear/vault data):
+   - \`pip install fastapi uvicorn telethon\`
+   - Copy \`.env.example\` → \`.env\`, fill in keys
+   - \`python server.py\` → http://127.0.0.1:49153
+
+3. **Install the Claude Code skill:**
+   \`\`\`bash
+   mkdir -p ~/.claude/skills/${slug}-ctrl
+   cp -r ${slug}-ctrl-skill/* ~/.claude/skills/${slug}-ctrl/
+   \`\`\`
+   Then in Claude Code: \`/${slug}-ctrl\` → run interactive setup.
+
+4. **Optional:** deploy to Netlify
+   \`\`\`bash
+   npx netlify deploy --prod --dir . --site-name ctrl-${slug}
+   \`\`\`
+`);
+
+  const blob = await zip.generateAsync({ type:'blob' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `ctrl-dashboard-${slug}.zip`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function generateReadme() {
+  return `# CTRL Dashboard · ${CONFIG.name || 'You'}
+
+generated: ${new Date().toISOString().slice(0,10)}
+slug: \`${CONFIG.slug}\`
+mode: ${CONFIG.mode}
+buddy: ${CONFIG.buddy}
+
+## What this is
+A personal terminal-aesthetic dashboard built on the AI Mindset CTRL pattern.
+- **VOX** assistant — thoughtful day advisor (Sonnet)
+- **SHEP** assistant — snappy task whip (Haiku · 12× cheaper)
+- **${CONFIG.buddy}** buddy — your reactive companion
+- session router · session timeline · skill launcher · buddy speech rotation
+
+## Quick start
+\`\`\`bash
+unzip ctrl-dashboard-${CONFIG.slug}.zip
+cd ctrl-dashboard-${CONFIG.slug}
+\`\`\`
+
+Then either:
+- **Static:** open \`index.html\` in Chrome
+- **Server:** \`pip install fastapi uvicorn telethon\` → \`python server.py\`
+
+See INSTALL.md for full setup.
+
+## What's wired
+${CONFIG.vault ? '- ✓ Obsidian vault: `' + CONFIG.vault + '`' : '- ○ vault not configured'}
+${CONFIG.linear ? '- ✓ Linear API connected' : '- ○ Linear: skipped (using localStorage kanban)'}
+${CONFIG.tg_session ? '- ✓ Telegram session: `' + CONFIG.tg_session + '`' : '- ○ Telegram: skipped'}
+${CONFIG.github ? '- ✓ GitHub artifact: ' + CONFIG.github : '- ○ GitHub: skipped'}
+
+---
+built via [CTRL Dashboard Builder](http://127.0.0.1:49153/ctrl-dashboard-builder/) · AI Mindset · 2026
+`;
+}
+
+function generateSkill() {
+  return `---
+name: ${CONFIG.slug}-ctrl
+description: Use when ${CONFIG.name || 'you'} wants to open, refresh, or interact with your personal CTRL dashboard. Triggers on "open dashboard", "ctrl ${CONFIG.slug}", "my dashboard", "refresh ctrl".
+---
+
+# ${CONFIG.name || 'Your'} CTRL Dashboard
+
+Personal dashboard for ${CONFIG.name || 'you'} — built ${new Date().toISOString().slice(0,10)} via CTRL Dashboard Builder.
+
+## Quick commands
+
+- \`open\` — open dashboard in browser
+- \`refresh\` — hit /api/dashboard-snapshot, reload
+- \`buddy\` — show current ${CONFIG.buddy} state and speech
+- \`session\` — list latest Claude Code sessions
+
+## Config
+
+- slug: ${CONFIG.slug}
+- mode: ${CONFIG.mode}
+- buddy: ${CONFIG.buddy}
+- vault: ${CONFIG.vault || '(none)'}
+
+## Buddy: ${CONFIG.buddy}
+
+Your sidebar companion reacts to dashboard state:
+- when overdue tasks > 0: barks (alert speech)
+- when next meeting < 15min: meeting-prep speech
+- when focus pct >= 90%: sleeps quietly
+- otherwise: idle speech rotation
+`;
+}
+
+function generatePlaceholderHTML() {
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>CTRL · ${CONFIG.name || CONFIG.slug}</title>
+<style>body{background:#0d1117;color:#c9d1d9;font-family:'JetBrains Mono',monospace;padding:48px;text-align:center;}
+h1{color:#55aa88;font-size:32px;}p{color:#8b949e;margin:12px 0;}code{background:#161b22;padding:2px 6px;border-radius:3px;}</style>
+</head><body>
+<h1>CTRL · ${CONFIG.name || CONFIG.slug}</h1>
+<p>This is a placeholder. To get the full dashboard:</p>
+<p>Run <code>/${CONFIG.slug}-ctrl</code> in Claude Code, OR copy index.html from <code>~/Documents/_code/_dashboards/pos-playground/</code> after running <code>/ctrl-dashboard-build</code>.</p>
+<p style="margin-top:32px;font-size:11px;">slug: ${CONFIG.slug} · buddy: ${CONFIG.buddy} · mode: ${CONFIG.mode}</p>
+</body></html>`;
+}
+
+function generatePlaceholderServer() {
+  return `#!/usr/bin/env python3
+"""CTRL Dashboard server for ${CONFIG.name || CONFIG.slug}.
+Placeholder — full version generated by /ctrl-dashboard-build skill."""
+import os
+from pathlib import Path
+
+VAULT_PATH = os.getenv("CTRL_VAULT_PATH", "${CONFIG.vault || ''}")
+LINEAR_KEY = os.getenv("CTRL_LINEAR_KEY", "")
+TG_SESSION = os.getenv("CTRL_TG_SESSION", "${CONFIG.tg_session || ''}")
+
+print(f"CTRL Dashboard for ${CONFIG.name || CONFIG.slug}")
+print(f"  vault: {VAULT_PATH or '(not configured)'}")
+print(f"  linear: {'configured' if LINEAR_KEY else 'skipped'}")
+print(f"  telegram: {TG_SESSION or '(not configured)'}")
+print()
+print("Run /ctrl-dashboard-build in Claude Code to generate full server.py with all endpoints.")
+print("This is a placeholder. Open index.html directly for static mode.")
+`;
+}
+</script>
+</body>
+</html>
