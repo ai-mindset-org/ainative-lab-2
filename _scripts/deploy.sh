@@ -1,33 +1,19 @@
 #!/usr/bin/env bash
-# ---------------------------------------------------------------
-# AI-Native Lab — deploy helper
-# Runs tests, shows status, then commits and pushes to main.
-# GitHub Pages auto-publishes on push to main.
-# ---------------------------------------------------------------
-set -e
-cd "$(dirname "$0")"
+# Manual Netlify deploy helper for ainative-lab-2.
+set -euo pipefail
 
-echo "== running tests =="
-if ! ./test.sh; then
-  echo
-  echo "Tests failed. Aborting deploy."
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+echo "== tests =="
+bash _scripts/test.sh
+
+echo
+echo "== netlify deploy =="
+if ! command -v netlify >/dev/null 2>&1; then
+  echo "Netlify CLI is not installed or not on PATH."
+  echo "Install/use it manually, then run: netlify deploy --prod --dir=."
   exit 1
 fi
 
-echo
-echo "== git status =="
-git add -A
-git status
-echo "---"
-echo "Review above. Press Enter to commit and push, Ctrl-C to abort."
-read -r
-
-git commit -m "deploy: rebuild sprint hub" || {
-  echo "Nothing to commit. Aborting."
-  exit 1
-}
-git push origin main
-
-echo
-echo "Pushed. GitHub Pages will update in ~1-2 min."
-echo "Live: https://ai-mindset-org.github.io/ainative-lab/"
+netlify deploy --prod --dir=.

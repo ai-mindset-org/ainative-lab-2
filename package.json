@@ -2,7 +2,7 @@
   "name": "ainative-lab-2",
   "version": "0.1.0",
   "private": true,
-  "description": "AI-Native Sprint Vol2 (s3) hub — context engineering playground, artifact chain, harness toolkit.",
+  "description": "AI-Native Sprint Vol2 (s3) context observatory — Graph Lab, Compass links, context pack compiler.",
   "scripts": {
     "deploy": "bash _scripts/deploy.sh",
     "test": "bash _scripts/test.sh"
