@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ainative-lab-2 · prompt compiler · realtime context → prompt</title>
-<meta name="description" content="плотный личный контекст → готовый prompt в тональности сегодняшней лекции. встроенные примеры из w26 + research notes. опционально — прогон через openrouter.">
-<meta property="og:title" content="ainative-lab-2 · prompt compiler">
-<meta property="og:description" content="плотный контекст → готовый промпт. ai-native sprint vol2 · w1.">
+<title>ainative-lab-2 · context pack compiler</title>
+<meta name="description" content="личный и командный контекст → переносимый context pack для agent workflow. встроенные примеры из лабы, Compass, Graph Lab и OpenRouter.">
+<meta property="og:title" content="ainative-lab-2 · context pack compiler">
+<meta property="og:description" content="личный и командный контекст → готовый context pack. ai-native sprint vol2 · w1.">
 <meta property="og:type" content="website">
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -541,6 +542,7 @@ body { padding-top: 52px; }
     <a href="./rules.html" data-route="rules">rules</a>
     <a href="./naming.html" data-route="naming">naming</a>
     <a href="./knowledge-graph.html" data-route="graph">graph</a>
+    <a href="https://aim-ain02-compass.netlify.app/" class="ext" target="_blank" rel="noreferrer">compass</a>
     <a href="https://ainative-lab-deck.netlify.app/" class="ext" target="_blank" rel="noreferrer">deck</a>
   </nav>
   <button class="ai-nav-burger" id="aiBurger" aria-label="menu">≡</button>
@@ -550,10 +552,10 @@ body { padding-top: 52px; }
 
   <!-- HEADER BAND -->
   <header class="headband">
-    <span class="ai-role">output · prompt compiler</span>
-    <div class="eyebrow">prompt compiler · ai-native sprint vol2 · w1</div>
-    <h1>плотный контекст → готовый промпт</h1>
-    <p class="sub">внешняя сила приходит готовой — capability от model providers, cloud, chips, policy. твоя задача — собрать вокруг неё управляемый контур: <em style="color:var(--teal);font-style:normal">external capability → context route → boundary → evidence → owner → review</em>. контекст — русло, модель — течение. заполни поля справа, скопируй промпт, прогони через свою модель — или прямо здесь через openrouter.</p>
+    <span class="ai-role">output · context pack compiler</span>
+    <div class="eyebrow">context compiler · ai-native sprint vol2 · w1</div>
+    <h1>личный контекст → командный стек</h1>
+    <p class="sub">это не генератор красивого prompt-а. Это маленький способ собрать переносимый пакет для работы: <em style="color:var(--teal);font-style:normal">source -> signal -> context pack -> action -> evidence -> review</em>. Контекст здесь не «всё, что мы знаем», а выбранное русло для действия агента, команды или прототипа.</p>
   </header>
 
   <!-- SPLIT: INPUTS LEFT (smaller) ↔ PROMPT RIGHT (larger) -->
@@ -563,8 +565,8 @@ body { padding-top: 52px; }
     <section class="panel" aria-labelledby="fig1">
       <div class="fig" id="fig1">
         <span class="num">fig.1</span>
-        <span class="name">personal context</span>
-        <span class="tag">15 полей · autosave</span>
+        <span class="name">context pack</span>
+        <span class="tag">16 полей · autosave</span>
       </div>
 
       <div class="field tall">
@@ -573,6 +575,14 @@ body { padding-top: 52px; }
           <span class="hint">кто ты, чем занимается команда</span>
         </div>
         <textarea id="f-role" data-key="role" placeholder="я cto в saas-команде из 12 человек, делаем b2b аналитику для retail. сейчас фокус на agent-orchestration слое над данными."></textarea>
+      </div>
+
+      <div class="field medium">
+        <div class="row">
+          <label for="f-team-stack">team stack / company os</label>
+          <span class="hint">как личные контуры соединяются в общий процесс</span>
+        </div>
+        <textarea id="f-team-stack" data-key="teamStack" placeholder="personal os участников → shared naming → workflow owners → graph memory → evidence registry → review cadence"></textarea>
       </div>
 
       <div class="field tall">
@@ -662,7 +672,7 @@ body { padding-top: 52px; }
       <div class="preview-head">
         <div class="fig" id="fig2" style="margin:0">
           <span class="num">fig.2</span>
-          <span class="name">prompt preview</span>
+          <span class="name">context pack preview</span>
         </div>
         <div class="status empty" id="status-pill">
           <span class="dot"></span>
@@ -684,10 +694,12 @@ body { padding-top: 52px; }
 
   <!-- fig.3 LECTURE CONTEXT -->
   <details class="section-fold" id="fig3">
-    <summary>fig.3 контекст лекции <span class="desc">тональность, в которой собирается prompt</span></summary>
+    <summary>fig.3 контекст лекции <span class="desc">тональность, в которой собирается context pack</span></summary>
     <div class="chips">
       <div class="chip"><div class="k">harness</div><div class="v">внешняя сила обуздана управляемым контуром, а не прямым доступом</div></div>
       <div class="chip"><div class="k">context as riverbed, model as current</div><div class="v">контекст — русло, модель — течение. без русла нет направления</div></div>
+      <div class="chip"><div class="k">compass as social context engine</div><div class="v">люди становятся навигируемыми узлами: запросы, опыт, ограничения, возможные пары</div></div>
+      <div class="chip"><div class="k">graph memory</div><div class="v">не склад заметок, а temporal relations: кто, что, когда, почему, с каким evidence</div></div>
       <div class="chip"><div class="k">templates before dashboards</div><div class="v">сначала шаблон процесса, потом метрики поверх него</div></div>
       <div class="chip"><div class="k">evidence is decision memory, not just logs</div><div class="v">логи показывают что произошло. evidence — зачем</div></div>
       <div class="chip"><div class="k">agent passport</div><div class="v">owner, scope, tools, expiry — паспорт уже хочет себе скоуп</div></div>
@@ -796,7 +808,7 @@ review обновляет rule, memory или eval. без этого цикла
 <!-- unified footer -->
 <footer class="ai-foot">
   <div class="ai-foot-row">
-    <span>ainative-lab-2 · ai-native sprint vol2 · s3 · 2026-05-06</span>
+    <span>ainative-lab-2 · ai-native sprint vol2 · s3 · 2026-05-07</span>
     <span>
       <a href="https://github.com/ai-mindset-org/ainative-lab-2" target="_blank" rel="noreferrer">github</a> ·
       <a href="https://aimindset.org" target="_blank" rel="noreferrer">ai mindset</a> ·
@@ -805,7 +817,7 @@ review обновляет rule, memory или eval. без этого цикла
   </div>
   <div class="ai-foot-row">
     <span style="opacity:0.55">dragon-dna · space grotesk + ibm plex mono + jetbrains mono · single-file</span>
-    <span style="opacity:0.55">v0.3 · 2026-05-06</span>
+    <span style="opacity:0.55">v0.4 · 2026-05-07</span>
   </div>
 </footer>
 
@@ -823,12 +835,12 @@ review обновляет rule, memory или eval. без этого цикла
 (function(){
   'use strict';
 
-  var STORE_KEY = 'ain-ws01-prompt-compiler-v2';
+  var STORE_KEY = 'ain-ws01-context-pack-compiler-v4';
   var OR_KEY_STORE = 'ainative-lab-2-openrouter-key';
   var OR_MODEL_STORE = 'ainative-lab-2-openrouter-model';
 
   var FIELDS = [
-    'role','workflow',
+    'role','teamStack','workflow',
     'trigger','input','action','review','output','metric',
     'force','boundary','passport','evidence','cadence',
     // new v3 fields
@@ -837,6 +849,7 @@ review обновляет rule, memory или eval. без этого цикла
 
   var PLACEHOLDERS = {
     role: '{кто ты, какая команда, какой текущий фокус}',
+    teamStack: '{как личные системы сотрудников соединяются с процессом компании}',
     workflow: '{один workflow, который болит — опиши свободно: триггер, шаги, узкое место}',
     trigger: '{что запускает процесс}',
     input: '{какие данные приходят на вход}',
@@ -884,6 +897,7 @@ review обновляет rule, memory или eval. без этого цикла
     }
 
     var role = v('role');
+    var teamStack = v('teamStack');
     var workflow = v('workflow');
     var trigger = v('trigger');
     var input = v('input');
@@ -907,9 +921,9 @@ review обновляет rule, memory или eval. без этого цикла
     }
     function nl(n){ segs.push({ t: '\n'.repeat(n||1), k: 'plain' }); }
 
-    add('# context для agentного workflow', 'h1');
+    add('# context pack для agentного workflow', 'h1');
     nl(2);
-    add('// собрано в ainative-lab-2 prompt compiler · ai-native sprint vol2 · w1', 'dim');
+    add('// собрано в ainative-lab-2 context pack compiler · ai-native sprint vol2 · w1', 'dim');
     nl(2);
 
     // === роль и сила ===
@@ -923,6 +937,11 @@ review обновляет rule, memory или eval. без этого цикла
     add('контур', 'em');
     add(': external capability → context route → boundary → evidence → owner → review.', 'plain'); nl(1);
     add('контекст — ', 'plain'); add('русло', 'em'); add(', модель — ', 'plain'); add('течение', 'em'); add('. без русла нет направления.', 'plain'); nl(2);
+
+    // === team stack ===
+    add('## team stack / company os', 'h2'); nl(1);
+    field(teamStack); nl(1);
+    add('company os здесь не заменяет personal os. он соединяет личные контуры людей через shared naming, owners, workflow contracts, graph memory и evidence registry.', 'plain'); nl(2);
 
     // === workflow ===
     add('## workflow', 'h2'); nl(1);
@@ -981,32 +1000,35 @@ review обновляет rule, memory или eval. без этого цикла
     add('---', 'plain'); nl(2);
     add('## что нужно от тебя', 'h2'); nl(2);
 
-    add('1. предложи ', 'plain'); add('seed', 'em');
+    add('1. предложи ', 'plain'); add('context pack', 'em');
     add(' под этот workflow в формате: source · signal · ask · output · evidence — одной плотной таблицей.', 'plain'); nl(2);
 
-    add('2. покажи 2–3 точки ', 'plain'); add('compensation', 'em');
+    add('2. покажи, как этот workflow ложится в ', 'plain'); add('team stack', 'em');
+    add(': какие личные контуры нужны, какой общий owner, что попадает в graph memory, что остается human-only.', 'plain'); nl(2);
+
+    add('3. покажи 2–3 точки ', 'plain'); add('compensation', 'em');
     add(': где blast-radius выше — там guardrail должен быть толще. укажи конкретно, какой guardrail и почему.', 'plain'); nl(2);
 
-    add('3. пометь, какие из шести полей ', 'plain'); add('самые слабые', 'em');
+    add('4. пометь, какие из шести полей ', 'plain'); add('самые слабые', 'em');
     add(' (нет владельца / метрики / явного review-date / непрозрачный input). дай по каждому — как починить за один шаг.', 'plain'); nl(2);
 
-    add('4. дай первый шаг на следующие 48 часов: ', 'plain'); add('один артефакт', 'em');
+    add('5. дай первый шаг на следующие 48 часов: ', 'plain'); add('один артефакт', 'em');
     add(', который снимет неопределённость. не план — артефакт.', 'plain'); nl(2);
 
-    add('5. выбери ', 'plain'); add('одну зону harness\'a', 'em');
+    add('6. выбери ', 'plain'); add('одну зону harness\'a', 'em');
     add(' (context · memory · guardrail · review · naming · communication), которую усилить в первую очередь. почему именно эту, что именно сделать на этой неделе, какое evidence покажет, что зона усилилась.', 'plain'); nl(2);
 
     // === тональность ===
     add('---', 'plain'); nl(2);
     add('## тональность ответа', 'h2'); nl(1);
     add('— прямая, lowercase, без «помогу тебе» и «давайте».', 'plain'); nl(1);
-    add('— говори про harness, контур, силу, evidence, owner, scope, expiry, replay, hooks, registry.', 'plain'); nl(1);
+    add('— говори про context pack, team stack, graph memory, compass, harness, evidence, owner, scope, expiry, replay, registry.', 'plain'); nl(1);
     add('— en dash «–» для тире, не em dash.', 'plain'); nl(1);
     add('— никаких обещаний «ai заменит» — речь о том, как ', 'plain'); add('я', 'em'); add(' держу контур.', 'plain'); nl(1);
     add('— шаблон важнее дашборда: сначала русло, потом метрика поверх.', 'plain'); nl(1);
     add('— evidence важнее логов: log = что, evidence = зачем.', 'plain'); nl(2);
 
-    add('respond with: { 1.seed-таблица, 2.compensation-точки, 3.слабые-поля, 4.артефакт-48ч, 5.зона-harness-на-неделю }', 'em');
+    add('respond with: { 1.context-pack, 2.team-stack, 3.compensation-точки, 4.слабые-поля, 5.артефакт-48ч, 6.зона-harness-на-неделю }', 'em');
 
     // render two outputs
     var plain = '';
@@ -1225,7 +1247,7 @@ review обновляет rule, memory или eval. без этого цикла
         'Authorization': 'Bearer ' + key,
         'Content-Type': 'application/json',
         'HTTP-Referer': location.origin,
-        'X-Title': 'ainative-lab-2 prompt compiler'
+        'X-Title': 'ainative-lab-2 context pack compiler'
       },
       body: JSON.stringify({
         model: model,
