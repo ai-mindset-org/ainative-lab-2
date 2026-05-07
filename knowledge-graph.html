@@ -712,6 +712,7 @@
     N('knowledge-graph-html','knowledge graph','pages','Graph Lab: живая карта связей лабы, стека, участников и артефактов.'),
     N('compass-app',     'Compass',        'pages', 'социальный контекст: участники, пары, запросы, маршруты.'),
     N('dragon-deck',     'dragon deck',    'pages', 'презентация лабы (ainative-lab-deck.netlify.app).'),
+    N('observatory-deck','context observatory deck','pages','вторая дека: navigation room, Compass, Graph Lab, context pack, team stack.'),
 
     // organization (3)
     N('ai-mindset',           'ai mindset',           'organization', 'org, делает лабу.'),
@@ -819,7 +820,12 @@
     E('playground-html','knowledge-graph-html','updates'),
     E('knowledge-graph-html','compass-app','links'),
     E('compass-app','knowledge-graph-html','feeds'),
+    E('knowledge-graph-html','observatory-deck','feeds'),
+    E('observatory-deck','knowledge-graph-html','explains'),
+    E('observatory-deck','compass-app','explains'),
+    E('observatory-deck','playground-html','explains'),
     E('playground-html','dragon-deck','links'),
+    E('playground-html','observatory-deck','links'),
     E('dragon-deck','naming-html','links'),
     E('naming-html','playground-html','links'),
     E('rules-html','dragon-deck','links'),
@@ -1155,7 +1161,8 @@
         'playground-html':'./playground.html',
         'knowledge-graph-html':'./knowledge-graph.html',
         'compass-app':    'https://aim-ain02-compass.netlify.app/',
-        'dragon-deck':    'https://ainative-lab-deck.netlify.app/'
+        'dragon-deck':    'https://ainative-lab-deck.netlify.app/',
+        'observatory-deck':'https://ainative-lab-deck.netlify.app/decks/ain-ws02-context-observatory/'
       };
       const url = map[n.id] || '#';
       const ext = url.startsWith('http') ? ' target="_blank" rel="noreferrer"' : '';
