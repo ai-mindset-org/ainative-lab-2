@@ -1,90 +1,90 @@
 #!/usr/bin/env bash
-# ---------------------------------------------------------------
-# AI-Native Lab — site structure verification
-# Usage: ./test.sh
-# Exit 0 if all expected pages + data files are present and valid.
-# ---------------------------------------------------------------
-set -u
-cd "$(dirname "$0")"
+# ainative-lab-2 static sanity checks.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
 
 PAGES=(
   "index.html"
-  "graph/index.html"
-  "weeks/index.html"
-  "weeks/w1.html"
-  "weeks/w2.html"
-  "weeks/w3.html"
-  "sessions/index.html"
-  "speakers-page/index.html"
-  "participants/index.html"
-  "stories/index.html"
-  "results/index.html"
+  "playground.html"
+  "knowledge-graph.html"
+  "naming.html"
+  "rules.html"
+  "templates/personal-os-starter.html"
+  "rules-public/agent-passport.html"
+  "rules-public/guardrails-blast-radius.html"
+  "rules-public/evidence-over-logs.html"
 )
 
-DATA=(
-  "lms-data.json"
-  "data/sessions.json"
-  "data/speakers.json"
-  "data/stories.json"
-  "data/participants.json"
+REQUIRED_STRINGS=(
+  "context observatory"
+  "context pack"
+  "Compass"
+  "knowledge graph"
+  "OpenRouter"
+  "agent passport"
+  "naming convention"
 )
 
-SHARED=(
-  "shared/site.css"
-  "shared/nav.html"
-)
-
-missing=0
 ok=0
+fail=0
 
 echo "== pages =="
-for p in "${PAGES[@]}"; do
-  if [[ -f "$p" ]]; then
-    if grep -qi "<!DOCTYPE html>" "$p"; then
-      echo "  ok   $p"
-      ok=$((ok+1))
-    else
-      echo "  FAIL $p (no <!DOCTYPE html>)"
-      missing=$((missing+1))
-    fi
-  else
-    echo "  MISS $p"
-    missing=$((missing+1))
+for page in "${PAGES[@]}"; do
+  if [[ ! -f "$page" ]]; then
+    echo "  MISS $page"
+    fail=$((fail+1))
+    continue
   fi
+
+  if ! grep -qi "<!doctype html>" "$page"; then
+    echo "  FAIL $page (missing doctype)"
+    fail=$((fail+1))
+    continue
+  fi
+
+  echo "  ok   $page"
+  ok=$((ok+1))
 done
 
 echo
-echo "== data =="
-for d in "${DATA[@]}"; do
-  if [[ -f "$d" ]]; then
-    if python3 -c "import json,sys; json.load(open('$d'))" 2>/dev/null; then
-      echo "  ok   $d"
-      ok=$((ok+1))
-    else
-      echo "  FAIL $d (invalid JSON)"
-      missing=$((missing+1))
-    fi
-  else
-    echo "  MISS $d"
-    missing=$((missing+1))
-  fi
-done
-
-echo
-echo "== shared =="
-for s in "${SHARED[@]}"; do
-  if [[ -f "$s" ]]; then
-    echo "  ok   $s"
+echo "== content markers =="
+for marker in "${REQUIRED_STRINGS[@]}"; do
+  if rg -q "$marker" index.html playground.html knowledge-graph.html README.md; then
+    echo "  ok   $marker"
     ok=$((ok+1))
   else
-    echo "  MISS $s"
-    missing=$((missing+1))
+    echo "  MISS $marker"
+    fail=$((fail+1))
   fi
 done
 
 echo
-echo "-- summary: $ok ok, $missing missing/invalid --"
-if [[ $missing -gt 0 ]]; then
+echo "== javascript parse =="
+for page in playground.html knowledge-graph.html; do
+  node - "$page" <<'NODE'
+const fs = require('fs');
+const page = process.argv[2];
+const html = fs.readFileSync(page, 'utf8');
+const scripts = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)]
+  .map(m => m[1].trim())
+  .filter(Boolean);
+for (const code of scripts) {
+  try {
+    new Function(code);
+  } catch (err) {
+    console.error(`${page}: ${err.message}`);
+    process.exit(1);
+  }
+}
+NODE
+  echo "  ok   $page"
+  ok=$((ok+1))
+done
+
+echo
+echo "-- summary: $ok ok, $fail missing/invalid --"
+if [[ "$fail" -gt 0 ]]; then
   exit 1
 fi
-exit 0

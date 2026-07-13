@@ -3,43 +3,77 @@
 ai-native sprint vol2 · s3 · 2 may – 25 may 2026
 ai mindset org
 
-successor to `ai-mindset-org/ainative-lab` (s2). seeded fresh — s2 data stripped, infrastructure cherry-picked, content focused on s3 cohort.
-
 live: https://ainative-lab-2.netlify.app
 
-aesthetic: **dragon-dna** (teal `#5cdacc` on dark navy `#07090d`, space grotesk + ibm plex mono + jetbrains mono). matches the ai-native dragon deck visual language so artifacts and presentation share one flow.
+`ainative-lab-2` is a **context observatory** for the current AI-native lab. It connects the deck narrative, participant context, naming convention, public rules, Compass, and a living knowledge graph into one navigable artifact.
+
+Successor to `ai-mindset-org/ainative-lab` (s2). S2 data was stripped, infrastructure was cherry-picked, and content now focuses on the s3 cohort.
+
+Visual language: **dragon-dna** – teal `#5cdacc` on dark navy `#07090d`, Space Grotesk + IBM Plex Mono + JetBrains Mono. The graph, playground, and deck should feel like one lab surface, not separate microsites.
 
 ---
 
-## what's here (v0.2 — 2026-05-06 evening release)
+## what's here (v0.4 – 2026-05-07 context graph release)
 
-- **`index.html`** — hub landing with all 13 s3 speakers + 4-week structure + artifact toolkit + real roadmap
-- **`playground.html`** — **prompt compiler**: 13 free-text fields → real-time markdown prompt in lecture tonality (harness · контур · evidence · replay · passport)
-- **`naming.html`** — 8 copyable s3 example filenames + formula visual + 4-rule grid + project codes + content types
-- **`rules.html`** — diagram of 6 zones (context · memory · guardrail · review · naming · communication) around central «harness», each clickable, expanding 13 rule cards
-- **`knowledge-graph.html`** — 38-node force-graph: speakers × weeks × themes × artifacts × pages × org. 6 categories, 80 edges, search + filter + side panel
-- **`rules-public/`** — 12 anonymized public rule pages, each a single readable url that replaces vault paths in source-map (e.g. `/rules-public/agent-passport.html`)
-- **`_scripts/`** — vault → json extract, netlify deploy, participants parser
-- **`_specs/`** — design records + deck-integration paste-ready json
+- **`index.html`** – hub for the lab as a context observatory: session focus, modern stack, artifacts, pages, roadmap.
+- **`playground.html`** – **context pack compiler**: 16 free-text fields → portable markdown context pack for an agent workflow and team stack.
+- **`knowledge-graph.html`** – force graph of speakers, weeks, themes, artifacts, pages, organization, and modern stack nodes. It now includes Compass, Graph Lab, context engine, graph memory, governed loop, evidence, MCP interfaces, and team stack.
+- **`naming.html`** – copyable s3 example filenames + formula visual + project codes + content types.
+- **`rules.html`** – six zones around the operating harness: context, memory, guardrail, review, naming, communication.
+- **`rules-public/`** – anonymized public rule pages that replace private vault links in source maps.
+- **`templates/`** – portable starter templates for personal/team operating systems.
+- **`_scripts/`** – sanity checks, vault extraction helpers, deploy helpers.
+
+---
+
+## operating model
+
+The lab is not just a page set. It is a small **closed loop**:
+
+```text
+source -> signal -> context pack -> action -> evidence -> review -> graph update
+```
+
+- **source** – participant notes, workshop transcript, Telegram/LMS signals, GitHub artifacts.
+- **signal** – selected facts, roles, workflows, constraints, questions.
+- **context pack** – portable brief that can be given to a person or agent.
+- **action** – a workcase, prototype, dashboard, agent, or process change.
+- **evidence** – trace that proves what happened and why the decision was made.
+- **review** – human and AI pass over the result.
+- **graph update** – the knowledge graph learns from the next evidence layer.
+
+Compass adds the social layer: people become navigable context nodes, not CRM rows.
+
+---
+
+## modern stack frame
+
+- **Context engine** – runtime context, short-term state, persistent store, retrieval, trimming, tool selection.
+- **Graph memory** – temporal relations across people, artifacts, workflows, roles, and decisions.
+- **Governed loop** – agent passport, tool rights, guardrails, policy, expiry, human review.
+- **Evidence layer** – traces, eval notes, replay links, review decisions.
+- **MCP interfaces** – GitHub, Obsidian, LMS, Telegram, calendar, Netlify, OpenRouter.
+- **Team stack** – Personal OS of participants connected into Company OS through shared workflow artifacts.
 
 ---
 
 ## roadmap
 
-- [x] playground v1 → v2 prompt-compiler (today)
+- [x] playground v1 -> v4 context pack compiler
 - [x] naming.html copyable cards
 - [x] rules.html diagram of zones
-- [x] knowledge-graph.html minimalist port
-- [x] /rules-public/ — 12 anonymized pages
+- [x] knowledge-graph.html graph with stack layer
+- [x] Compass linked as social context engine
+- [x] `/rules-public/` – 12 anonymized pages
 - [x] dragon-dna across all pages
-- [ ] w1 evidence collection (после workshop 6 may)
-- [ ] speaker cards с фото — после w1
-- [ ] participants explorer (~160) — после w2 alumni showcase
-- [ ] weeks/w1.html через w4.html — материалы каждой недели
-- [ ] custom subdomain (`s3.aimindset.org` или `harness.aimindset.org`)
-- [ ] github actions auto-deploy
-- [ ] og images (dragon-dna 1200×630)
-- [ ] prompt-compiler с openrouter мостом — vNext
+- [x] unified nav across all pages
+- [ ] participant explorer from Compass and lab graph
+- [ ] Graph Lab sync from GitHub/vault artifacts
+- [ ] weeks/w1.html through w4.html – materials for each week
+- [ ] research source map visible from graph nodes
+- [ ] GitHub Actions auto-deploy
+- [ ] OG images (dragon-dna 1200x630)
+- [ ] Netlify function bridge for graph rationale and context pack generation
 
 ---
 
@@ -49,11 +83,11 @@ aesthetic: **dragon-dna** (teal `#5cdacc` on dark navy `#07090d`, space grotesk 
 # manual deploy from local
 netlify deploy --prod --dir=.
 
-# subsequent commits push to github but Netlify is NOT auto-linked yet
+# repo push
 git push origin main
 ```
 
-site config in `netlify.toml`. publish dir = repo root, no build step. site id `f77d3724-3ed2-48f3-845e-fa4e391557b8`, account slug `apowall`.
+Site config lives in `netlify.toml`. Publish dir = repo root, no build step. Site id `f77d3724-3ed2-48f3-845e-fa4e391557b8`, account slug `apowall`.
 
 ---
 
@@ -62,25 +96,17 @@ site config in `netlify.toml`. publish dir = repo root, no build step. site id `
 `{project} {type} description – yyyy-mm-dd.md`
 
 - date at the end, en dash `–`, lowercase description
-- no interface suffix (`– claude code` / `– cursor` deprecated с 2026-02-20)
+- no interface suffix (`– claude code`, `– cursor`, `– codex`)
 - live tool: [naming.html](./naming.html)
-
----
-
-## seed from s2
-
-cherry-picked into `_scripts/`:
-- `extract.js` — vault → json (parametric via `_scripts/config.json`)
-- `deploy.sh` — netlify helper
-- `parse-participants.mjs` — vault parser
-- `test.sh` — sanity checks
-
-stripped (not ported): all s2 data/*.json, weeks/, participants/, sessions/, stories/, results/, speakers-page/, speakers/*.jpg, dashboard-workshop.html, knowledge-graph s2 data.
 
 ---
 
 ## links
 
+- live lab: https://ainative-lab-2.netlify.app
+- knowledge graph: https://ainative-lab-2.netlify.app/knowledge-graph
+- playground: https://ainative-lab-2.netlify.app/playground
+- Compass: https://aim-ain02-compass.netlify.app
 - live deck: https://ainative-lab-deck.netlify.app
 - ai mindset: https://aimindset.org
 - bot deep link: `?start=s3` on @aimindset_lab_bot
