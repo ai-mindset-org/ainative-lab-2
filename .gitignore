@@ -11,3 +11,20 @@ dist/
 build/
 .idea/
 .vscode/
+
+# Private runtime/session artifacts
+.claude/
+.codex/
+.cursor/
+_sessions/
+session-logs/
+*.jsonl
+*.sqlite
+*.sqlite3
+*.db
+*.pem
+*.key
+HANDOFF.md
+CONTEXT-HANDOFF.md
+SESSION-*-HANDOFF.md
+*.backup-*

@@ -19,8 +19,7 @@ aesthetic: **dragon-dna** (teal `#5cdacc` on dark navy `#07090d`, space grotesk 
 - **`rules.html`** — diagram of 6 zones (context · memory · guardrail · review · naming · communication) around central «harness», each clickable, expanding 13 rule cards
 - **`knowledge-graph.html`** — 38-node force-graph: speakers × weeks × themes × artifacts × pages × org. 6 categories, 80 edges, search + filter + side panel
 - **`rules-public/`** — 12 anonymized public rule pages, each a single readable url that replaces vault paths in source-map (e.g. `/rules-public/agent-passport.html`)
-- **`_scripts/`** — vault → json extract, netlify deploy, participants parser
-- **`_specs/`** — design records + deck-integration paste-ready json
+- Public pages contain only reviewed, anonymized material. Source-vault extractors and participant parsers are excluded.
 
 ---
 
@@ -34,7 +33,7 @@ aesthetic: **dragon-dna** (teal `#5cdacc` on dark navy `#07090d`, space grotesk 
 - [x] dragon-dna across all pages
 - [ ] w1 evidence collection (после workshop 6 may)
 - [ ] speaker cards с фото — после w1
-- [ ] participants explorer (~160) — после w2 alumni showcase
+- [ ] aggregate cohort outcomes — only reviewed, non-identifying statistics
 - [ ] weeks/w1.html через w4.html — материалы каждой недели
 - [ ] custom subdomain (`s3.aimindset.org` или `harness.aimindset.org`)
 - [ ] github actions auto-deploy
@@ -67,15 +66,9 @@ site config in `netlify.toml`. publish dir = repo root, no build step. site id `
 
 ---
 
-## seed from s2
+## public-data boundary
 
-cherry-picked into `_scripts/`:
-- `extract.js` — vault → json (parametric via `_scripts/config.json`)
-- `deploy.sh` — netlify helper
-- `parse-participants.mjs` — vault parser
-- `test.sh` — sanity checks
-
-stripped (not ported): all s2 data/*.json, weeks/, participants/, sessions/, stories/, results/, speakers-page/, speakers/*.jpg, dashboard-workshop.html, knowledge-graph s2 data.
+Private vault exports, participant profiles, usernames, local source paths, agent sessions, and handoff artifacts are excluded from this repository and its publication.
 
 ---
 
@@ -90,4 +83,4 @@ stripped (not ported): all s2 data/*.json, weeks/, participants/, sessions/, sto
 
 ## license
 
-unset. internal artifact for ai mindset team and lab participants.
+unset. public, anonymized artifact for AI Mindset lab participants.
