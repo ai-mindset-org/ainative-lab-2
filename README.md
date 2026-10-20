@@ -1,5 +1,9 @@
 # ainative-lab-2
 
+<!-- aim-public-links:start -->
+[Лабы AI Mindset](https://aimindset.org/?utm_source=website&utm_medium=article&utm_campaign=start&utm_content=github-ainative-lab-2#learning) · [База знаний](https://base.aimindset.org/?utm_source=website&utm_medium=article&utm_campaign=start&utm_content=github-ainative-lab-2)
+<!-- aim-public-links:end -->
+
 ai-native sprint vol2 · s3 · 2 may – 25 may 2026
 ai mindset org
 
@@ -75,7 +79,7 @@ Private vault exports, participant profiles, usernames, local source paths, agen
 ## links
 
 - live deck: https://ainative-lab-deck.netlify.app
-- ai mindset: https://aimindset.org
+- ai mindset: [aimindset.org](https://aimindset.org?utm_source=website&utm_medium=article&utm_campaign=start&utm_content=github-ainative-lab-2)
 - bot deep link: `?start=s3` on @aimindset_lab_bot
 - github: https://github.com/ai-mindset-org/ainative-lab-2
 
